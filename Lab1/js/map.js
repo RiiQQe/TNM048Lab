@@ -62,8 +62,6 @@ function map(){
             cc.push(newObj);
         });
         
-        console.log(cc[1].color);
-
         country.enter().insert("path")
             .attr("class", "country")
             .attr("d", path)
@@ -74,26 +72,30 @@ function map(){
 
             .style("fill", function (d) { return d.properties.color })
 
-            //tooltip
-            .on("mousemove", function(d) {
-                tooltip.transition()        
-                    .duration(200)      
-                    .style("opacity", .9);      
-                tooltip.html("Country: " + d.properties.name)  
-                    .style("left", (d3.event.pageX) + "px")     
-                    .style("top", (d3.event.pageY - 28) + "px");    
-            })
-            .on("mouseout",  function(d) {
-                  tooltip.transition()        
-                    .duration(500)      
-                    .style("opacity", 0);  
-            })
             //selection
             .on("click",  function(d) {
-                alert("here i am" + d.properties.name);
+                console.log("clicked");
                 sp1.selectDot(d.properties.name);
                 pc1.selectLine(d.properties.name);
             });
+
+            if(useTooltip){
+                //tooltip
+                country.on("mousemove", function(d) {
+                    tooltip.transition()        
+                        .duration(200)      
+                        .style("opacity", .9);      
+                    tooltip.html("Country: " + d.properties.name)  
+                        .style("left", (d3.event.pageX) + "px")     
+                        .style("top", (d3.event.pageY - 28) + "px");    
+                })
+                .on("mouseout",  function(d) {
+                      tooltip.transition()        
+                        .duration(500)      
+                        .style("opacity", 0);  
+                });
+            }
+
 
     }
     
