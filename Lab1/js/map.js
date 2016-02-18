@@ -80,6 +80,7 @@ function map(){
             });
 
             if(useTooltip){
+                //Hejsan
                 //tooltip
                 country.on("mousemove", function(d) {
                     tooltip.transition()        
