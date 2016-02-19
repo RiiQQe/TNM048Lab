@@ -72,7 +72,7 @@ function pc(){
             
             //.style("stroke", function(d){ self.color(d.cluster); });
 
-            .style("stroke", function(d, i){ console.log(self.color(kmeansRes[i])); self.color(kmeansRes[i]); })
+            .style("stroke", function(d, i){ self.color(kmeansRes[i]); })
             
             //Assign the cluster colors
             //..
