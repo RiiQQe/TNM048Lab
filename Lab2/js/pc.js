@@ -39,14 +39,16 @@ function pc(){
         
         self.data = data;
         
-        var k = 0;
+        var k = 4;
         var kmeansRes = kmeans(data,k);
 
         console.log(kmeansRes);
         
-        //initialize the cluster colors
-        //...
+        self.color = d3.scale.category20()
+            .domain(0, k);
         
+        self.cluster = kmeansRes;
+
         draw(kmeansRes);
     });
 
@@ -59,7 +61,7 @@ function pc(){
             .data(self.data)
             .enter().append("svg:path")
             .attr("d", path);
-                
+                            
         // Add blue foreground lines for focus.
         foreground = svg.append("svg:g")
             .attr("class", "foreground")
@@ -67,8 +69,9 @@ function pc(){
             .data(self.data)
             .enter().append("svg:path")
             .attr("d", path)
-            .style("stroke", function(d) { return "hsl(" + Math.random() * 360 + ",100%,50%)"; }); 
-    
+            
+            .style("stroke", function(d){ self.color(d); });
+            
             //Assign the cluster colors
             //..
             
