@@ -96,6 +96,8 @@
 
 			//4. Check the quality of the cluster. Use the sum of the squared distances within each cluster as your
 			//measure of quality. The objective is to minimize the sum of squared errors within each cluster:
+
+			//Change should be a vector of these sums instead 
 			for(var i = 0; i < 20; i++){
 				for(var j = 0; j < data.length; j++){
 					if(cluster[j]["clusi"] == i && i * 10 != j){
@@ -109,8 +111,6 @@
 			}	
 			console.log(Math.abs(change - prevChange));
 		}		
-
-
     };
     
     
