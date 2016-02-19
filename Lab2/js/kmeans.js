@@ -51,8 +51,7 @@
 		
 		
 		var nofBelonging = 0, xTot = 0, yTot = 0, zTot = 0;
-		var tester = 0;
-		console.log( "BEFORE: ( " +  data[10]["A"] + ", " + data[10]["B"] + ", " + data[10]["C"] + " )");
+		
 		for(var i = 0; i < 20; i++){
 			for(var j = 0; j < data.length; j++){
 				if(cluster[j]["clusi"] == i && j != i){
@@ -63,7 +62,7 @@
 					yTot = yTot + parseFloat(data[i * 10]["B"]) - parseFloat(data[j]["B"]);
 					zTot = zTot + parseFloat(data[i * 10]["C"]) - parseFloat(data[j]["C"]);
 					
-					tester++;
+					
 				}
 			}
 			
@@ -76,9 +75,9 @@
 				data[i * 10]["A"] = parseFloat(data[i * 10]["A"]) + parseFloat(xTot);
 				data[i * 10]["B"] = parseFloat(data[i * 10]["B"]) + parseFloat(yTot);
 				data[i * 10]["C"] = parseFloat(data[i * 10]["C"]) + parseFloat(zTot);
-				cluster[i]["x"] = data[i * 10]["A"];
-				cluster[i]["y"] = data[i * 10]["B"];
-				cluster[i]["z"] = data[i * 10]["C"];
+				cluster[i]["x"] = parseFloat(data[i * 10]["A"]);
+				cluster[i]["y"] = parseFloat(data[i * 10]["B"]);
+				cluster[i]["z"] = parseFloat(data[i * 10]["C"]);
 				
 			}
 
@@ -87,12 +86,7 @@
 			zTot = 0;
 			nofBelonging = 0;
 		}
-		console.log( "AFTER: ( " +  data[10]["A"] + ", " + data[10]["B"] + ", " + data[10]["C"] + " )");
 		
-
-		
-		
-
 		//4. Check the quality of the cluster. Use the sum of the squared distances within each cluster as your
 		//measure of quality. The objective is to minimize the sum of squared errors within each cluster:
 			
