@@ -28,12 +28,8 @@ function pc(){
         // Extract the list of dimensions and create a scale for each.
         x.domain(dimensions = d3.keys(data[0]).filter(function(d) {
             return (y[d] = d3.scale.linear()
-                .domain(d3.extent(data, function(p) { return +p[d]; }))
-        
-                //assign the the axis scale  between [0 1]
-                //...
-        
-                .range([height, 0])
+                    .domain(d3.extent(data, function(p) { return +p[d]; }))
+                    .range([height, 0])
                 ); 
         }));
         
@@ -47,7 +43,9 @@ function pc(){
         self.color = d3.scale.category20()
             .domain(0, k);
         
-        self.cluster = kmeansRes;
+        //self.cluster = kmeansRes;
+
+
 
         draw(kmeansRes);
     });
@@ -61,18 +59,19 @@ function pc(){
             .data(self.data)
             .enter().append("svg:path")
             .attr("d", path);
+            //.style("stroke", "red");
                             
         // Add blue foreground lines for focus.
         foreground = svg.append("svg:g")
             .attr("class", "foreground")
             .selectAll("path")
-            .data(self.data)
+            .data(kmeansRes)
             .enter().append("svg:path")
             .attr("d", path)
             
             //.style("stroke", function(d){ self.color(d.cluster); });
 
-            .style("stroke", function(d, i){ self.color(kmeansRes[i]); })
+            .style("stroke", function(d){ self.color(d["cluster"]); });
             
             //Assign the cluster colors
             //..

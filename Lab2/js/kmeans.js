@@ -13,13 +13,14 @@
     	var thresholdW = 1,
     		change = 10,
     		counter = 0;
-    	var prevChange = 0;
+    	var prevError = 10000;
+
+    	var notGoodEnough = true;
+    	/*for(var i = 0; i < k; i++)
+    		prevChange[i] = 0;
+    	*/
+    	while(notGoodEnough){
     		
-    	//while(Math.abs(change - prevChange) > thresholdW && counter < 70){
-    		
-    		prevChange = change;
-    		change = 0;
-    		counter++;
 	        //1. Randomly place K points into the space represented by the items that are being clustered. These
 			//points represent the initial cluster centroids.
 	        var centeroid = {};
@@ -106,34 +107,49 @@
 			//measure of quality. The objective is to minimize the sum of squared errors within each cluster:
 
 			//Change should be a vector of these sums instead
+			//TODO: 
+			//Change this, I believe that the loops could still be as they are. But that we 
+
+			var newError = 0;
+
 			for(var i = 0; i < centeroids.length; i++){
+
 				for(var j = 0; j < data.length; j++){
 					if(cluster[j] == i && i * sampleSize != j){
 						xDiff = Math.pow(data[j]["A"] - centeroids[i]["x"], 2);
 						yDiff = Math.pow(data[j]["B"] - centeroids[i]["y"], 2);
 						zDiff = Math.pow(data[j]["C"] - centeroids[i]["z"], 2);
 
-						change += Math.sqrt(xDiff + yDiff + zDiff);
+						var length = Math.sqrt(xDiff + yDiff + zDiff); 
+
+						newError += parseFloat(length);
 					}
 				}
-			}	
-		//}
+			}
+
+			console.log(newError);
+			
+			if(newError > prevError) notGoodEnough = false;
+			else prevError = newError;
+
+
+		}
 
 		//Just a tester to see that nothing went wrong..
 		//If something is printed from this, something
 		//went wrong somewhere
 		console.log("Belongs to cluster 0");
 		console.log(cluster.length);
+		var newData = [];
 		for(var i = 0; i < cluster.length; i++){
-			if(data[i]["A"] < 0 || data[i]["B"] < 0 || data[i]["C"] < 0){
-				console.log(i)
-				console.log( "( " + data[i]["A"] + ", " + data[i]["B"] +  ", " + data[i]["C"] +  " )");
-			}
+			var temp = cluster[i];
+			var newObj = {A:data[i]["A"],B:data[i]["B"],C:data[i]["C"], cluster:temp}
+			newData.push(newObj);
 		}
 
 
 
-		return cluster;		
+		return newData;		
     };
     
     
