@@ -41,6 +41,8 @@ function pc(){
         
         var k = 0;
         var kmeansRes = kmeans(data,k);
+
+        console.log(kmeansRes);
         
         //initialize the cluster colors
         //...

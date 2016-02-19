@@ -23,7 +23,7 @@
 	        var points = [];
 	        
 	        //This could be done more random..
-	        for(var i = 0; i < data.length/2; i=i+10){
+	        for(var i = 0; i < data.length; i=i+10){
 	    		point = {x:data[i]["A"],y:data[i]["B"],z:data[i]["C"]};
 	        	points.push(point);
 	        }
@@ -46,11 +46,9 @@
 							}
 					}
 					minLength = 10000;
-					clusterPoint = {clusi:jTemp, index:i}; //Index could be unneccassary
-					cluster.push(clusterPoint);
+					cluster.push(jTemp);
 				}else{
-					clusterPoint = {clusi:i, index:i};
-					cluster.push(clusterPoint);
+					cluster.push(i / 10);
 				}	
 			}
 			//Now cluster contains the points index that it´s connected to.
@@ -61,7 +59,7 @@
 			
 			for(var i = 0; i < 20; i++){
 				for(var j = 0; j < data.length; j++){
-					if(cluster[j]["clusi"] == i && j != i){
+					if(cluster[j] == i && j != i){
 
 						nofBelonging++;
 						
@@ -85,7 +83,6 @@
 					points[i]["x"] = parseFloat(data[i * 10]["A"]);
 					points[i]["y"] = parseFloat(data[i * 10]["B"]);
 					points[i]["z"] = parseFloat(data[i * 10]["C"]);
-					
 				}
 
 				xTot = 0;
@@ -100,7 +97,7 @@
 			//Change should be a vector of these sums instead 
 			for(var i = 0; i < 20; i++){
 				for(var j = 0; j < data.length; j++){
-					if(cluster[j]["clusi"] == i && i * 10 != j){
+					if(cluster[j] == i && i * 10 != j){
 						xDiff = Math.pow(data[j]["A"] - points[i]["x"], 2);
 						yDiff = Math.pow(data[j]["B"] - points[i]["y"], 2);
 						zDiff = Math.pow(data[j]["C"] - points[i]["z"], 2);
@@ -109,8 +106,16 @@
 					}
 				}
 			}	
-			console.log(Math.abs(change - prevChange));
-		}		
+			//console.log(Math.abs(change - prevChange));
+		}
+
+		for(var i = 0; i < cluster.length; i++){
+			if(cluster[i] > 40){
+				console.log(i)
+			}
+		}
+
+		return cluster;		
     };
     
     
