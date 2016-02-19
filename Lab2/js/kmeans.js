@@ -49,25 +49,20 @@
         //3. When all objects have been assigned, recalculate the positions of the K centroids to be in the
 		//centre of the cluster. This is achieved by calculating the average values in all dimensions.
 		
-		/*
-		float nofBelonging = 0, xTot = 0, yTot = 0, zTot = 0;
-		float tester = 0;
+		
+		var nofBelonging = 0, xTot = 0, yTot = 0, zTot = 0;
+		var tester = 0;
 		console.log( "BEFORE: ( " +  data[0]["A"] + ", " + data[0]["B"] + ", " + data[0]["C"] + " )");
-		for(var i = 0; i < 1; i++){
+		for(var i = 0; i < 20; i++){
 			for(var j = 0; j < data.length; j++){
 				if(cluster[j]["clusi"] == i && j != i){
 
 					nofBelonging++;
-					console.log(data[i]["B"]);
-					console.log(data[j]["B"]);
-
-					temp = data[i]["A"];
-					temp2 = data[j]["A"];
-
-					xTot = xTot + temp - temp2;
-					yTot = yTot + data[i]["B"] - data[j]["B"];
-					zTot = zTot + data[i]["C"] - data[j]["C"];
-					console.log(yTot);
+					
+					xTot = xTot + parseFloat(data[i]["A"]) - parseFloat(data[j]["A"]);
+					yTot = yTot + parseFloat(data[i]["B"]) - parseFloat(data[j]["B"]);
+					zTot = zTot + parseFloat(data[i]["C"]) - parseFloat(data[j]["C"]);
+					
 					tester++;
 				}
 			}
@@ -76,11 +71,11 @@
 				xTot = xTot / nofBelonging;
 				yTot = yTot / nofBelonging;
 				zTot = zTot / nofBelonging;
-				console.log("before: " + data[i]["B"]);
-				data[i]["A"] = data[i]["A"] + xTot;
-				data[i]["B"] = data[i]["B"] + yTot;
-				data[i]["C"] = data[i]["C"] + zTot;
-				console.log("after: " + data[i]["B"]);
+				
+				data[i]["A"] = parseFloat(data[i]["A"]) + parseFloat(xTot);
+				data[i]["B"] = parseFloat(data[i]["B"]) + parseFloat(yTot);
+				data[i]["C"] = parseFloat(data[i]["C"]) + zTot;
+				
 			}
 
 			xTot = 0;
@@ -92,7 +87,7 @@
 		console.log( "AFTER: ( " +  data[0]["A"] + ", " + data[0]["B"] + ", " + data[0]["C"] + " )");
 
 		
-		*/
+		
 
 		//4. Check the quality of the cluster. Use the sum of the squared distances within each cluster as your
 		//measure of quality. The objective is to minimize the sum of squared errors within each cluster:
