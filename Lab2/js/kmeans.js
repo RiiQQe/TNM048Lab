@@ -23,7 +23,8 @@
 	        var points = [];
 	        
 	        //This could be done more random..
-	        for(var i = 0; i < data.length; i=i+10){
+	        //Right now every 20th point is a centeroid
+	        for(var i = 0; i < data.length; i=i+20){
 	    		point = {x:data[i]["A"],y:data[i]["B"],z:data[i]["C"]};
 	        	points.push(point);
 	        }
@@ -32,8 +33,9 @@
 			//distances and in this lab we will use the Euclidean distance: (SEE SLIDES)
 			var xDiff, yDiff, zDiff, length, minLength = 10000;
 			var jTemp, cluster = [];
+
 			for(var i = 0; i < data.length; i++){
-				if(i % 10 != 0){
+				if(i % 20 != 0){
 					for(var j = 0; j < points.length; j++){
 							xDiff = Math.pow(data[i]["A"] - points[j]["x"], 2);
 							yDiff = Math.pow(data[i]["B"] - points[j]["y"], 2);
@@ -48,7 +50,7 @@
 					minLength = 10000;
 					cluster.push(jTemp);
 				}else{
-					cluster.push(i / 10);
+					cluster.push(i / 20);
 				}	
 			}
 			//Now cluster contains the points index that it´s connected to.
@@ -63,10 +65,9 @@
 
 						nofBelonging++;
 						
-						xTot = xTot + parseFloat(data[i * 10]["A"]) - parseFloat(data[j]["A"]);
-						yTot = yTot + parseFloat(data[i * 10]["B"]) - parseFloat(data[j]["B"]);
-						zTot = zTot + parseFloat(data[i * 10]["C"]) - parseFloat(data[j]["C"]);
-						
+						xTot = xTot + parseFloat(data[i * 20]["A"]) - parseFloat(data[j]["A"]);
+						yTot = yTot + parseFloat(data[i * 20]["B"]) - parseFloat(data[j]["B"]);
+						zTot = zTot + parseFloat(data[i * 20]["C"]) - parseFloat(data[j]["C"]);
 						
 					}
 				}
@@ -75,14 +76,13 @@
 					xTot = xTot / nofBelonging;
 					yTot = yTot / nofBelonging;
 					zTot = zTot / nofBelonging;
-					
 
-					data[i * 10]["A"] = parseFloat(data[i * 10]["A"]) + parseFloat(xTot);
-					data[i * 10]["B"] = parseFloat(data[i * 10]["B"]) + parseFloat(yTot);
-					data[i * 10]["C"] = parseFloat(data[i * 10]["C"]) + parseFloat(zTot);
-					points[i]["x"] = parseFloat(data[i * 10]["A"]);
-					points[i]["y"] = parseFloat(data[i * 10]["B"]);
-					points[i]["z"] = parseFloat(data[i * 10]["C"]);
+					data[i * 20]["A"] = parseFloat(data[i * 20]["A"]) + parseFloat(xTot);
+					data[i * 20]["B"] = parseFloat(data[i * 20]["B"]) + parseFloat(yTot);
+					data[i * 20]["C"] = parseFloat(data[i * 20]["C"]) + parseFloat(zTot);
+					points[i]["x"] = parseFloat(data[i * 20]["A"]);
+					points[i]["y"] = parseFloat(data[i * 20]["B"]);
+					points[i]["z"] = parseFloat(data[i * 20]["C"]);
 				}
 
 				xTot = 0;
@@ -94,10 +94,10 @@
 			//4. Check the quality of the cluster. Use the sum of the squared distances within each cluster as your
 			//measure of quality. The objective is to minimize the sum of squared errors within each cluster:
 
-			//Change should be a vector of these sums instead 
+			//Change should be a vector of these sums instead
 			for(var i = 0; i < 20; i++){
 				for(var j = 0; j < data.length; j++){
-					if(cluster[j] == i && i * 10 != j){
+					if(cluster[j] == i && i * 20 != j){
 						xDiff = Math.pow(data[j]["A"] - points[i]["x"], 2);
 						yDiff = Math.pow(data[j]["B"] - points[i]["y"], 2);
 						zDiff = Math.pow(data[j]["C"] - points[i]["z"], 2);
@@ -106,14 +106,17 @@
 					}
 				}
 			}	
-			//console.log(Math.abs(change - prevChange));
 		}
 
+		//Just a tester to see that nothing went wrong..
+		//If something is printed from this, something
+		//went wrong somewhere
 		for(var i = 0; i < cluster.length; i++){
-			if(cluster[i] > 40){
+			if(cluster[i] > 20){
 				console.log(i)
 			}
 		}
+		console.log(cluster);
 
 		return cluster;		
     };

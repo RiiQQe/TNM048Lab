@@ -71,7 +71,7 @@ function pc(){
     
             //Assign the cluster colors
             //..
-    
+            
 
         // Add a group element for each dimension.
         var g = svg.selectAll(".dimension")
