@@ -41,11 +41,11 @@ function map(data) {
 
     //Formats the data in a feature collection trougth geoFormat()
     var geoData = {type: "FeatureCollection", features: geoFormat(data)};
-
+    
     //Loads geo data
     d3.json("data/world-topo.json", function (error, world) {
         var countries = topojson.feature(world, world.objects.countries).features;
-        draw(countries);
+        draw(countries, geoData["features"]);
     });
 
     //Calls the filtering function 
@@ -56,16 +56,23 @@ function map(data) {
     //Formats the data in a feature collection
     function geoFormat(array) {
         var data = [];
+        var newObj = {};
         array.map(function (d, i) {
             //Complete the code
+            newObj = {type:"feature", geometry: {type: "Point", coordinates: [d.lat, d.lon]}};
+
+            data.push(newObj);
         });
+        
+
         return data;
     }
 
     //Draws the map and the points
-    function draw(countries)
+    function draw(countries, points)
     {
         //draw map
+        console.log(countries);
         var country = g.selectAll(".country").data(countries);
         country.enter().insert("path")
                 .attr("class", "country")
@@ -74,8 +81,22 @@ function map(data) {
                 .style("fill", "lightgray")
                 .style("stroke", "white");
 
+        console.log("here");
+        console.log(points);    
+
         //draw point        
-        var point //Complete the code
+        //var point //Complete the code
+        var circles = g.selectAll("circle")
+                        .data(points)
+                        .enter()
+                        .append("circle");
+
+
+        var circleAttributes = circles
+                   .attr("cx", function (d) { /*console.log(projection(d["geometry"]["coordinates"])[0]);*/ return projection(d["geometry"]["coordinates"])[0]; })
+                   .attr("cy", function (d) { return projection(d["geometry"]["coordinates"])[1]; })
+                   .attr("r", function (d) { return 2; })
+                   .style("fill", function(d) { return "red"; });
     };
 
     //Filters data points according to the specified magnitude
