@@ -63,6 +63,7 @@
 			var newCluster = [];
 
 			clusters.forEach(function(c, i){
+				counter[i] = 0;
 
 				dist[i] = call(c, i, data);
 				dist[i] = parseFloat(dist[i]) / parseFloat(counter[i]);
@@ -82,6 +83,8 @@
 
 			});
 
+			console.log(counter);
+
 			//Move the cluster centeroids
 			oldClusters = clusters;
 			clusters = newCluster;
@@ -94,7 +97,8 @@
 
 				data.forEach(function(d){
 
-					if(d["clusterIndex"] = i){
+					if(d["clusterIndex"] == i){
+						console.log(d["clusterIndex"]);
 						error += Math.pow(length(d, c), 2);
 					}
 
@@ -104,12 +108,13 @@
 
 			tries++;
 
-			if(error < prevError || tries > 1000){
+			if(error < prevError || tries > 2){
 				thisIsTrue = false;
-				console.info("done");
+			
 			}else{
 				prevError = error;
 			}
+			console.info("working.. ");
 		}
 
 		return data;

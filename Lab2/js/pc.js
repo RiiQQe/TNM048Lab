@@ -38,6 +38,9 @@ function pc(){
         var k = 4;
         var kmeansRes = kmeans(data,k);
 
+        for(var i = 0; i < kmeansRes.length; i++){
+            if(kmeansRes[i]["clusterIndex"] == 3) console.log("yes");
+        }
         console.log(kmeansRes);
         
         self.color = d3.scale.category20()
@@ -48,6 +51,7 @@ function pc(){
 
 
         draw(kmeansRes);
+
     });
 
     function draw(kmeansRes){
@@ -71,8 +75,8 @@ function pc(){
             
             //.style("stroke", function(d){ self.color(d.cluster); });
 
-            .style("stroke", function(d){ self.color(d["cluster"]); });
-            
+            //.style("stroke", function(d){ self.color(d["clusterIndex"]); });
+            .style("stroke", function(d){ /*console.log(self.color(d["clusterIndex"]));*/ self.color(d["clusterIndex"]); });
             //Assign the cluster colors
             //..
             
