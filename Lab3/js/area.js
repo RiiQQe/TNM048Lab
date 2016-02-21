@@ -76,10 +76,6 @@ function area(data) {
     var times = data.map(function(d) { return format.parse(d.time); });
     var mags = data.map(function(d) { return parseFloat(d.mag); });
 
-    //console.log(times);
-    //console.log(d3.min(times));
-    //console.log(d3.max(times));
-
     //Initializes the axis domains for the big chart
     x.domain([d3.min(times), d3.max(times)]);//Complete the code
     y.domain([d3.min(mags), d3.max(mags)]);//Complete the code
