@@ -5,6 +5,8 @@ function map(data) {
     
     var format = d3.time.format.utc("%Y-%m-%dT%H:%M:%S.%LZ");
 
+    var color = d3.scale.category20();
+
     var zoom = d3.behavior.zoom()
             .scaleExtent([0.5, 8])
             .on("zoom", move);
@@ -79,7 +81,6 @@ function map(data) {
     function draw(countries)
     {
         //draw map
-        
         var country = g.selectAll(".country").data(countries);
         country.enter().insert("path")
                 .attr("class", "country")
@@ -90,12 +91,14 @@ function map(data) {
 
 
         //draw point        
-        //var point //Complete the code
+        //Complete the code
         circles = g.selectAll("path")
             .data(geoData.features)
             .enter().append("path")
             .attr("class", "quakes")
             .attr("d", path);
+
+        //map1.cluster();
 
         
     };
@@ -103,6 +106,19 @@ function map(data) {
     //Filters data points according to the specified magnitude
     function filterMag(value) {
         //Complete the code
+
+        var filter = [];
+        data.forEach(function(d){
+            if(parseFloat(d["mag"]) > value) filter.push(true);
+            else filter.push(false);
+        });
+
+        var quakes = g.selectAll(".quakes");
+
+        quakes.style("display", function(d, i){
+            if(filter[i]) return "";
+            else return "none";
+        });
     }
     
     //Filters data points according to the specified time window
@@ -117,8 +133,6 @@ function map(data) {
             else filter.push(false);
         });
 
-        console.log(filter);
-
         var quakes = g.selectAll(".quakes");
         
         //This is done very simple right now, might not be the correct way...
@@ -127,12 +141,33 @@ function map(data) {
                     return "";
                 return "none";
              });
+
+        map1.cluster();
         
     };
 
     //Calls k-means function and changes the color of the points  
     this.cluster = function () {
-        //Complete the code
+        console.log("inside");
+        var k = 4;
+        var reducedData = [];
+        data.forEach(function(d){
+            reducedData.push([d["lat"], d["lon"]]);
+        });
+        
+        var kMeansRes = kmeans(reducedData, k);
+
+        /*kMeansRes.forEach(function(d){
+            if(d.clusterIndex == -1) console.log("shiiizze");
+            if(d.clusterIndex > 0) console.log(d.clusterIndex);
+        });*/
+
+        var quakes = g.selectAll(".quakes");
+        
+        quakes.attr("stroke", function(d, i) { return /*colors[kMeansRes["clusterIndex"]];*/ color(kMeansRes["clusterIndex"]); })
+            .attr("fill", function(d, i){ return /*colors[kMeansRes["clusterIndex"]];*/ color(kMeansRes["clusterIndex"]); });
+
+        console.log("done");
     };
 
     //Zoom and panning method

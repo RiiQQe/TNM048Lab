@@ -42,15 +42,15 @@ function area(data) {
             });
     
     //Creates the small chart        
-        var area2 = d3.svg.area()
-            .interpolate("step")
-            .x(function (d) {
-                return x2(format.parse(d["time"]));                
-            })
-            .y0(height2)
-            .y1(function (d) {
-                return y2(parseFloat(d["mag"]));
-            });
+    var area2 = d3.svg.area()
+        .interpolate("step")
+        .x(function (d) {
+            return x2(format.parse(d["time"]));                
+        })
+        .y0(height2)
+        .y1(function (d) {
+            return y2(parseFloat(d["mag"]));
+        });
     
     //Assings the svg canvas to the area div
     var svg = d3.select("#area").append("svg")
@@ -119,9 +119,6 @@ function area(data) {
             .attr("y", -6)
             .attr("height", height2 + 7);
     
-  
-     
-
     //Method for brushing
     function brush() {
         x.domain(brush.empty() ? x2.domain() : brush.extent());
