@@ -121,6 +121,7 @@ function map(data) {
 
         var quakes = g.selectAll(".quakes");
         
+        //This is done very simple right now, might not be the correct way...
         quakes.style("display", function(d, i){
                 if(filter[i]) 
                     return "";
