@@ -106,7 +106,7 @@ function map(data) {
     //Filters data points according to the specified magnitude
     function filterMag(value) {
         //Complete the code
-
+        //Not used at the moment
         var filter = [];
         data.forEach(function(d){
             if(parseFloat(d["mag"]) > value) filter.push(true);
@@ -127,9 +127,9 @@ function map(data) {
         var filter = [];
         //Complete the code
         data.forEach(function(d){
-            if((format.parse(d.time) > value[0] && format.parse(d.time) < value[1])){
+            if((format.parse(d.time) > value[0] && format.parse(d.time) < value[1]))
                 filter.push(true);
-            }
+            
             else filter.push(false);
         });
 
@@ -155,12 +155,8 @@ function map(data) {
             reducedData.push([d["lat"], d["lon"]]);
         });
         
+        //kMeansRes is screwing with us somehow now..
         var kMeansRes = kmeans(reducedData, k);
-
-        /*kMeansRes.forEach(function(d){
-            if(d.clusterIndex == -1) console.log("shiiizze");
-            if(d.clusterIndex > 0) console.log(d.clusterIndex);
-        });*/
 
         var quakes = g.selectAll(".quakes");
         
