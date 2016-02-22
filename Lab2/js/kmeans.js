@@ -7,7 +7,8 @@
 
     var counter = [];
 
-    var notSoRandom = [{0:"75"} , {1:"235"}, {2:"271"}, {3:"355"}];
+    //var notSoRandom = [{0:"75"} , {1:"235"}, {2:"271"}, {3:"355"}];
+    var notSoRandom = [{0:"159"} , {1:"66"}];
 
 	function kmeans(data, k) {
     	
@@ -30,7 +31,7 @@
     		var ran = i * 100;
 
             ran = Math.floor(Math.random() * (max - min)) + min;
-            //ran = notSoRandom[i][i];
+            //ran = parseFloat(notSoRandom[i][i]);
 
             while(centeroids.indexOf(ran) != -1)
                 ran = Math.floor(Math.random() * (max - min)) + min;
@@ -40,7 +41,7 @@
     		
     		clusters.push(data[ran]);
     	}
-    	
+    	console.log(centeroids);
     	var thisIsTrue = true;
     	while(thisIsTrue){
 			//2. Assign each item to the cluster that has the closest centroid. There are several ways of calculating
@@ -85,13 +86,19 @@
                     pointVals.push(c[keys]);
 
 				dist[i] = calcDist(c, i, data);
+              
 
                 for(var k = 0; k < Object.keys(c).length - 1; k++){
-                    dist[i][k] = parseFloat(dist[i][k]) / parseFloat(counter[i]);                    
+                    
+                    if(parseFloat(counter[i]) != 0)
+                        dist[i][k] = parseFloat(dist[i][k]) / parseFloat(counter[i]);
+                    else dist[i][k] = 0;
+                    
                     newObj[k] = parseFloat(dist[i][k]) + parseFloat(pointVals[k]);
                 }
 				
 				newObj[Object.keys(c).length] = i;
+                
 				newCluster.push(newObj);	
 			});
 
@@ -117,7 +124,7 @@
 
 			tries++;
 
-			if(error < prevError) thisIsTrue = false;
+			if(error < prevError * 1.9) thisIsTrue = false;
 			else prevError = error;
 			
 			console.info("working.. ");
@@ -141,7 +148,8 @@
     		if(d["clusterIndex"] == index){
     			if(counter[index] == undefined) counter[index] = 1;
     			else counter[index]++;
-    			arr = avgLength(d, centeroid);
+
+    			arr = length(d, centeroid);
     			for(var k = 0; k < arr.length; k++)
     				newArr[k] += arr[k];
 

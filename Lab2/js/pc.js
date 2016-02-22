@@ -25,7 +25,7 @@ function pc(){
         .attr("transform", "translate(" + margin[3] + "," + margin[0] + ")");
 
     
-    d3.csv("data/testData2_5600x5_x-clusters.csv", function(data) {
+    d3.csv("data/testData2_400x3_2-clusters.csv", function(data) {
         // Extract the list of dimensions and create a scale for each.
         x.domain(dimensions = d3.keys(data[0]).filter(function(d) {
             return (y[d] = d3.scale.linear()
@@ -36,8 +36,12 @@ function pc(){
         
         self.data = data;
 
-        var k = 10;
+        var k = 2;
         var kmeansRes = kmeans(data,k);
+
+        kmeansRes.forEach(function(d){
+            console.log(d)
+        });
 
         color = d3.scale.category20().domain(0, k);
         
