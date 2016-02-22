@@ -1,3 +1,4 @@
+var color;
 function pc(){
 
     var self = this; // for internal d3 functions
@@ -24,7 +25,7 @@ function pc(){
         .attr("transform", "translate(" + margin[3] + "," + margin[0] + ")");
 
     
-    d3.csv("data/testData1_400x3_2-clusters.csv", function(data) {
+    d3.csv("data/testData2_5600x5_x-clusters.csv", function(data) {
         // Extract the list of dimensions and create a scale for each.
         x.domain(dimensions = d3.keys(data[0]).filter(function(d) {
             return (y[d] = d3.scale.linear()
@@ -37,18 +38,8 @@ function pc(){
 
         var k = 4;
         var kmeansRes = kmeans(data,k);
-        var counter = [];
-        
-        for(var i = 0; i < kmeansRes.length; i++){
-            if(counter[kmeansRes[i]["clusterIndex"]] == undefined) counter[kmeansRes[i]["clusterIndex"]] = 0;
 
-            counter[kmeansRes[i]["clusterIndex"]]++;
-        }
-
-        console.log(counter);
-        
-        self.color = d3.scale.category20()
-            .domain(0, k);
+        color = d3.scale.category20().domain(0, k);
         
         draw(kmeansRes);
 
@@ -73,10 +64,7 @@ function pc(){
             .enter().append("svg:path")
             .attr("d", path)
             
-            //.style("stroke", function(d){ self.color(d.cluster); });
-
-            //.style("stroke", function(d){ self.color(d["clusterIndex"]); });
-            .style("stroke", function(d){ /*console.log(self.color(d["clusterIndex"]));*/ self.color(d["clusterIndex"]); });
+            .style("stroke", function(d){ return color(d["clusterIndex"]); });
             //Assign the cluster colors
             //..
             
