@@ -97,16 +97,13 @@ function map(data) {
             .enter().append("path")
             .attr("class", "quakes")
             .attr("d", path);
-
-        //map1.cluster();
-
         
     };
 
     //Filters data points according to the specified magnitude
     function filterMag(value) {
         //Complete the code
-        //Not used at the moment
+        
         var filter = [];
         data.forEach(function(d){
             if(parseFloat(d["mag"]) > value) filter.push(true);
@@ -158,10 +155,12 @@ function map(data) {
         //kMeansRes is screwing with us somehow now..
         var kMeansRes = kmeans(reducedData, k);
 
+        color = d3.scale.category20().domain(0, k);
+
         var quakes = g.selectAll(".quakes");
         
-        quakes.attr("stroke", function(d, i) { return /*colors[kMeansRes["clusterIndex"]];*/ color(kMeansRes["clusterIndex"]); })
-            .attr("fill", function(d, i){ return /*colors[kMeansRes["clusterIndex"]];*/ color(kMeansRes["clusterIndex"]); });
+        quakes.attr("stroke", function(d, i) { return color(kMeansRes["clusterIndex"]); });
+           // .attr("fill", function(d, i){ return color(kMeansRes["clusterIndex"]); });
 
         console.log("done");
     };

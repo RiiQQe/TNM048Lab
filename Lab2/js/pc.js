@@ -36,7 +36,7 @@ function pc(){
         
         self.data = data;
 
-        var k = 4;
+        var k = 10;
         var kmeansRes = kmeans(data,k);
 
         color = d3.scale.category20().domain(0, k);

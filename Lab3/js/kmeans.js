@@ -7,6 +7,8 @@
 
     var counter = [];
 
+    var notSoRandom = [{0:"75"} , {1:"235"}, {2:"271"}, {3:"355"}];
+
 	function kmeans(data, k) {
     	
     	var centeroids = [],
@@ -17,16 +19,24 @@
 
     	var tries = 0;
 
+        var max = data.length;
+        var min = 0;
+
 		//1. Randomly place K points into the space represented by the items that are being clustered. These
 		//points represent the initial cluster centroids.
 
 		/*The not so random way*/
     	for(var i = 0; i < k; i++){
-    		var ran = i * 2000;
+    		var ran = i * 100;
 
-            //ran = Math.floor((Math.random() * data.length) + 1); //A bit missleading, range is [1, data.length]
-    		
-            centeroids.push(ran);
+            ran = Math.floor(Math.random() * (max - min)) + min;
+            //ran = notSoRandom[i][i];
+
+            while(centeroids.indexOf(ran) != -1)
+                ran = Math.floor(Math.random() * (max - min)) + min;
+
+
+    		centeroids.push(ran);
     		
     		clusters.push(data[ran]);
     	}
@@ -43,7 +53,7 @@
 				clusters.forEach(function(c, j){
 
 					var dist = Math.sqrt(length(d, c));
-
+                 
 					if(dist < newDist){
 						newDist = dist;
 						newIndex = j;
@@ -60,38 +70,38 @@
 			var dist = [];
 
 			for(var i = 0; i < clusters.length; i++)
-				dist[i] = i;
+				dist[i] = 0;
 
 			var newCluster = [];
-
+            
 			clusters.forEach(function(c, i){
 				counter[i] = 0;
 
 				dist[i] = call(c, i, data);
-				dist[i] = parseFloat(dist[i]) / parseFloat(counter[i]);
-				
+
+                for(var k = 0; k < dist[i].length - 1; k++)
+                    dist[i][k] = parseFloat(dist[i][k]) / parseFloat(counter[i]);                    
+                    
+
 				var pointVals = [];
 
 	    		for(var keys in c)
 	    			pointVals.push(c[keys]);
 
+
 				var newObj = {};
-				for(var k = 0; k < Object.keys(c).length - 1; k++){
-					newObj[k] = dist[k] + parseFloat(pointVals[k]);
-				}
+				for(var k = 0; k < Object.keys(c).length - 1; k++)
+					newObj[k] = parseFloat(dist[i][k]) + parseFloat(pointVals[k]);
+				
 				newObj[Object.keys(c).length] = i;
 				newCluster.push(newObj);	
-
-
 			});
 
-			
 
 			//Move the cluster centeroids
 			oldClusters = clusters;
 			clusters = newCluster;
-
-
+            
 			//4. Check the quality of the cluster. Use the sum of the squared distances within each cluster as your
 			//measure of quality. The objective is to minimize the sum of squared errors within each cluster:
 			var error = 0;
@@ -109,15 +119,15 @@
 
 			tries++;
 
-			if(error < prevError || tries > 2){
+			if(error < prevError /*|| tries > 2*/){
 				thisIsTrue = false;
 			
 			}else{
 				prevError = error;
 			}
-			
+			console.info("working.. ");
 		}
-
+        console.log(clusters);
 		return data;
 
     };
@@ -169,8 +179,9 @@
 
     	return tot;
     }
-
+    
     function length(point, centeroid){
+        
     	var pointVals = [],
     		centeroidVals = [];
     	for(var keys in point) 
@@ -178,6 +189,7 @@
 	
 		for(var keys in centeroid) 
     		centeroidVals.push(centeroid[keys]);
+        
 
     	var max = pointVals.length > centeroidVals.length ? pointVals.length : centeroidVals.length;
     	var tot = 0;

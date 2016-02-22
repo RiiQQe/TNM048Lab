@@ -76,22 +76,20 @@
             
 			clusters.forEach(function(c, i){
 				counter[i] = 0;
+                
+                var newObj = {};
 
-				dist[i] = call(c, i, data);
+                var pointVals = [];
 
-                for(var k = 0; k < dist[i].length - 1; k++)
+                for(var keys in c)
+                    pointVals.push(c[keys]);
+
+				dist[i] = calcDist(c, i, data);
+
+                for(var k = 0; k < Object.keys(c).length - 1; k++){
                     dist[i][k] = parseFloat(dist[i][k]) / parseFloat(counter[i]);                    
-                    
-
-				var pointVals = [];
-
-	    		for(var keys in c)
-	    			pointVals.push(c[keys]);
-
-
-				var newObj = {};
-				for(var k = 0; k < Object.keys(c).length - 1; k++)
-					newObj[k] = parseFloat(dist[i][k]) + parseFloat(pointVals[k]);
+                    newObj[k] = parseFloat(dist[i][k]) + parseFloat(pointVals[k]);
+                }
 				
 				newObj[Object.keys(c).length] = i;
 				newCluster.push(newObj);	
@@ -119,20 +117,20 @@
 
 			tries++;
 
-			if(error < prevError /*|| tries > 2*/){
-				thisIsTrue = false;
+			if(error < prevError) thisIsTrue = false;
+			else prevError = error;
 			
-			}else{
-				prevError = error;
-			}
 			console.info("working.. ");
 		}
-
+        console.log(clusters);
+        print("after");
 		return data;
 
     };
-
-    function call(centeroid, index, data){
+    function print(val){
+        console.log(val);
+    }
+    function calcDist(centeroid, index, data){
     	var arr = [];
     	var newArr = [];
 
