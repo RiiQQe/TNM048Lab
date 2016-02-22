@@ -110,7 +110,7 @@ function map(data) {
 
         var filter = [];
         //Complete the code
-        data.filter(function(d){
+        data.forEach(function(d){
             if((format.parse(d.time) > value[0] && format.parse(d.time) < value[1])){
                 filter.push(true);
             }
