@@ -89,17 +89,17 @@ function map(data) {
 
         //draw point        
         //var point //Complete the code
-
+        /*
         var circles = g.selectAll("path")
             .data(geoData.features)
             .enter().append("path")
             .attr("d", function(d) { return path(circle.origin(d["geometry"]["coordinates"])); });
 
         console.log("after");
+        */
 
 
-
-        /*var circles = g.selectAll("circle")
+        var circles = g.selectAll("circle")
                         .data(geoData.features)
                         .enter()
                         .append("circle");
@@ -108,7 +108,7 @@ function map(data) {
                    .attr("cx", function (d) { return projection(d["geometry"]["coordinates"])[0]; })
                    .attr("cy", function (d) { return projection(d["geometry"]["coordinates"])[1]; })
                    .attr("r", function (d) { return 2; })
-                   .style("fill", function(d) { return "red"; });*/
+                   .style("fill", "red");
     };
 
     //Filters data points according to the specified magnitude

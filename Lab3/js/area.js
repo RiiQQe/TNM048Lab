@@ -49,7 +49,6 @@ function area(data) {
             })
             .y0(height2)
             .y1(function (d) {
-
                 return y2(parseFloat(d["mag"]));
             });
     
