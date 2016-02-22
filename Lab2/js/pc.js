@@ -34,22 +34,22 @@ function pc(){
         }));
         
         self.data = data;
-        
+
         var k = 4;
         var kmeansRes = kmeans(data,k);
-
+        var counter = [];
+        
         for(var i = 0; i < kmeansRes.length; i++){
-            if(kmeansRes[i]["clusterIndex"] == 3) console.log("yes");
+            if(counter[kmeansRes[i]["clusterIndex"]] == undefined) counter[kmeansRes[i]["clusterIndex"]] = 0;
+
+            counter[kmeansRes[i]["clusterIndex"]]++;
         }
-        console.log(kmeansRes);
+
+        console.log(counter);
         
         self.color = d3.scale.category20()
             .domain(0, k);
         
-        //self.cluster = kmeansRes;
-
-
-
         draw(kmeansRes);
 
     });
