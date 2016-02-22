@@ -2,7 +2,7 @@
 //http://bl.ocks.org/mbostock/1667367
 
 function area(data) {
-    console.log(data);
+    
     var areaDiv = $("#area");
 
     var margin = {top: 100, right: 40, bottom: 100, left: 40},
@@ -128,5 +128,7 @@ function area(data) {
         focus.select("path").attr("d", area);
         focus.select(".x.axis").call(xAxis);
         //Complete the code
+
+        map1.filterTime(brush.extent());
     }
 }

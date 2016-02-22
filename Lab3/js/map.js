@@ -1,6 +1,9 @@
 var points;
-var circle;
+var circles;
 function map(data) {
+
+    
+    var format = d3.time.format.utc("%Y-%m-%dT%H:%M:%S.%LZ");
 
     var zoom = d3.behavior.zoom()
             .scaleExtent([0.5, 8])
@@ -76,7 +79,7 @@ function map(data) {
     function draw(countries)
     {
         //draw map
-        console.log(countries);
+        
         var country = g.selectAll(".country").data(countries);
         country.enter().insert("path")
                 .attr("class", "country")
@@ -85,30 +88,16 @@ function map(data) {
                 .style("fill", "lightgray")
                 .style("stroke", "white");
 
-        console.log("here");
 
         //draw point        
         //var point //Complete the code
-        
-        var circles = g.selectAll("path")
+        circles = g.selectAll("path")
             .data(geoData.features)
             .enter().append("path")
+            .attr("class", "quakes")
             .attr("d", path);
 
-        console.log("after");
         
-
-        /*
-        var circles = g.selectAll("circle")
-                        .data(geoData.features)
-                        .enter()
-                        .append("circle");
-
-        var circleAttributes = circles
-                   .attr("cx", function (d) { return projection(d["geometry"]["coordinates"])[0]; })
-                   .attr("cy", function (d) { return projection(d["geometry"]["coordinates"])[1]; })
-                   .attr("r", function (d) { return 2; })
-                   .style("fill", "red");*/
     };
 
     //Filters data points according to the specified magnitude
@@ -118,7 +107,26 @@ function map(data) {
     
     //Filters data points according to the specified time window
     this.filterTime = function (value) {
+
+        var filter = [];
         //Complete the code
+        data.filter(function(d){
+            if((format.parse(d.time) > value[0] && format.parse(d.time) < value[1])){
+                filter.push(true);
+            }
+            else filter.push(false);
+        });
+
+        console.log(filter);
+
+        var quakes = g.selectAll(".quakes");
+        
+        quakes.style("display", function(d, i){
+                if(filter[i]) 
+                    return "";
+                return "none";
+             });
+        
     };
 
     //Calls k-means function and changes the color of the points  
