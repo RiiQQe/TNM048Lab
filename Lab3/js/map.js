@@ -152,7 +152,7 @@ function map(data) {
     this.cluster = function () {
         console.log("inside");
         var k = document.getElementById('k').value;
-        alert(k);
+        
         var reducedData = [];
         var newObj = {};
 
@@ -204,16 +204,13 @@ function map(data) {
 
         var quakes = g.selectAll(".quakes");
         
-        quakes.attr("stroke", function(d, i) { 
-        
-            //console.log(color(d["clusterIndex"])); 
-
-            //if(d["clusterIndex"] == 1) return "red";
-            //if(d["clusterIndex"] == 2) return "green";
-            //if(d["clusterIndex"] == 3) return "black";
-            //if(d["clusterIndex"] == 0) return "yellow";
+        quakes/*.attr("stroke", function(d) { 
+    
             return color(d["clusterIndex"]); 
 
+        })*/
+        .style("fill", function(d){
+            return color(d["clusterIndex"]);
         });
            
 
