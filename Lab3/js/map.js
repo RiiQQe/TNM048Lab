@@ -106,7 +106,7 @@ function map(data) {
         
         var filter = [];
         data.forEach(function(d){
-            if(parseFloat(d["mag"]) > value) filter.push(true);
+            if(parseFloat(  d["mag"]) > value) filter.push(true);
             else filter.push(false);
         });
 
@@ -126,7 +126,9 @@ function map(data) {
         data.forEach(function(d){
             if((format.parse(d.time) > value[0] && format.parse(d.time) < value[1]))
                 filter.push(true);
-            
+            else if((format.parse(d.time) > value[1] && format.parse(d.time) < value[0]))
+                filter.push(true);
+
             else filter.push(false);
         });
 
@@ -134,8 +136,11 @@ function map(data) {
         
         //This is done very simple right now, might not be the correct way...
         quakes.style("display", function(d, i){
-                if(filter[i]) 
+                if(filter[i]) {
+                    d['displayed'] = filter[i];
                     return "";
+                }
+                d['displayed'] = false;
                 return "none";
              });
 
@@ -148,19 +153,68 @@ function map(data) {
         console.log("inside");
         var k = 4;
         var reducedData = [];
-        data.forEach(function(d){
-            reducedData.push([d["lat"], d["lon"]]);
+        var newObj = {};
+
+
+        data.forEach(function(d, i){
+            var kT;
+            
+                if(d.clusterIndex !== undefined){
+                    kT = d.clusterIndex;
+                }else kT = -1;
+
+                newObj = {1:d["lat"], 2:d["lon"], clusterIndex:kT};
+                
+                reducedData.push(newObj);
+            
         });
+
         
+        console.log(reducedData);
+
         //kMeansRes is screwing with us somehow now..
         var kMeansRes = kmeans(reducedData, k);
+
+        data.forEach(function(d, i){
+
+            d['clusterIndex'] = kMeansRes[i]['clusterIndex'];
+
+        });
+
+        (geoData.features).forEach(function(d, i){
+            if(d.displayed == true)
+                d['clusterIndex'] = kMeansRes[i]['clusterIndex'];
+        });
+        
+        //console.log(geoData.features.length);
+
+        //console.log(geoData.features);
+        
+        //console.log(kMeansRes);
+
+        //var prev, temp;
+        //(geoData.features).forEach(function(d, index){
+            
+        //    console.log(d['clusterIndex']);
+
+        //});
 
         color = d3.scale.category20().domain(0, k);
 
         var quakes = g.selectAll(".quakes");
         
-        quakes.attr("stroke", function(d, i) { return color(kMeansRes["clusterIndex"]); });
-           // .attr("fill", function(d, i){ return color(kMeansRes["clusterIndex"]); });
+        quakes.attr("stroke", function(d, i) { 
+        
+            //console.log(color(d["clusterIndex"])); 
+
+            //if(d["clusterIndex"] == 1) return "red";
+            //if(d["clusterIndex"] == 2) return "green";
+            //if(d["clusterIndex"] == 3) return "black";
+            //if(d["clusterIndex"] == 0) return "yellow";
+            return color(d["clusterIndex"]); 
+
+        });
+           
 
         console.log("done");
     };
