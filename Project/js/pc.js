@@ -9,9 +9,13 @@ function pc(){
         
     d3.csv(csv, function(data){
             
-        console.log(data);
+        //console.log(data);
         makeCalcs(data);
 
+    });
+
+    d3.json("data/swe_mun.topojson", function(error, sweden){
+        console.log(sweden);
     });
 
     function makeCalcs(data){
