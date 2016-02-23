@@ -151,7 +151,8 @@ function map(data) {
     //Calls k-means function and changes the color of the points  
     this.cluster = function () {
         console.log("inside");
-        var k = 4;
+        var k = document.getElementById('k').value;
+        alert(k);
         var reducedData = [];
         var newObj = {};
 
@@ -170,7 +171,7 @@ function map(data) {
         });
 
         
-        console.log(reducedData);
+        //console.log(reducedData);
 
         //kMeansRes is screwing with us somehow now..
         var kMeansRes = kmeans(reducedData, k);
