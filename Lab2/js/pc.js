@@ -39,9 +39,9 @@ function pc(){
         var k = 4;
         var kmeansRes = kmeans(data,k);
 
-        kmeansRes.forEach(function(d){
-            console.log(d)
-        });
+        //kmeansRes.forEach(function(d){
+        //    console.log(d)
+        //});
 
         color = d3.scale.category20().domain(0, k);
         
