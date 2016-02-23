@@ -32,7 +32,7 @@ function kmeans(data, k){
         //measure of quality. The objective is to minimize the sum of squared errors within each cluster:
         ifTrue = checkQuality(data);
     }
-    console.log(data);
+    //console.log(data);
     return data;
 
 }
