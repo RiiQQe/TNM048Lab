@@ -14,8 +14,8 @@ function pc(){
     //console.log(mapDiv);
 
     var margin = {top: 20, right: 20, bottom: 20, left: 20};
-    //width = mapDiv.width() - margin.right - margin.left,
-      //      height = mapDiv.height() - margin.top - margin.bottom;
+    
+      
     var width = 960,
         height = 1160;
 
@@ -23,7 +23,6 @@ function pc(){
     var svg = d3.select("#map").append("svg")
             .attr("width", width)
             .attr("height", height);
-            //.call(zoom);
 
     var g = svg.append("g");
 
@@ -34,8 +33,6 @@ function pc(){
 
     //Creates a new geographic path generator and assing the projection        
     var path = d3.geo.path().projection(projection);
-    //var csv = 'data/taxi_sthlm_march_2013.csv';
-    
     
     var csv = 'data/Swedish_Population_Statistics.csv';
         
@@ -48,12 +45,7 @@ function pc(){
     d3.json("data/swe_mun.topojson", function(error, sweden){
         if(error) return console.error(error);
         var municipalities = topojson.feature(sweden, sweden.objects.swe_mun).features;
-<<<<<<< HEAD
 
-=======
-        
->>>>>>> ff0507eb0553ad57e0cb4852c3be2b919808a427
-        draw(municipalities);
      });
 
     function draw(municipalities){
@@ -61,19 +53,13 @@ function pc(){
         
         municipality.enter().insert("path")
                     .attr("class", function(d){ return "municipality " + d.properties.name; })
-                    .attr("d", path);
-        console.log(municipality);
-                    
+                    .attr("d", path);            
     }
 
     function makeCalcs(data){
 
-        var mens = {sex:"men"},
-            womens = {sex:"women"};
-
         var newArr = [];
 
-        var newVar;
 
         data.forEach(function(d){
             
