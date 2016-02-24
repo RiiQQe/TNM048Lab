@@ -4,6 +4,8 @@ function sp(){
 
 	var self = this;
 
+    var format = d3.time.format.utc("");//Complete the code
+
 	var spDiv = $("#sp");
 
     spDiv.innerHTML = "HEJ";
@@ -14,8 +16,10 @@ function sp(){
         width = spDiv.width() - margin.right - margin.left,
         height = spDiv.height() - margin.top - margin.bottom;
 
-    var x = d3.scale.linear()
+    var x = d3.time.scale()
         .range([0, width]);
+
+    //x = d3.time.scale();
 
     var y = d3.scale.linear()
         .range([height, 0]);
@@ -36,7 +40,7 @@ function sp(){
 
 
     function draw(data){
-
+        //These 4 can be done before
     	// Add x axis and title.
         svg.append("g")
             .attr("class", "x axis")
@@ -79,11 +83,23 @@ function sp(){
     this.startSP = function(data){
         console.log(data);
         data.self = data;
+        fixAxels(data);
         draw(data);
     }
 
     this.updateSP = function(data, val){
         handleData(data, val);
+    }
+
+    function fixAxels(data){
+        
+        for(var key in data[0])
+            if(!isNaN(parseFloat(key)))
+                vals.push(new Date(key));
+        
+        x.domain([d3.min(vals), d3.max(vals)]);
+
+
     }
 
     function handleData(data, val){
@@ -98,9 +114,4 @@ function sp(){
         console.log(filterData);
 
     }
-
-
-
-
-
 }
