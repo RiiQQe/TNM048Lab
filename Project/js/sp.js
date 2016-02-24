@@ -4,6 +4,8 @@ function sp(){
 
 	var spDiv = $("#sp");
 
+    spDiv.innerHTML = "HEJ";
+
 	var margin = "";
 
 	var margin = {top: 20, right: 20, bottom: 30, left: 40},
@@ -18,11 +20,17 @@ function sp(){
         .attr("transform", "translate(" + margin.left + "," + margin.top + ")");
 
 
-
-
     this.updateSP = function(data, val){
+        handleData(data, val);
+    }
 
-        alert("hej");
+    function handleData(data, val){
+
+        var filterData = data.filter(function(d){
+            var noDigitsAndTrim = d.region.replace(/[0-9]/g, "").trim();
+            
+            return noDigitsAndTrim == val;
+        });
 
     }
 
