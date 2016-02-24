@@ -64,9 +64,23 @@ function pc(){
 
         municipalities = setColor(municipalities);
 
-        draw(municipalities);
+        draw(municipalities, newData);
 
      });
+
+    function replaceLetters(municipalities){
+
+        municipalities.forEach(function(d){ d.properties.name = d.properties.name.replace(/Å/g, "A")
+                                            d.properties.name = d.properties.name.replace(/Ä/g, "A")
+                                            d.properties.name = d.properties.name.replace(/Ö/g, "O")
+                                            d.properties.name = d.properties.name.replace(/å/g, "a")
+                                            d.properties.name = d.properties.name.replace(/ä/g, "a")
+                                            d.properties.name = d.properties.name.replace(/oe/g, "o")
+                                            d.properties.name = d.properties.name.replace(/Malung/g, "Malung-Salen")
+                                            d.properties.name = d.properties.name.replace(/Upplands-Vasby/g, "Upplands Vasby")
+                                            d.properties.name = d.properties.name.replace(/ö/g, "o")});
+        return municipalities;
+    }
 
     function draw(municipalities, n){
         var municipality = g.selectAll(".municipality").data(municipalities);
@@ -80,17 +94,6 @@ function pc(){
 
     }
 
-    function replaceLetters(municipalities){
-
-        municipalities.forEach(function(d){ d.properties.name = d.properties.name.replace("Å", "A")
-                                            d.properties.name = d.properties.name.replace("Ä", "A")
-                                            d.properties.name = d.properties.name.replace("Ö", "O")
-                                            d.properties.name = d.properties.name.replace("å", "a")
-                                            d.properties.name = d.properties.name.replace("ä", "a")
-                                            d.properties.name = d.properties.name.replace("ö", "o")});
-        return municipalities;
-    }
-
     function setColor(municipalities){
         
         municipalities.forEach(function(d){ d.properties.color = colorrange[Math.floor((Math.random() * 10) + 0)]});
@@ -102,8 +105,7 @@ function pc(){
 
     //  Creates a new Dataset that looks like this: 
     //  newData.region gives region
-    //  newData.men/.women/.total gives array with years as attribute and with sum for each year as values
-
+    //  newData.men/.women/.total gives array with years as attribute and with sum for each group ('singles, married etc..') as values
     function makeCalcs(data){
 
         data.forEach(function(d){
