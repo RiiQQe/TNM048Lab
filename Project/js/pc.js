@@ -94,17 +94,6 @@ function pc(){
 
     }
 
-    function replaceLetters(municipalities){
-
-        municipalities.forEach(function(d){ d.properties.name = d.properties.name.replace("Å", "A")
-                                            d.properties.name = d.properties.name.replace("Ä", "A")
-                                            d.properties.name = d.properties.name.replace("Ö", "O")
-                                            d.properties.name = d.properties.name.replace("å", "a")
-                                            d.properties.name = d.properties.name.replace("ä", "a")
-                                            d.properties.name = d.properties.name.replace("ö", "o")});
-        return municipalities;
-    }
-
     function setColor(municipalities){
         
         municipalities.forEach(function(d){ d.properties.color = colorrange[Math.floor((Math.random() * 10) + 0)]});
