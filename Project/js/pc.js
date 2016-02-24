@@ -9,18 +9,19 @@ function pc(){
     var color = d3.scale.category20();
 
     var zoom = d3.behavior.zoom()
-            .scaleExtent([0.5, 8]);
-            //.on("zoom", move);
+            .scaleExtent([0.5, 8])
+            .on("zoom", move);
 
     var mapDiv = $("#map");
 
     //console.log(mapDiv);
 
     var margin = {top: 20, right: 20, bottom: 20, left: 20};
-    
+    var width = mapDiv.width() - margin.right - margin.left,
+        height = mapDiv.height() - margin.top - margin.bottom;
       
-    var width = 960,
-        height = 1160;
+    //var width = 960,
+      //  height = 1160;
 
     //initialize color scale
     //...
@@ -35,7 +36,8 @@ function pc(){
     //Assings the svg canvas to the map div
     var svg = d3.select("#map").append("svg")
             .attr("width", width)
-            .attr("height", height);
+            .attr("height", height)
+            .call(zoom);
 
     var g = svg.append("g");
 
@@ -187,6 +189,17 @@ function pc(){
         
 
         colorbrew.domain([prevMin, prevMax]);
+    }
+
+    //zoom and panning method
+    function move() {
+        var t = d3.event.translate;
+        var s = d3.event.scale;
+        
+
+        zoom.translate(t);
+        g.style("stroke-width", 1 / s).attr("transform", "translate(" + t + ")scale(" + s + ")");
+
     }
 }
 
