@@ -6,7 +6,6 @@ function pc(){
 
     var self = this; // for internal d3 functions
 
-
     var pcDiv = $("#pc");
 
     var color = d3.scale.category20();
@@ -33,9 +32,6 @@ function pc(){
 
     //initialize color scale
     //...
-    var colorrange = [];
-    colorrange = ["#ECEFF1", "#CFD8DC", "#B0BEC5", "#90A4AE", "#78909C", "#607D8B", "#546E7A", "#455A64", "#37474F", "#263238" ];
-
     var colorRangeTester = d3.scale.ordinal().range(["blue", "green", "red"]);
 
     colorRangeTester = d3.scale.ordinal()
@@ -63,7 +59,7 @@ function pc(){
     //var year = "2011";  
         
     d3.csv(csv, function(data){
-        
+        self.data = data;
         makeCalcs(data);
     
     });
@@ -112,7 +108,7 @@ function pc(){
                         });
                         return colo;
                      })
-                    .on("click", function(d) { sp1.updateSP(newData, d.properties.name); })
+                    .on("click", function(d) { sp1.updateSP(self.data, d.properties.name); })
                     
                     //Tooltip functions
                     .on("mousemove", function(d){
