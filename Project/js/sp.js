@@ -62,7 +62,7 @@ function sp(){
             .attr("text-anchor", "end")
             .attr("x", width)
             .attr("y", height - 6)
-            .text("Household income");
+            .text("Year");
 
         //yAxis
         svg.append("text")
@@ -71,7 +71,7 @@ function sp(){
             .attr("y", 6)
             .attr("dy", "2.0em")
             .attr("transform", "rotate(-90)")
-            .text("Employment rate");
+            .text("Amount");
             
     }
 
