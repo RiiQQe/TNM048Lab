@@ -43,14 +43,18 @@ function pc(){
     
     });
 
+    var arrRep1 = ["Å", "Ä", "Ö", "å", "ä", "ö"];
+    var arrRep2 = ["A", "A", "O", "a", "a", "ö"];
+
     d3.json("data/swe_mun.topojson", function(error, sweden){
         if(error) return console.error(error);
         
             var municipalities = topojson.feature(sweden, sweden.objects.swe_mun).features;
 
-            draw(municipalities, newData);    
-    
-    });
+
+        draw(municipalities);
+
+     });
 
     function draw(municipalities, n){
         var municipality = g.selectAll(".municipality").data(municipalities);
@@ -58,19 +62,13 @@ function pc(){
         municipality.enter().insert("path")
                     .attr("class", function(d){ return "municipality " + d.properties.name; })
                     .attr("d", path);   
-
-        /*circles = g.selectAll("path")
-            .data(geoData.features)
-            .enter().append("path")
-            .attr("class", "quakes")
-            .attr("d", path);*/
     }
 
 
     //  Creates a new Dataset that looks like this: 
-    //  newData.sex.place.year 
-
-
+    //  newData.region gives region
+    //  newData.men/.women/.total gives array with years as attribute and with sum for each year as values
+    
     function makeCalcs(data){
 
         data.forEach(function(d){
