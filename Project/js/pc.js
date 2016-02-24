@@ -77,8 +77,6 @@ function pc(){
 
         municipalities = replaceLetters(municipalities);
 
-        //municipalities = setColor(municipalities);
-
         draw(municipalities, newData);
 
      });
@@ -130,15 +128,6 @@ function pc(){
         console.log(municipalities);
 
     }
-
-    function setColor(municipalities){
-        
-        municipalities.forEach(function(d){ d.properties.color = colorrange[Math.floor((Math.random() * 10) + 0)]});
-        
-        return municipalities; 
-
-    }
-
 
     //  Creates a new Dataset that looks like this: 
     //  newData.region gives region
@@ -239,7 +228,6 @@ function pc(){
             console.log("working");
         }
     });
-
 
    function toggleColor(val, sex, n){
         
