@@ -6,6 +6,8 @@ function pc(){
 
     var pcDiv = $("#pc");
 
+    var color = d3.scale.category20();
+
     var zoom = d3.behavior.zoom()
             .scaleExtent([0.5, 8]);
             //.on("zoom", move);
@@ -19,6 +21,13 @@ function pc(){
       
     var width = 960,
         height = 1160;
+
+    //initialize color scale
+    //...
+    var colorrange = [];
+    colorrange = ["#ECEFF1", "#CFD8DC", "#B0BEC5", "#90A4AE", "#78909C", "#607D8B", "#546E7A", "#455A64", "#37474F", "#263238" ];
+
+    var colors = colorbrewer.Set3[10];
 
     //Assings the svg canvas to the map div
     var svg = d3.select("#map").append("svg")
@@ -49,10 +58,11 @@ function pc(){
     d3.json("data/swe_mun.topojson", function(error, sweden){
         if(error) return console.error(error);
         
-            var municipalities = topojson.feature(sweden, sweden.objects.swe_mun).features;
+        var municipalities = topojson.feature(sweden, sweden.objects.swe_mun).features;
 
-            var municipalities = replaceLetters(municipalities);
+        municipalities = replaceLetters(municipalities);
 
+        municipalities = setColor(municipalities);
 
         draw(municipalities, newData);
 
@@ -74,16 +84,33 @@ function pc(){
 
     function draw(municipalities, n){
         var municipality = g.selectAll(".municipality").data(municipalities);
-        
-        municipality.enter().insert("path")
-                    .attr("class", function(d){ return "municipality " + d.properties.name; })
-                    .attr("d", path);   
-        
-        var circles = g.selectAll('.circles').data(n);
 
-        circles.enter().insert('path')
-                .attr("class", "circles")
-                .attr("d", path);
+        municipality.enter().insert("path")
+                    .attr("class", "municipality")
+                    .attr("d", path)
+                    .style('stroke-width', 1)
+                    .style("stroke", "white")
+                    .style("fill", function(d){ return d.properties.color; });
+
+    }
+
+    function replaceLetters(municipalities){
+
+        municipalities.forEach(function(d){ d.properties.name = d.properties.name.replace("Å", "A")
+                                            d.properties.name = d.properties.name.replace("Ä", "A")
+                                            d.properties.name = d.properties.name.replace("Ö", "O")
+                                            d.properties.name = d.properties.name.replace("å", "a")
+                                            d.properties.name = d.properties.name.replace("ä", "a")
+                                            d.properties.name = d.properties.name.replace("ö", "o")});
+        return municipalities;
+    }
+
+    function setColor(municipalities){
+        
+        municipalities.forEach(function(d){ d.properties.color = colorrange[Math.floor((Math.random() * 10) + 0)]});
+        
+        return municipalities; 
+
     }
 
 
