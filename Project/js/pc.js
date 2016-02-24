@@ -118,6 +118,9 @@ function pc(){
                       
                         return d.properties.color = colo;
                      })
+                    .on("click", function(d) { console.log(d.properties.name);})
+                    
+                    //Tooltip functions
                     .on("mousemove", function(d){
                         tooltip.transition()
                             .duration(200)
@@ -132,7 +135,7 @@ function pc(){
                             .style("opacity", 0);
                     });
 
-        console.log(municipalities);
+        //console.log(municipalities);
 
     }
 
