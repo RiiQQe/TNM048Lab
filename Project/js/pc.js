@@ -50,6 +50,7 @@ function pc(){
             .center([20, 65])
             .scale(1300);
 
+
     //Creates a new geographic path generator and assing the projection        
     var path = d3.geo.path().projection(projection);
     

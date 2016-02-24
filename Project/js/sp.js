@@ -56,6 +56,23 @@ function sp(){
             .attr("transform", "rotate(-90)")
             .attr("y", 6)
             .attr("dy", ".71em");
+
+        //xAxis
+        svg.append("text")
+            .attr("class", "x label")
+            .attr("text-anchor", "end")
+            .attr("x", width)
+            .attr("y", height - 6)
+            .text("Household income");
+
+        //yAxis
+        svg.append("text")
+            .attr("class", "y label")
+            .attr("text-anchor", "end")
+            .attr("y", 6)
+            .attr("dy", "2.0em")
+            .attr("transform", "rotate(-90)")
+            .text("Employment rate");
             
     }
 
