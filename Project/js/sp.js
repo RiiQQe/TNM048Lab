@@ -4,7 +4,7 @@ function sp(){
 
 	var spDiv = $("#sp");
 
-	var margin = 
+	var margin = "";
 
 	var margin = {top: 20, right: 20, bottom: 30, left: 40},
         width = spDiv.width() - margin.right - margin.left,
@@ -42,6 +42,15 @@ function sp(){
             .attr("dy", ".71em");
             
     }
+
+
+    this.updateSP = function(data, val){
+
+        alert("hej");
+
+    }
+
+
 
 
 

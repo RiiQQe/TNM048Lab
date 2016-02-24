@@ -6,6 +6,7 @@ function pc(){
 
     var self = this; // for internal d3 functions
 
+
     var pcDiv = $("#pc");
 
     var color = d3.scale.category20();
@@ -111,7 +112,7 @@ function pc(){
                         });
                         return colo;
                      })
-                    .on("click", function(d) { console.log(d.properties.name);})
+                    .on("click", function(d) { sp1.updateSP(newData, d.properties.name); })
                     
                     //Tooltip functions
                     .on("mousemove", function(d){
@@ -127,9 +128,6 @@ function pc(){
                             .duration(500)
                             .style("opacity", 0);
                     });
-
-        //console.log(municipalities);
-
     }
 
     //  Creates a new Dataset that looks like this: 
