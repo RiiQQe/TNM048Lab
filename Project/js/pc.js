@@ -126,7 +126,7 @@ function pc(){
                             .duration(500)
                             .style("opacity", 0);
                     });
-                    
+
         console.log(municipalities);
 
     }
@@ -224,21 +224,20 @@ function pc(){
     var radios = document.getElementsByName("myradio");
 
     document.getElementById("btn").addEventListener("click", function(){
-        //year = "2011";
-        //recalculateRange(newData, "women");
-        //toggleColor(year, "women", newData);
+
         var sex = undefined;
         for(var i = 0; i < radios.length; i++){
             if(radios[i].checked) sex = radios[i].value;
         }
         var year = document.getElementById("year").value;
         if(!year || parseFloat(year) < 2000 || parseFloat(year) > 2012) alert("fill in year between 2000-2012");
+        else{
+            recalculateRange(newData, sex);
 
-        recalculateRange(newData, sex);
+            toggleColor(year, sex, newData);
 
-        toggleColor(year, sex, newData);
-
-        console.log("working");
+            console.log("working");
+        }
     });
 
 
