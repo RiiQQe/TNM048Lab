@@ -1,4 +1,5 @@
-var color;
+var newData = [];
+
 function pc(){
 
     var self = this; // for internal d3 functions
@@ -39,49 +40,80 @@ function pc(){
     d3.csv(csv, function(data){
         
         makeCalcs(data);
-
+    
     });
 
     d3.json("data/swe_mun.topojson", function(error, sweden){
         if(error) return console.error(error);
-        var municipalities = topojson.feature(sweden, sweden.objects.swe_mun).features;
+        
+            var municipalities = topojson.feature(sweden, sweden.objects.swe_mun).features;
 
-     });
+            draw(municipalities, newData);    
+    
+    });
 
-    function draw(municipalities){
+    function draw(municipalities, n){
         var municipality = g.selectAll(".municipality").data(municipalities);
         
         municipality.enter().insert("path")
                     .attr("class", function(d){ return "municipality " + d.properties.name; })
-                    .attr("d", path);            
+                    .attr("d", path);   
+
+        /*circles = g.selectAll("path")
+            .data(geoData.features)
+            .enter().append("path")
+            .attr("class", "quakes")
+            .attr("d", path);*/
     }
+
+
+    //  Creates a new Dataset that looks like this: 
+    //  newData.sex.place.year 
+
 
     function makeCalcs(data){
 
-        var newArr = [];
-
-
         data.forEach(function(d){
+
+            var withNoDigits = d.region.replace(/[0-9]/g, '');
+
+            //Just because the data is screwing us over..
+            //With both "kvinnor" and "women" as keyvalues..
+            if(d.sex == "kvinnor") keysVar = "women";
+            else keysVar = d.sex;
+            var counter = 0;
+            var alreadyExists = false;
+            newData.forEach(function(nd){
+                if(nd.region == withNoDigits) alreadyExists = true;
+                else if(!alreadyExists) counter++;
+            });
+
+            if(!alreadyExists) {
+                newData.push({region:withNoDigits});
+                counter = newData.length - 1;
+            }
+
             
+            if(!newData[counter][keysVar]) newData[counter][keysVar] = []; 
+            if(!newData[counter]["total"]) newData[counter]["total"] = []; 
 
-            if(!newArr[d.sex]) newArr[d.sex] = [];
-
-            if(!newArr[d.sex][d.region]) newArr[d.sex][d.region] = [];
-
-            for(var keys in d){
-                
-                if(!isNaN(parseFloat(d[keys])) && !isNaN(parseFloat(keys))) {
-
-                    if(!newArr[d.sex][d.region][keys]) newArr[d.sex][d.region][keys] = 0;
+            for(var key in d){
+                if(!isNaN(parseFloat(d[key])) && !isNaN(parseFloat(key))) {
                     
-                    newArr[d.sex][d.region][keys] += parseFloat(d[keys]);
+                    if(!newData[counter]["total"][key]) 
+                        newData[counter]["total"][key] = 0;
+                           
+                    if(!newData[counter][keysVar][key])
+                        newData[counter][keysVar][key] = 0;
+
+                    //console.log(newData[counter]["total"][key]);
+                    newData[counter]["total"][key] += parseFloat(d[key]);
+                    newData[counter][keysVar][key] += parseFloat(d[key]);
                 }
-            }            
+            }
+
         });
-        console.log(newArr);
-
+        console.log(newData);
     }
-  
-
 }
 
