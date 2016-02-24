@@ -51,8 +51,8 @@ function pc(){
 
     //Sets the map projection
     var projection = d3.geo.mercator()
-            .center([15, 70])
-            .scale(1300);
+            .center([30, 63])
+            .scale(700);
 
     //Creates a new geographic path generator and assing the projection        
     var path = d3.geo.path().projection(projection);
