@@ -35,7 +35,7 @@ function sp(){
 
 
     function draw(){
-
+        console.log("here");
     	// Add x axis and title.
         svg.append("g")
             .attr("class", "x axis")
@@ -69,6 +69,9 @@ function sp(){
             
             return noDigitsAndTrim == val;
         });
+
+        console.log(filterData);
+        draw();
 
     }
 
