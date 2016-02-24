@@ -19,6 +19,8 @@ function pc(){
     var margin = {top: 20, right: 20, bottom: 20, left: 20};
     var width = mapDiv.width() - margin.right - margin.left,
         height = mapDiv.height() - margin.top - margin.bottom;
+        console.log(width + " " + height);
+
       
     //var width = 960,
       //  height = 1160;
@@ -40,7 +42,7 @@ function pc(){
 
     //Sets the map projection
     var projection = d3.geo.mercator()
-            .center([20, 70])
+            .center([15, 70])
             .scale(1300);
 
     //Creates a new geographic path generator and assing the projection        
