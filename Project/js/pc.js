@@ -32,6 +32,9 @@ function pc(){
 
     var colors = colorbrewer.Set3[10];
 
+    var colorbrew = d3.scale.ordinal()
+        .range(colorbrewer.Set3[10]);
+
     //Assings the svg canvas to the map div
     var svg = d3.select("#map").append("svg")
             .attr("width", width)
@@ -49,6 +52,15 @@ function pc(){
     var path = d3.geo.path().projection(projection);
     
     var csv = 'data/Swedish_Population_Statistics.csv';
+
+    var year = "2011";  
+
+    var radios = document.forms["formA"].elements["myradio"];
+    for(radio in radios) {
+        radio.onclick = function() {
+            alert(radio.value);
+        }
+    }
         
     d3.csv(csv, function(data){
         
@@ -66,7 +78,7 @@ function pc(){
 
         municipalities = replaceLetters(municipalities);
 
-        municipalities = setColor(municipalities);
+        //municipalities = setColor(municipalities);
 
         draw(municipalities, newData);
 
@@ -94,7 +106,17 @@ function pc(){
                     .attr("d", path)
                     .style('stroke-width', 1)
                     .style("stroke", "white")
-                    .style("fill", function(d){ return d.properties.color; });
+                    .style("fill", function(d){
+                        var colo = undefined;
+                        n.forEach(function(c){
+                            if(d.properties.name == c.region) 
+                                colo = colorbrew(c.total[year]);
+                        });
+                      
+                        return d.properties.color = colo;
+                     });
+
+        console.log(municipalities);
 
     }
 
@@ -145,7 +167,6 @@ function pc(){
                     if(!newData[counter][keysVar][key])
                         newData[counter][keysVar][key] = 0;
 
-                    //console.log(newData[counter]["total"][key]);
                     newData[counter]["total"][key] += parseFloat(d[key]);
                     newData[counter][keysVar][key] += parseFloat(d[key]);
                 }
@@ -153,6 +174,23 @@ function pc(){
 
         });
         console.log(newData);
+        var min, max,
+            prevMax = 0,
+            prevMin = Infinity;
+
+        newData.forEach(function(nd){
+            max = d3.max(nd.total);
+            min = d3.min(nd.total);
+            if(max > prevMax){
+                prevMax = max;
+            }
+            if(min < prevMin){
+                prevMin = min;
+            }
+        });
+        
+
+        colorbrew.domain([prevMin, prevMax]);
     }
 
     //zoom and panning method
