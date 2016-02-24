@@ -19,7 +19,6 @@ function pc(){
     var width = 960,
         height = 1160;
 
-    
     //Assings the svg canvas to the map div
     var svg = d3.select("#map").append("svg")
             .attr("width", width)
@@ -36,18 +35,24 @@ function pc(){
     //Creates a new geographic path generator and assing the projection        
     var path = d3.geo.path().projection(projection);
     //var csv = 'data/taxi_sthlm_march_2013.csv';
+    
+    
+    var csv = 'data/Swedish_Population_Statistics.csv';
         
-   /* d3.csv(csv, function(data){
-            
-        //console.log(data);
+    d3.csv(csv, function(data){
+        
         makeCalcs(data);
 
-    });*/
+    });
 
     d3.json("data/swe_mun.topojson", function(error, sweden){
         if(error) return console.error(error);
         var municipalities = topojson.feature(sweden, sweden.objects.swe_mun).features;
+<<<<<<< HEAD
 
+=======
+        
+>>>>>>> ff0507eb0553ad57e0cb4852c3be2b919808a427
         draw(municipalities);
      });
 
@@ -62,7 +67,33 @@ function pc(){
     }
 
     function makeCalcs(data){
-        
+
+        var mens = {sex:"men"},
+            womens = {sex:"women"};
+
+        var newArr = [];
+
+        var newVar;
+
+        data.forEach(function(d){
+            
+
+            if(!newArr[d.sex]) newArr[d.sex] = [];
+
+            if(!newArr[d.sex][d.region]) newArr[d.sex][d.region] = [];
+
+            for(var keys in d){
+                
+                if(!isNaN(parseFloat(d[keys])) && !isNaN(parseFloat(keys))) {
+
+                    if(!newArr[d.sex][d.region][keys]) newArr[d.sex][d.region][keys] = 0;
+                    
+                    newArr[d.sex][d.region][keys] += parseFloat(d[keys]);
+                }
+            }            
+        });
+        console.log(newArr);
+
     }
   
 
