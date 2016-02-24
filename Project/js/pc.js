@@ -68,12 +68,12 @@ function pc(){
     //  Creates a new Dataset that looks like this: 
     //  newData.region gives region
     //  newData.men/.women/.total gives array with years as attribute and with sum for each year as values
-    
+
     function makeCalcs(data){
 
         data.forEach(function(d){
 
-            var withNoDigits = d.region.replace(/[0-9]/g, '');
+            var withNoDigitsAndTrim = d.region.replace(/[0-9]/g, '').trim();
 
             //Just because the data is screwing us over..
             //With both "kvinnor" and "women" as keyvalues..
@@ -82,12 +82,12 @@ function pc(){
             var counter = 0;
             var alreadyExists = false;
             newData.forEach(function(nd){
-                if(nd.region == withNoDigits) alreadyExists = true;
+                if(nd.region == withNoDigitsAndTrim) alreadyExists = true;
                 else if(!alreadyExists) counter++;
             });
 
             if(!alreadyExists) {
-                newData.push({region:withNoDigits});
+                newData.push({region:withNoDigitsAndTrim});
                 counter = newData.length - 1;
             }
 
