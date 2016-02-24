@@ -1,3 +1,5 @@
+var data;
+
 function sp(){
 
 	var self = this;
@@ -26,7 +28,6 @@ function sp(){
         .scale(y)
         .orient("left");
 
-
     var svg = d3.select("#sp").append("svg")
         .attr("width", width + margin.left + margin.right)
         .attr("height", height + margin.top + margin.bottom)
@@ -34,8 +35,8 @@ function sp(){
         .attr("transform", "translate(" + margin.left + "," + margin.top + ")");
 
 
-    function draw(){
-        console.log("here");
+    function draw(data){
+
     	// Add x axis and title.
         svg.append("g")
             .attr("class", "x axis")
@@ -75,11 +76,18 @@ function sp(){
             
     }
 
+    this.startSP = function(data){
+        console.log(data);
+        data.self = data;
+        draw(data);
+    }
+
     this.updateSP = function(data, val){
         handleData(data, val);
     }
 
     function handleData(data, val){
+        console.log(pc1.data);
 
         var filterData = data.filter(function(d){
             var noDigitsAndTrim = d.region.replace(/[0-9]/g, "").trim();
@@ -88,7 +96,6 @@ function sp(){
         });
 
         console.log(filterData);
-        draw();
 
     }
 

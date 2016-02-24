@@ -47,8 +47,9 @@ function pc(){
 
     //Sets the map projection
     var projection = d3.geo.mercator()
-            .center([30, 63])
-            .scale(700);
+            .center([20, 65])
+            .scale(1300);
+
 
     //Creates a new geographic path generator and assing the projection        
     var path = d3.geo.path().projection(projection);
@@ -59,6 +60,7 @@ function pc(){
     //var year = "2011";  
         
     d3.csv(csv, function(data){
+        sp1.data = data;
         self.data = data;
         makeCalcs(data);
     
@@ -130,6 +132,7 @@ function pc(){
     //  newData.region gives region
     //  newData.men/.women/.total gives array with years as attribute and with sum for each group ('singles, married etc..') as values
     function makeCalcs(data){
+        sp1.startSP(data);
 
         data.forEach(function(d){
 
