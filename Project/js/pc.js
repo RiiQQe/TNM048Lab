@@ -47,31 +47,18 @@ function pc(){
     d3.json("data/swe_mun.topojson", function(error, sweden){
         if(error) return console.error(error);
         var municipalities = topojson.feature(sweden, sweden.objects.swe_mun).features;
-        
-        /*svg.append("path")
-            .datum(municipalities)
-            .attr("class", "municipality")
-            .attr("d", path)*/
-
-        /*g.selectAll(".municipality")
-            .data(municipalities)
-            .enter().append("path")
-            .attr("class", function(d){console.log(d.properties.name); return "municipality " + d.municipality;})
-            .attr("d", path);*/
 
         draw(municipalities);
-
-    });
+     });
 
     function draw(municipalities){
-        //console.log(municipalities);
         var municipality = g.selectAll(".municipality").data(municipalities);
-        console.log(municipality);
+        
         municipality.enter().insert("path")
                     .attr("class", function(d){ return "municipality " + d.properties.name; })
                     .attr("d", path);
+        console.log(municipality);
                     
-        //console.log(municipality);
     }
 
     function makeCalcs(data){
