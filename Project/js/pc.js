@@ -1,6 +1,8 @@
-var newData = [];
-
 function pc(){
+
+    var newData = [];
+    var municipalities;
+    var year = "2011";
 
     var self = this; // for internal d3 functions
 
@@ -28,10 +30,10 @@ function pc(){
     var colorrange = [];
     colorrange = ["#ECEFF1", "#CFD8DC", "#B0BEC5", "#90A4AE", "#78909C", "#607D8B", "#546E7A", "#455A64", "#37474F", "#263238" ];
 
-    var colors = colorbrewer.Set3[10];
+    var colorRangeTester = d3.scale.ordinal().range(["blue", "green", "red"]);
 
-    var colorbrew = d3.scale.ordinal()
-        .range(colorbrewer.Set3[10]);
+    colorRangeTester = d3.scale.ordinal()
+        .range(colorbrewer.Reds[9]);
 
     //Assings the svg canvas to the map div
     var svg = d3.select("#map").append("svg")
@@ -50,15 +52,9 @@ function pc(){
     var path = d3.geo.path().projection(projection);
     
     var csv = 'data/Swedish_Population_Statistics.csv';
+    var municipalities, newData;
 
-    var year = "2011";  
-
-    var radios = document.forms["formA"].elements["myradio"];
-    for(radio in radios) {
-        radio.onclick = function() {
-            alert(radio.value);
-        }
-    }
+    //var year = "2011";  
         
     d3.csv(csv, function(data){
         
@@ -72,7 +68,7 @@ function pc(){
     d3.json("data/swe_mun.topojson", function(error, sweden){
         if(error) return console.error(error);
         
-        var municipalities = topojson.feature(sweden, sweden.objects.swe_mun).features;
+        municipalities = topojson.feature(sweden, sweden.objects.swe_mun).features;
 
         municipalities = replaceLetters(municipalities);
 
@@ -108,11 +104,11 @@ function pc(){
                         var colo = undefined;
                         n.forEach(function(c){
                             if(d.properties.name == c.region) 
-                                colo = colorbrew(c.total[year]);
+                                colo = colorRangeTester(c.total[year]);
                         });
-                      
-                        return d.properties.color = colo;
+                        return colo;
                      });
+
 
         console.log(municipalities);
 
@@ -171,24 +167,30 @@ function pc(){
             }
 
         });
-        console.log(newData);
+        
+        recalculateRange(newData, "total");
+        
+    }
+
+    function recalculateRange(n, val){
         var min, max,
             prevMax = 0,
             prevMin = Infinity;
 
         newData.forEach(function(nd){
-            max = d3.max(nd.total);
-            min = d3.min(nd.total);
-            if(max > prevMax){
+            max = d3.max(nd[val]);
+            min = d3.min(nd[val]);
+            if(max > prevMax)
                 prevMax = max;
-            }
-            if(min < prevMin){
+            
+            if(min < prevMin)
                 prevMin = min;
-            }
+            
         });
         
 
-        colorbrew.domain([prevMin, prevMax]);
+        //colorbrew.domain([prevMin, prevMax]);
+        colorRangeTester.domain([prevMin, prevMax]);
     }
 
     //zoom and panning method
@@ -201,5 +203,43 @@ function pc(){
         g.style("stroke-width", 1 / s).attr("transform", "translate(" + t + ")scale(" + s + ")");
 
     }
+
+    var radios = document.getElementsByName("myradio");
+
+    document.getElementById("btn").addEventListener("click", function(){
+        //year = "2011";
+        //recalculateRange(newData, "women");
+        //toggleColor(year, "women", newData);
+        var sex = undefined;
+        for(var i = 0; i < radios.length; i++){
+            if(radios[i].checked) sex = radios[i].value;
+        }
+        var year = document.getElementById("year").value;
+        if(!year || parseFloat(year) < 2000 || parseFloat(year) > 2012) alert("fill in year between 2000-2012");
+
+        recalculateRange(newData, sex);
+
+        toggleColor(year, sex, newData);
+
+        console.log("working");
+    });
+
+
+   function toggleColor(val, sex, n){
+        
+        d3.selectAll(".municipality")
+            .style("fill", function(d){
+                var colo = undefined;
+                n.forEach(function(c){
+                    if(d.properties.name == c.region) 
+                        colo = colorRangeTester(c[sex][year]);
+                });
+              
+                return colo;
+            });
+    
+    }
+
+
 }
 
