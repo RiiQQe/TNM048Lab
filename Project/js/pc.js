@@ -19,11 +19,14 @@ function pc(){
     var margin = {top: 20, right: 20, bottom: 20, left: 20};
     var width = mapDiv.width() - margin.right - margin.left,
         height = mapDiv.height() - margin.top - margin.bottom;
-        console.log(width + " " + height);
 
       
     //var width = 960,
       //  height = 1160;
+
+    var tooltip = d3.select("body").append("div")
+                    .attr("class", "tooltip")
+                    .style("opacity", 0);
 
     //initialize color scale
     //...
@@ -114,7 +117,20 @@ function pc(){
                         });
                       
                         return d.properties.color = colo;
-                     });
+                     })
+                    .on("mousemove", function(d){
+                        tooltip.transition()
+                            .duration(200)
+                            .style("opacity", 1);
+                        tooltip.html(d.properties.name)
+                            .style("left", (d3.event.pageX) + "px")
+                            .style("top", (d3.event.pageY - 28) + "px");
+                    })
+                    .on("mouseout", function(d){
+                        tooltip.transition()
+                            .duration(500)
+                            .style("opacity", 0);
+                    });
 
         console.log(municipalities);
 
