@@ -45,14 +45,20 @@ function pc(){
 
     });
 
+    var arrRep1 = ["Å", "Ä", "Ö", "å", "ä", "ö"];
+    var arrRep2 = ["A", "A", "O", "a", "a", "ö"];
+
     d3.json("data/swe_mun.topojson", function(error, sweden){
         if(error) return console.error(error);
         var municipalities = topojson.feature(sweden, sweden.objects.swe_mun).features;
-<<<<<<< HEAD
 
-=======
-        
->>>>>>> ff0507eb0553ad57e0cb4852c3be2b919808a427
+        municipalities.forEach(function(d){ d.properties.name = d.properties.name.replace("Å", "A")
+                                            d.properties.name = d.properties.name.replace("Ä", "A")
+                                            d.properties.name = d.properties.name.replace("Ö", "O")
+                                            d.properties.name = d.properties.name.replace("å", "a")
+                                            d.properties.name = d.properties.name.replace("ä", "a")
+                                            d.properties.name = d.properties.name.replace("ö", "o")});
+
         draw(municipalities);
      });
 
@@ -62,8 +68,7 @@ function pc(){
         municipality.enter().insert("path")
                     .attr("class", function(d){ return "municipality " + d.properties.name; })
                     .attr("d", path);
-        console.log(municipality);
-                    
+                                        
     }
 
     function makeCalcs(data){
