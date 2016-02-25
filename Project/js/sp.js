@@ -104,41 +104,39 @@ function sp(){
         for(var key in data[0])
             if(!isNaN(parseFloat(key)))
                 vals.push(new Date(key));
+
+        var vals2 = [];
+        var i = 0;
+
+        data.forEach(function(d){
+
+            for(var key in d)
+                if(!isNaN(parseFloat(key)))
+                    vals2.push(parseFloat(d[key]));
+
+        });
         
         x.domain([d3.min(vals), d3.max(vals)]);
+        y.domain([d3.min(vals2), d3.max(vals2)]);
 
+        draw(data);
 
     }
 
     function handleData(data, val){
-        //console.log(pc1.data);
 
-        var filterData = data.filter(function(d){
+
+        var filterDataR = data.filter(function(d){
             var noDigitsAndTrim = d.region.replace(/[0-9]/g, "").trim();
-           // console.log(noDigitsAndTrim);
-            return noDigitsAndTrim == val;
+            if(noDigitsAndTrim == val){
+                
+                d["region"] = noDigitsAndTrim;
+                return d; 
+            }
         });
 
 
-        var vals = [];
-        for(var key in data[0])
-            if(!isNaN(parseFloat(key)))
-                vals.push(key);
-
-        var vals2 = [];
-
-
-        for(var key in filterData[1]){
-            if(parseFloat(key)){
-                console.log(filterData[1][key]);
-                vals2.push(filterData[1][key]);
-            }
-
-        }
-
-        console.log(vals2);
-        y.domain([d3.min(vals2), d3.max(vals2)]);
-        draw(data);
+        fixAxels(filterDataR);
 
     }
 }
