@@ -103,21 +103,16 @@ function sp(){
     }
 
     function handleData(data, val){
-        console.log(pc1.data);
 
-
-        var filterData = [];
-        var counter = 0;
-        data.filter(function(d){
+        var filterDataR = data.filter(function(d){
             var noDigitsAndTrim = d.region.replace(/[0-9]/g, "").trim();
             if(noDigitsAndTrim == val){
-                filterData.push(d);
-                filterData[counter]["region"] = noDigitsAndTrim;
-                counter++;
+                
+                d["region"] = noDigitsAndTrim;
+                return d; 
             }
         });
 
-        console.log(filterData);
-
+        console.log(filterDataR);
     }
 }
