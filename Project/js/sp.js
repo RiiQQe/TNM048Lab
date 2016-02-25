@@ -61,25 +61,11 @@ function sp(){
             .attr("y", 6)
             .attr("dy", ".71em");
 
-        var i = 0;
-        var vals = [];
-        for(var key in data[1]){
-            if(!isNaN(parseFloat(key))){
-                vals[i].push(key);
-                i++;
-            }        
-        }
-
-        console.log(vals);
-
-        i = 0;
-    
-   // function(d){ i++; return vals[i]; }
         svg.selectAll(".dot")
             .data(data)
             .enter().append("circle")
             .attr("class", "dot")
-            .attr("cx", function(d){ console.log(" ")})
+            .attr("cx", function(d){ })
             .attr("cy", function(d){ return d.fo})
             .attr("r", 2.0);
 
@@ -103,7 +89,7 @@ function sp(){
     }
 
     this.startSP = function(data){
-        console.log(data);
+        //console.log(data);
         data.self = data;
         fixAxels(data);
         draw(data);
@@ -114,7 +100,7 @@ function sp(){
     }
 
     function fixAxels(data){
-        
+        var vals = [];
         for(var key in data[0])
             if(!isNaN(parseFloat(key)))
                 vals.push(new Date(key));
@@ -125,15 +111,34 @@ function sp(){
     }
 
     function handleData(data, val){
-        console.log(pc1.data);
+        //console.log(pc1.data);
 
         var filterData = data.filter(function(d){
             var noDigitsAndTrim = d.region.replace(/[0-9]/g, "").trim();
-            
+           // console.log(noDigitsAndTrim);
             return noDigitsAndTrim == val;
         });
 
-        console.log(filterData);
+
+        var vals = [];
+        for(var key in data[0])
+            if(!isNaN(parseFloat(key)))
+                vals.push(key);
+
+        var vals2 = [];
+
+
+        for(var key in filterData[1]){
+            if(parseFloat(key)){
+                console.log(filterData[1][key]);
+                vals2.push(filterData[1][key]);
+            }
+
+        }
+
+        console.log(vals2);
+        y.domain([d3.min(vals2), d3.max(vals2)]);
+        draw(data);
 
     }
 }
