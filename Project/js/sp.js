@@ -92,7 +92,7 @@ function sp(){
     }
 
     function fixAxels(data){
-        
+        var vals = [];
         for(var key in data[0])
             if(!isNaN(parseFloat(key)))
                 vals.push(new Date(key));
@@ -105,10 +105,16 @@ function sp(){
     function handleData(data, val){
         console.log(pc1.data);
 
-        var filterData = data.filter(function(d){
+
+        var filterData = [];
+        var counter = 0;
+        data.filter(function(d){
             var noDigitsAndTrim = d.region.replace(/[0-9]/g, "").trim();
-            
-            return noDigitsAndTrim == val;
+            if(noDigitsAndTrim == val){
+                filterData.push(d);
+                filterData[counter]["region"] = noDigitsAndTrim;
+                counter++;
+            }
         });
 
         console.log(filterData);
