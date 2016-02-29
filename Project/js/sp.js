@@ -1,4 +1,4 @@
-var data;
+var data, region = "Jarfalla";
 
 function sp(){
 
@@ -38,22 +38,23 @@ function sp(){
         .append("g")
         .attr("transform", "translate(" + margin.left + "," + margin.top + ")");
 
-
     jQuery(function(){
         $('input.mybox').click(function() {
+            var vals = [];
             $('.mybox:checked').each(function(){
-                console.log($(this).val());
+                //console.log($(this).val());
+                vals.push($(this).val());
             });
+
+            sp1.updateSP(self.data, region, vals);
         })
     });
 
-    var statuses = {single:8, married:6, widower:4, divorced:2};
+    var statuses = {single:8, married:6, "widow/widower":4, divorced:2};
 
+    var dots;
 
-
-    function drawSetup(data){
-        //These 4 can be done before
-    	// Add x axis and title.
+    function drawSetup(data, status){
         svg.append("g")
             .attr("class", "x axis")
             .attr("transform", "translate(0," + height + ")")
@@ -73,10 +74,19 @@ function sp(){
             .attr("y", 6)
             .attr("dy", ".71em");
 
-
-        svg.selectAll(".dot")
+        dots = svg.selectAll(".dot")
             .data(data)
-            .enter().append("circle")
+            .enter();
+        var counter = 0;
+        dots.append("circle")
+            .filter(function(d) { 
+                var noDigitsAndTrim = d.region.replace(/[0-9]/g, "").trim();
+                if(noDigitsAndTrim == region && status.indexOf(d["status"]) !== -1){
+                    counter++;
+                    d["region"] = noDigitsAndTrim;
+                    return d; 
+                } 
+            })
             .attr("class", "dot")
             .attr("cx", function(d){ return x(d.year); })
             .attr("cy", function(d){ return y(d.amount); })
@@ -89,6 +99,7 @@ function sp(){
                 else return "red";
 
             });
+        console.log("here: " + counter);
 
         //xAxis
         svg.append("text")
@@ -116,41 +127,74 @@ function sp(){
             .attr("x", width)
             .attr("y", 0)
             .style("font-size", "20px")
-            .text(data[0].region);        
+            .text(region);        
     }
 
-    function redo(data){
+    function redo(data, region, status){
 
         svg.select(".region")
-            .text(data[0].region);
+            .text(region);
 
 
-        svg.selectAll(".dot")
-            .data(data)
-            .attr("cx", function(d) { return x(d.year); })
-            .attr("cy", function(d) { return y(d.amount); })
+        svg.selectAll(".dot").remove();
+        var counter = 0;
+        dots.append("circle")
+            .filter(function(d) { 
+                var noDigitsAndTrim = d.region.replace(/[0-9]/g, "").trim();
+                if(noDigitsAndTrim == region && status.indexOf(d["status"]) !== -1){
+                    counter++;
+                    console.log(d["status"]);
+                    return d; 
+                } 
+            })
+            .attr("class", "dot")
+            .attr("cx", function(d){ return x(d.year); })
+            .attr("cy", function(d){ return y(d.amount); })
+            .attr("r", function(d){
+                return statuses[d.status];
+            })
             .style("fill", function(d){
-                if(d.sex == "men") return "blue";
-                else return "red"
-            });
 
+                if(d.sex == "men") return "blue";
+                else return "red";
+
+            });
+            console.log("here2: " + counter);
     }
 
     this.startSP = function(data){
         var status = ["single", "married"];
         data.self = recalcData(data);
-        var kalle = handleData(data.self, "Jarfalla", status);
-        drawSetup(kalle);
+
+        //var kalle = handleData(data.self, region, status);
+
+        fixAxels(data.self, region, status);
+        drawSetup(data.self, status);
     }
 
 
 
-    this.updateSP = function(data, val){
-        
-        var status = ["single", "married"];
-        var kalle = handleData(data.self, val, status);
+    this.updateSP = function(data, val, status){
 
-        redo(kalle)
+        var status = [];
+        jQuery(function(){
+            $('.mybox:checked').each(function(){
+                status.push($(this).val());
+            });            
+        });
+        
+        if(!status)
+            var status = ["single", "married"];
+        else alert("not undefined" + status);
+
+        //console.log(status);
+        region = val;
+
+        console.log(data);
+
+        fixAxels(data.self, region, status);
+
+        redo(data.self, region, status);
     }
 
     function recalcData(data){
@@ -170,31 +214,31 @@ function sp(){
             d.forEach(function(f){
                 newMapped.push(f);
             });
-        });
+        }); 
 
-        //console.log(newMapped);
+        console.log(newMapped);
 
         return newMapped;
     }
 
-    function fixAxels(data){
+    function fixAxels(data, region, status){
 
-        //console.log(data);
-
-        vals = [];
-        for(var key in data[0])
-            if(!isNaN(parseFloat(key)))
-                vals.push(new Date(key));
-
+        var vals = [];
         var vals2 = [];
-
+        console.log(region);
         data.forEach(function(d){
-            vals2.push(d.amount);
-            vals.push(new Date(d.year));
+            var noDigitsAndTrim = d.region.replace(/[0-9]/g, "").trim();
+            if(noDigitsAndTrim == region && status.indexOf(d["status"]) != -1){
+                vals2.push(d.amount);
+                vals.push(new Date(d.year));
+            }
         });
+
+        console.log(vals);
         
-        x.domain([d3.min(vals), d3.max(vals)]);
-        y.domain([0, d3.max(vals2)]);
+        x.domain([new Date(d3.min(vals)), new Date(d3.max(vals))]);
+        y.domain([0, d3.max(vals2)]);   
+        //y.domain([0, 90000]);
 
         svg.select("g .y.axis")
             .call(yAxis);
