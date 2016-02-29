@@ -1,5 +1,5 @@
 function map(){
-
+    //testkommentar för git
     var newData = [];
     var municipalities;
     var year = "2011";
