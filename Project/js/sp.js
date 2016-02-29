@@ -21,6 +21,8 @@ function sp(){
 
     //x = d3.time.scale();
 
+    var color = d3.scale.category10();
+
     var y = d3.scale.linear()
         .range([height, 0]);
 
@@ -116,7 +118,8 @@ function sp(){
             .attr("x", width)
             .attr("y", 0)
             .style("font-size", "20px")
-            .text(data[0].region);        
+            .text(data[0].region);
+     
     }
 
     function redo(data){
@@ -133,6 +136,29 @@ function sp(){
                 if(d.sex == "men") return "blue";
                 else return "red"
             });
+
+        //Ta ej bort, ska användas till att skriva ut legend  
+        /*var legend = svg.selectAll(".legend")
+        .data(data)
+        .enter().append("g")
+        .attr("class", "legend")
+        .attr("transform", function(d, i) { return "translate(0," + i * 20 + ")"; });
+
+        console.log(width);
+        console.log(height);
+
+        legend.append("rect")
+            .attr("x", width - 18)
+            .attr("width", 18)
+            .attr("height", 18)
+            .style("fill",  "#00ff00");  
+
+        legend.append("text")
+            .attr("x", width - 24)
+            .attr("y", 9)
+            .attr("dy", ".35em")
+            .style("text-anchor", "end")
+            .text(function(d) { return d.status}); */
 
     }
 
