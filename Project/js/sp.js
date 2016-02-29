@@ -38,6 +38,8 @@ function sp(){
         .append("g")
         .attr("transform", "translate(" + margin.left + "," + margin.top + ")");
 
+    var statuses = {single:8, married:6, widower:4, divorced:2};
+
 
     function drawSetup(data){
         //These 4 can be done before
@@ -61,13 +63,16 @@ function sp(){
             .attr("y", 6)
             .attr("dy", ".71em");
 
+
         svg.selectAll(".dot")
             .data(data)
             .enter().append("circle")
             .attr("class", "dot")
             .attr("cx", function(d){ return x(d.year); })
             .attr("cy", function(d){ return y(d.amount); })
-            .attr("r", 5)
+            .attr("r", function(d){
+                return statuses[d.status];
+            })
             .style("fill", function(d){
 
                 if(d.sex == "men") return "blue";
@@ -193,8 +198,6 @@ function sp(){
                 return d; 
             }
         });
-
-        //console.log(filterDataR);
 
         fixAxels(filterDataR);
 
