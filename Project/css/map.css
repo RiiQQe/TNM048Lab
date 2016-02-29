@@ -1,3 +1,7 @@
+svg {
+    font: 10px sans-serif;
+}
+
 .municipality{ fill: rgb(0, 75, 151); }
 
 .point {

@@ -14,17 +14,10 @@ function map(){
             .scaleExtent([0.5, 8])
             .on("zoom", move);
 
-    //var mapDiv = $("#map");
-
-    //console.log(mapDiv);
-
     var margin = {top: 20, right: 20, bottom: 20, left: 20};
     var width = mapDiv.width() - margin.right - margin.left,
         height = mapDiv.height() - margin.top - margin.bottom;
 
-      
-    //var width = 960,
-      //  height = 1160;
 
     var tooltip = d3.select("body").append("div")
                     .attr("class", "tooltip")
