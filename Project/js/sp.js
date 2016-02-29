@@ -39,7 +39,7 @@ function sp(){
         .attr("transform", "translate(" + margin.left + "," + margin.top + ")");
 
 
-    function drawSetup(data, val){
+    function drawSetup(data){
         //These 4 can be done before
     	// Add x axis and title.
         svg.append("g")
@@ -65,9 +65,15 @@ function sp(){
             .data(data)
             .enter().append("circle")
             .attr("class", "dot")
-            .attr("cx", function(d){ })
-            .attr("cy", function(d){ return d.fo})
-            .attr("r", 2.0);
+            .attr("cx", function(d){ return x(d.year); })
+            .attr("cy", function(d){ return y(d.amount); })
+            .attr("r", 5)
+            .style("fill", function(d){
+
+                if(d.sex == "men") return "blue";
+                else return "red";
+
+            });
 
         //xAxis
         svg.append("text")
@@ -87,48 +93,78 @@ function sp(){
             .attr("transform", "rotate(-90)")
             .style("font-size", "13px")
             .text("Amount");
-            
+
+
+        svg.append("text")
+            .attr("class", "region")
+            .attr("text-anchor", "end")
+            .attr("x", width)
+            .attr("y", 0)
+            .style("font-size", "20px")
+            .text(data[0].region);        
     }
 
+    function redo(data){
 
+        svg.select(".region")
+            .text(data[0].region);
+
+
+        svg.selectAll(".dot")
+            .data(data)
+            .attr("cx", function(d) { return x(d.year); })
+            .attr("cy", function(d) { return y(d.amount); })
+            .style("fill", function(d){
+                if(d.sex == "men") return "blue";
+                else return "red"
+            });
+
+    }
 
     this.startSP = function(data){
-        //console.log(data);
-        data.self = data;
-        //fixAxels(data);
-        handleData(data, "Jarfalla");
-        val = ["single", "married"];
-        var newData = recalcData(data);
-        drawSetup(data, val);
+        var status = ["single", "married"];
+        data.self = recalcData(data);
+        var kalle = handleData(data.self, "Jarfalla", status);
+        drawSetup(kalle);
     }
 
 
 
     this.updateSP = function(data, val){
-        handleData(data, val);
+        
+        var status = ["single", "married"];
+        var kalle = handleData(data.self, val, status);
+
+        redo(kalle)
     }
 
     function recalcData(data){
         var mapped = [];
         for(var key in data[0]){
             if(!isNaN(parseFloat(key))){
-                var newObj = {};
-
-                mapped = data.map(function(d){
-                    var newObj2 = {amount:parseFloat(d[key]), region:d["region"], "status":d["marital status"], year:new Date(key)};
-                    return newObj2;
-                });
-
-                mapped.push(newObj);                
+                mapped.push(data.map(function(d){
+                    var tempObj = {amount:parseFloat(d[key]), region:d["region"], "status":d["marital status"], year:new Date(key), sex:d["sex"]};
+                    return tempObj;
+                }));                
             }
         }
 
-        console.log(mapped);
-        
-        return mapped;
+        var newMapped = [];
+
+        mapped.forEach(function(d){
+            d.forEach(function(f){
+                newMapped.push(f);
+            });
+        });
+
+        //console.log(newMapped);
+
+        return newMapped;
     }
 
     function fixAxels(data){
+
+        //console.log(data);
 
         vals = [];
         for(var key in data[0])
@@ -138,36 +174,30 @@ function sp(){
         var vals2 = [];
 
         data.forEach(function(d){
-
-            for(var key in d)
-                if(!isNaN(parseFloat(key)))
-                    vals2.push(parseFloat(d[key]));
-
+            vals2.push(d.amount);
+            vals.push(new Date(d.year));
         });
         
         x.domain([d3.min(vals), d3.max(vals)]);
-        y.domain([d3.min(vals2), d3.max(vals2)]);
+        y.domain([0, d3.max(vals2)]);
 
-        svg.selectAll("g .y.axis")
+        svg.select("g .y.axis")
             .call(yAxis);
-        //drawSetup(data);
-
     }
 
-    function handleData(data, val){
-
-
+    function handleData(data, val, status){
         var filterDataR = data.filter(function(d){
             var noDigitsAndTrim = d.region.replace(/[0-9]/g, "").trim();
-            if(noDigitsAndTrim == val){
+            if(noDigitsAndTrim == val && status.indexOf(d["status"]) != -1){
                 d["region"] = noDigitsAndTrim;
                 return d; 
             }
         });
 
-
+        //console.log(filterDataR);
 
         fixAxels(filterDataR);
 
+        return filterDataR;
     }
 }
