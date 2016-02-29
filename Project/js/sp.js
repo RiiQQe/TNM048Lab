@@ -19,8 +19,6 @@ function sp(){
     var x = d3.time.scale()
         .range([0, width - 100]);
 
-    //x = d3.time.scale();
-
     var color = d3.scale.category10();
 
     var y = d3.scale.linear()
@@ -42,12 +40,6 @@ function sp(){
 
     jQuery(function(){
         $('input.mybox').click(function() {
-            var vals = [];
-            $('.mybox:checked').each(function(){
-                //console.log($(this).val());
-                vals.push($(this).val());
-            });
-
             sp1.updateSP(self.data, region, vals);
         })
     });
