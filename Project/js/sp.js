@@ -17,9 +17,11 @@ function sp(){
         height = spDiv.height() - margin.top - margin.bottom;
 
     var x = d3.time.scale()
-        .range([0, width]);
+        .range([0, width - 100]);
 
     //x = d3.time.scale();
+
+    var color = d3.scale.category10();
 
     var y = d3.scale.linear()
         .range([height, 0]);
@@ -77,13 +79,10 @@ function sp(){
         dots = svg.selectAll(".dot")
             .data(data)
             .enter();
-        var counter = 0;
         dots.append("circle")
             .filter(function(d) { 
                 var noDigitsAndTrim = d.region.replace(/[0-9]/g, "").trim();
                 if(noDigitsAndTrim == region && status.indexOf(d["status"]) !== -1){
-                    counter++;
-                    d["region"] = noDigitsAndTrim;
                     return d; 
                 } 
             })
@@ -99,13 +98,12 @@ function sp(){
                 else return "red";
 
             });
-        console.log("here: " + counter);
 
         //xAxis
         svg.append("text")
             .attr("class", "x label")
             .attr("text-anchor", "end")
-            .attr("x", width)
+            .attr("x", width - 100)
             .attr("y", height - 6)
             .style("font-size", "13px")
             .text("Year");
@@ -137,13 +135,10 @@ function sp(){
 
 
         svg.selectAll(".dot").remove();
-        var counter = 0;
         dots.append("circle")
             .filter(function(d) { 
                 var noDigitsAndTrim = d.region.replace(/[0-9]/g, "").trim();
                 if(noDigitsAndTrim == region && status.indexOf(d["status"]) !== -1){
-                    counter++;
-                    console.log(d["status"]);
                     return d; 
                 } 
             })
@@ -159,7 +154,30 @@ function sp(){
                 else return "red";
 
             });
-            console.log("here2: " + counter);
+
+        //Ta ej bort, ska användas till att skriva ut legend  
+       /* var legend = svg.selectAll(".legend")
+        .data(data)
+        .enter().append("g")
+        .attr("class", "legend")
+        .attr("transform", function(d, i) { return "translate(0," + i * 20 + ")"; });
+
+        console.log(width);
+        console.log(height);
+
+        legend.append("rect")
+            .attr("x", width - 18)
+            .attr("width", 18)
+            .attr("height", 18)
+            .style("fill",  "#00ff00");  
+
+        legend.append("text")
+            .attr("x", width - 24)
+            .attr("y", 9)
+            .attr("dy", ".35em")
+            .style("text-anchor", "end")
+            .text(function(d) { return d.status}); */
+
     }
 
     this.startSP = function(data){
@@ -185,12 +203,8 @@ function sp(){
         
         if(!status)
             var status = ["single", "married"];
-        else alert("not undefined" + status);
 
-        //console.log(status);
         region = val;
-
-        console.log(data);
 
         fixAxels(data.self, region, status);
 
@@ -216,8 +230,6 @@ function sp(){
             });
         }); 
 
-        console.log(newMapped);
-
         return newMapped;
     }
 
@@ -234,12 +246,9 @@ function sp(){
             }
         });
 
-        console.log(vals);
-        
         x.domain([new Date(d3.min(vals)), new Date(d3.max(vals))]);
         y.domain([0, d3.max(vals2)]);   
-        //y.domain([0, 90000]);
-
+        
         svg.select("g .y.axis")
             .call(yAxis);
     }
