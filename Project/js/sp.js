@@ -75,15 +75,17 @@ function sp(){
             .attr("text-anchor", "end")
             .attr("x", width)
             .attr("y", height - 6)
+            .style("font-size", "13px")
             .text("Year");
 
         //yAxis
         svg.append("text")
             .attr("class", "y label")
             .attr("text-anchor", "end")
-            .attr("y", 6)
+            .attr("y", 4)
             .attr("dy", "2.0em")
             .attr("transform", "rotate(-90)")
+            .style("font-size", "13px")
             .text("Amount");
             
     }
