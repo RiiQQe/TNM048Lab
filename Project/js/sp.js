@@ -38,6 +38,13 @@ function sp(){
         .append("g")
         .attr("transform", "translate(" + margin.left + "," + margin.top + ")");
 
+    jQuery(function(){
+        $('input.mybox').click(function() {
+            $('.mybox:checked').each(function(){
+                console.log($(this).val());
+            });
+        })
+    });
 
     function drawSetup(data, val){
         //These 4 can be done before
@@ -106,6 +113,7 @@ function sp(){
 
     this.updateSP = function(data, val){
         handleData(data, val);
+
     }
 
     function recalcData(data){
@@ -170,4 +178,11 @@ function sp(){
         fixAxels(filterDataR);
 
     }
+
+    function selectDots(){
+        console.log("clicked");
+
+    }
+    
 }
+
