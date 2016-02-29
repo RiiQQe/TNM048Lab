@@ -138,7 +138,7 @@ function sp(){
             });
 
         //Ta ej bort, ska användas till att skriva ut legend  
-        /*var legend = svg.selectAll(".legend")
+       /* var legend = svg.selectAll(".legend")
         .data(data)
         .enter().append("g")
         .attr("class", "legend")
@@ -159,7 +159,6 @@ function sp(){
             .attr("dy", ".35em")
             .style("text-anchor", "end")
             .text(function(d) { return d.status}); */
-
     }
 
     this.startSP = function(data){
