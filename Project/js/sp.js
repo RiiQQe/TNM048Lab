@@ -17,7 +17,7 @@ function sp(){
         height = spDiv.height() - margin.top - margin.bottom;
 
     var x = d3.time.scale()
-        .range([0, width]);
+        .range([0, width - 100]);
 
     //x = d3.time.scale();
 
@@ -96,7 +96,7 @@ function sp(){
         svg.append("text")
             .attr("class", "x label")
             .attr("text-anchor", "end")
-            .attr("x", width)
+            .attr("x", width - 100)
             .attr("y", height - 6)
             .style("font-size", "13px")
             .text("Year");
