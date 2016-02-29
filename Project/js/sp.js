@@ -112,22 +112,16 @@ function sp(){
             if(!isNaN(parseFloat(key))){
                 var newObj = {};
 
-                //newObj.year = key;
-
-                //newObj["k"];
                 mapped = data.map(function(d){
                     var newObj2 = {amount:parseFloat(d[key]), region:d["region"], "status":d["marital status"], year:new Date(key)};
                     return newObj2;
                 });
 
-                mapped.push(newObj);
-                
+                mapped.push(newObj);                
             }
         }
 
-
         console.log(mapped);
-
         
         return mapped;
     }
