@@ -38,6 +38,11 @@ function sp(){
         .append("g")
         .attr("transform", "translate(" + margin.left + "," + margin.top + ")");
 
+    var tooltip = d3.select("body").append("div")
+            .attr("class", "tooltip")
+            .style("opacity", 0);
+
+
     jQuery(function(){
         $('input.mybox').click(function() {
             sp1.updateSP(self.data, region, vals);
@@ -46,9 +51,10 @@ function sp(){
 
     var statuses = {single:8, married:6, "widow/widower":4, divorced:2};
 
-    var dots;
+    var dots, rects;
 
     function drawSetup(data, status){
+
         svg.append("g")
             .attr("class", "x axis")
             .attr("transform", "translate(0," + height + ")")
@@ -75,7 +81,8 @@ function sp(){
             .filter(function(d) { 
                 var noDigitsAndTrim = d.region.replace(/[0-9]/g, "").trim();
                 if(noDigitsAndTrim == region && status.indexOf(d["status"]) !== -1){
-                    return d; 
+                    if(d["sex"] == "kvinnor" || d["sex"] == "women")
+                        return d; 
                 } 
             })
             .attr("class", "dot")
@@ -89,7 +96,57 @@ function sp(){
                 if(d.sex == "men") return "blue";
                 else return "red";
 
+            })
+
+            .on("mouseover", function(d){
+
+                tooltip.transition()
+                       .duration(300)
+                       .style("opacity", 0.8);
+
+                tooltip.html('Amount: ' + d.amount + "<br/> Sex: "  + d.sex + "<br/> Status: "  + d.status + "<br/> Year: "  + (d.year).getFullYear())  
+                .style("left", (d3.event.pageX) + "px")          
+                .style("top", (d3.event.pageY - 28) + "px");
+
+                setTimeout(removeTooltip, 3000);
             });
+
+            dots.append("rect")
+            .filter(function(d) { 
+                var noDigitsAndTrim = d.region.replace(/[0-9]/g, "").trim();
+                if(noDigitsAndTrim == region && status.indexOf(d["status"]) !== -1){
+                    if(d["sex"] == "men")
+                        return d; 
+                } 
+            })
+            .attr("class", "dot")
+            .attr("x", function(d){ return x(d.year); })
+            .attr("y", function(d){ return y(d.amount); })
+            .attr("width", function(d){
+                return statuses[d.status] * 1.5;
+            })
+            .attr("height", function(d){
+                return statuses[d.status] * 1.5;
+            })
+            .style("fill", function(d){
+
+                if(d.sex == "men") return "blue";
+                else return "red";
+
+            })
+
+            .on("mouseover", function(d){
+
+                tooltip.transition()
+                       .duration(300)
+                       .style("opacity", 0.8);
+                tooltip.html('Amount: ' + d.amount + "<br/> Sex: "  + d.sex + "<br/> Status: "  + d.status + "<br/> Year: "  + (d.year).getFullYear())  
+                       .style("left", (d3.event.pageX) + "px")          
+                       .style("top", (d3.event.pageY - 28) + "px");
+
+                setTimeout(removeTooltip, 3000);
+            });
+
 
         //xAxis
         svg.append("text")
@@ -140,6 +197,12 @@ function sp(){
 
     }
 
+    function removeTooltip(){
+        tooltip.transition()
+                .duration(300)
+                .style("opacity", 0);
+    }
+
     function redo(data, region, status){
 
         svg.select(".region")
@@ -150,7 +213,8 @@ function sp(){
             .filter(function(d) { 
                 var noDigitsAndTrim = d.region.replace(/[0-9]/g, "").trim();
                 if(noDigitsAndTrim == region && status.indexOf(d["status"]) !== -1){
-                    return d; 
+                    if(d["sex"] == "kvinnor" || d["sex"] == "women")
+                        return d; 
                 } 
             })
             .attr("class", "dot")
@@ -164,6 +228,55 @@ function sp(){
                 if(d.sex == "men") return "blue";
                 else return "red";
 
+            })
+
+            .on("mouseover", function(d){
+
+                tooltip.transition()
+                       .duration(300)
+                       .style("opacity", 0.8);
+
+                tooltip.html('Amount: ' + d.amount + "<br/> Sex: "  + d.sex + "<br/> Status: "  + d.status + "<br/> Year: "  + (d.year).getFullYear())  
+                .style("left", (d3.event.pageX) + "px")          
+                .style("top", (d3.event.pageY - 28) + "px");
+
+                setTimeout(removeTooltip, 3000);
+            });
+
+            dots.append("rect")
+            .filter(function(d) { 
+                var noDigitsAndTrim = d.region.replace(/[0-9]/g, "").trim();
+                if(noDigitsAndTrim == region && status.indexOf(d["status"]) !== -1){
+                    if(d["sex"] == "men")
+                        return d; 
+                } 
+            })
+            .attr("class", "dot")
+            .attr("x", function(d){ return x(d.year); })
+            .attr("y", function(d){ return y(d.amount); })
+            .attr("width", function(d){
+                return statuses[d.status] * 1.5;
+            })
+            .attr("height", function(d){
+                return statuses[d.status] * 1.5;
+            })
+            .style("fill", function(d){
+
+                if(d.sex == "men") return "blue";
+                else return "red";
+
+            })
+
+            .on("mouseover", function(d){
+
+                tooltip.transition()
+                       .duration(300)
+                       .style("opacity", 0.8);
+                tooltip.html('Amount: ' + d.amount + "<br/> Sex: "  + d.sex + "<br/> Status: "  + d.status + "<br/> Year: "  + (d.year).getFullYear())  
+                       .style("left", (d3.event.pageX) + "px")          
+                       .style("top", (d3.event.pageY - 28) + "px");
+
+                setTimeout(removeTooltip, 3000);
             });
 
         
@@ -198,13 +311,9 @@ function sp(){
         var status = ["single", "married"];
         data.self = recalcData(data);
 
-        //var kalle = handleData(data.self, region, status);
-
         fixAxels(data.self, region, status);
         drawSetup(data.self, status);
     }
-
-
 
     this.updateSP = function(data, val, status){
 
@@ -281,10 +390,6 @@ function sp(){
         return filterDataR;
     }
 
-    function selectDots(){
-        console.log("clicked");
-
-    }
     
 }
 
