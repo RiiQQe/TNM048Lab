@@ -1,10 +1,10 @@
-var data, region = "Jarfalla";
-
 function sp(){
 
     var vals = [];
 
 	var self = this;
+
+    var realData, reg = "Jarfalla";
 
     var dotsColor = ["red", "green", "brown", "orange"];
 
@@ -47,15 +47,15 @@ function sp(){
 
     jQuery(function(){
         $('input.mybox').click(function() {
-            sp1.updateSP(self.data, region, vals);
+            sp1.updateSP(reg);
         })
     });
 
     var statuses = {single:8, married:6, "widow/widower":4, divorced:2};
 
-    var dots, rects;
+    var dots
 
-    function drawSetup(data, status){
+    function drawSetup(status){
 
         svg.append("g")
             .attr("class", "x axis")
@@ -77,13 +77,14 @@ function sp(){
             .attr("dy", ".71em");
 
         dots = svg.selectAll(".dot")
-            .data(data)
+            .data(realData)
             .enter();
 
         dots.append("circle")
-            .filter(function(d) { 
+            .filter(function(d) {
+
                 var noDigitsAndTrim = d.region.replace(/[0-9]/g, "").trim();
-                if(noDigitsAndTrim == region && status.indexOf(d["status"]) !== -1){
+                if(noDigitsAndTrim == reg && status.indexOf(d["status"]) !== -1){
                     if(d["sex"] == "kvinnor" || d["sex"] == "women")
                         return d; 
                 } 
@@ -117,7 +118,7 @@ function sp(){
             dots.append("rect")
             .filter(function(d) { 
                 var noDigitsAndTrim = d.region.replace(/[0-9]/g, "").trim();
-                if(noDigitsAndTrim == region && status.indexOf(d["status"]) !== -1){
+                if(noDigitsAndTrim == reg && status.indexOf(d["status"]) !== -1){
                     if(d["sex"] == "men")
                         return d; 
                 } 
@@ -174,7 +175,8 @@ function sp(){
             .attr("x", width)
             .attr("y", 0)
             .style("font-size", "20px")
-            .text(region);
+            .text(reg);        
+
 
         var legendData = [];
 
@@ -249,18 +251,15 @@ function sp(){
                 .style("opacity", 0);
     }
 
-    function redo(data, region, status){
-
-
-
+    function redo(status){
         svg.select(".region")
-            .text(region);
+            .text(reg);
 
         svg.selectAll(".dot").remove();
         dots.append("circle")
             .filter(function(d) { 
                 var noDigitsAndTrim = d.region.replace(/[0-9]/g, "").trim();
-                if(noDigitsAndTrim == region && status.indexOf(d["status"]) !== -1){
+                if(noDigitsAndTrim == reg && status.indexOf(d["status"]) !== -1){
                     if(d["sex"] == "kvinnor" || d["sex"] == "women")
                         return d; 
                 } 
@@ -294,7 +293,7 @@ function sp(){
             dots.append("rect")
             .filter(function(d) { 
                 var noDigitsAndTrim = d.region.replace(/[0-9]/g, "").trim();
-                if(noDigitsAndTrim == region && status.indexOf(d["status"]) !== -1){
+                if(noDigitsAndTrim == reg && status.indexOf(d["status"]) !== -1){
                     if(d["sex"] == "men")
                         return d; 
                 } 
@@ -401,13 +400,13 @@ function sp(){
 
     this.startSP = function(data){
         var status = ["single", "married"];
-        data.self = recalcData(data);
-
-        fixAxels(data.self, region, status);
-        drawSetup(data.self, status);
+        realData = data;
+        fixAxels(status);
+        drawSetup(status);
     }
 
-    this.updateSP = function(data, val, status){
+    this.updateSP = function(region){
+        reg = region;
 
         var status = [];
         jQuery(function(){
@@ -419,43 +418,19 @@ function sp(){
         if(!status)
             var status = ["single", "married"];
 
-        region = val;
+        fixAxels(status);
 
-        fixAxels(data.self, region, status);
-
-        redo(data.self, region, status);
+        redo(status);
     }
 
-    function recalcData(data){
-        var mapped = [];
-        for(var key in data[0]){
-            if(!isNaN(parseFloat(key))){
-                mapped.push(data.map(function(d){
-                    var tempObj = {amount:parseFloat(d[key]), region:d["region"], "status":d["marital status"], year:new Date(key), sex:d["sex"]};
-                    return tempObj;
-                }));                
-            }
-        }
-
-        var newMapped = [];
-
-        mapped.forEach(function(d){
-            d.forEach(function(f){
-                newMapped.push(f);
-            });
-        }); 
-
-        return newMapped;
-    }
-
-    function fixAxels(data, region, status){
+    function fixAxels(status){
 
         var vals = [];
         var vals2 = [];
 
-        data.forEach(function(d){
+        realData.forEach(function(d){
             var noDigitsAndTrim = d.region.replace(/[0-9]/g, "").trim();
-            if(noDigitsAndTrim == region && status.indexOf(d["status"]) != -1){
+            if(noDigitsAndTrim == reg && status.indexOf(d["status"]) != -1){
                 vals2.push(d.amount);
                 vals.push(new Date(d.year));
             }
@@ -466,22 +441,6 @@ function sp(){
         
         svg.select("g .y.axis")
             .call(yAxis);
-    }
-
-    function handleData(data, val, status){
-        var filterDataR = data.filter(function(d){
-            var noDigitsAndTrim = d.region.replace(/[0-9]/g, "").trim();
-            if(noDigitsAndTrim == val && status.indexOf(d["status"]) != -1){
-                d["region"] = noDigitsAndTrim;
-                return d; 
-            }
-        });
-
-        fixAxels(filterDataR);
-
-        return filterDataR;
-    }
-
-    
+    }    
 }
 

@@ -6,6 +6,8 @@ function map(){
 
     var self = this; // for internal d3 functions
 
+    var realData, status = "single";
+
     var mapDiv = $("#map");
 
     var color = d3.scale.category20();
@@ -50,28 +52,23 @@ function map(){
     var csv = 'data/Swedish_Population_Statistics.csv';
     var municipalities, newData;
 
-    //var year = "2011";  
-        
-    d3.csv(csv, function(data){
-        sp1.data = data;
-        self.data = data;
-        makeCalcs(data);
-    
-    });
-
     var arrRep1 = ["Å", "Ä", "Ö", "å", "ä", "ö"];
     var arrRep2 = ["A", "A", "O", "a", "a", "ö"];
 
-    d3.json("data/swe_mun.topojson", function(error, sweden){
-        if(error) return console.error(error);
-        
-        municipalities = topojson.feature(sweden, sweden.objects.swe_mun).features;
+    this.startFun = function(data){
+        d3.json("data/swe_mun.topojson", function(error, sweden){
+            realData = data;
+            if(error) return console.error(error);
+            
+            municipalities = topojson.feature(sweden, sweden.objects.swe_mun).features;
 
-        municipalities = replaceLetters(municipalities);
+            municipalities = replaceLetters(municipalities);
 
-        draw(municipalities, newData);
+            draw(municipalities);
 
-     });
+         });
+    }
+
 
     function replaceLetters(municipalities){
 
@@ -87,7 +84,7 @@ function map(){
         return municipalities;
     }
 
-    function draw(municipalities, n){
+    function draw(municipalities){
         var municipality = g.selectAll(".municipality").data(municipalities);
 
         municipality.enter().insert("path")
@@ -97,13 +94,14 @@ function map(){
                     .style("stroke", "white")
                     .style("fill", function(d){
                         var colo = undefined;
-                        n.forEach(function(c){
-                            if(d.properties.name == c.region) 
-                                colo = colorRangeTester(c.total[year]);
+                        realData.forEach(function(c){
+                            if(d.properties.name == c.key){
+                                colo = colorRangeTester(c.values[1].values);            //TODO: changes this [1] so it corresponds to "status"
+                            }
                         });
                         return colo;
                      })
-                    .on("click", function(d) { sp1.updateSP(self.data, d.properties.name); })
+                    .on("click", function(d) { sp1.updateSP(d.properties.name); })
                     
                     //Tooltip functions
                     .on("mousemove", function(d){
@@ -121,62 +119,12 @@ function map(){
                     });
     }
 
-    //  Creates a new Dataset that looks like this: 
-    //  newData.region gives region
-    //  newData.men/.women/.total gives array with years as attribute and with sum for each group ('singles, married etc..') as values
-    function makeCalcs(data){
-        sp1.startSP(data);
-
-        data.forEach(function(d){
-
-            var withNoDigitsAndTrim = d.region.replace(/[0-9]/g, '').trim();
-
-            //Just because the data is screwing us over..
-            //With both "kvinnor" and "women" as keyvalues..
-            if(d.sex == "kvinnor") keysVar = "women";
-            else keysVar = d.sex;
-            var counter = 0;
-            var alreadyExists = false;
-            newData.forEach(function(nd){
-                if(nd.region == withNoDigitsAndTrim) alreadyExists = true;
-                else if(!alreadyExists) counter++;
-            });
-
-            if(!alreadyExists) {
-                newData.push({region:withNoDigitsAndTrim});
-                counter = newData.length - 1;
-            }
-
-            
-            if(!newData[counter][keysVar]) newData[counter][keysVar] = []; 
-            if(!newData[counter]["total"]) newData[counter]["total"] = []; 
-
-            for(var key in d){
-                if(!isNaN(parseFloat(d[key])) && !isNaN(parseFloat(key))) {
-                    
-                    if(!newData[counter]["total"][key]) 
-                        newData[counter]["total"][key] = 0;
-                           
-                    if(!newData[counter][keysVar][key])
-                        newData[counter][keysVar][key] = 0;
-
-                    newData[counter]["total"][key] += parseFloat(d[key]);
-                    newData[counter][keysVar][key] += parseFloat(d[key]);
-                }
-            }
-
-        });
-        
-        recalculateRange(newData, "total");
-        
-    }
-
-    function recalculateRange(n, val){
+    function recalculateRange(val){
         var min, max,
             prevMax = 0,
             prevMin = Infinity;
 
-        newData.forEach(function(nd){
+        realData.forEach(function(nd){
             max = d3.max(nd[val]);
             min = d3.min(nd[val]);
             if(max > prevMax)
@@ -187,7 +135,6 @@ function map(){
             
         });
         
-
         //colorbrew.domain([prevMin, prevMax]);
         colorRangeTester.domain([prevMin, prevMax]);
     }
@@ -211,10 +158,11 @@ function map(){
         for(var i = 0; i < radios.length; i++){
             if(radios[i].checked) sex = radios[i].value;
         }
-        var year = document.getElementById("year").value;
-        if(!year || parseFloat(year) < 2000 || parseFloat(year) > 2012) alert("fill in year between 2000-2012");
+        var year = document.getElementById("yearSpan").innerHTML;
+
+        if(!year || parseFloat(year) < 2000 || parseFloat(year) > 2012) alert(year);
         else{
-            recalculateRange(newData, sex);
+            recalculateRange(realData, sex);
 
             toggleColor(year, sex, newData);
 
@@ -236,7 +184,5 @@ function map(){
             });
     
     }
-
-
 }
 
