@@ -331,10 +331,6 @@ function sp(){
             .remove();
 
         var legendData = [];
-            /*legendData.push({men:"single"});
-            legendData.push({men:"married"});
-            legendData.push({women:"single"});
-            legendData.push({women:"married"});*/
 
             for(var i = 0; i < status.length; i++){
                 legendData.push({men:status[i]});
