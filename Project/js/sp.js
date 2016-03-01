@@ -53,7 +53,7 @@ function sp(){
 
     var statuses = {single:8, married:6, "widow/widower":4, divorced:2};
 
-    var dots
+    var dots;
 
     function drawSetup(status){
 
