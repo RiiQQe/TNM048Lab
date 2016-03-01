@@ -55,6 +55,9 @@ function sp(){
 
     function drawSetup(data, status){
 
+        console.log(status);
+
+
         svg.append("g")
             .attr("class", "x axis")
             .attr("transform", "translate(0," + height + ")")
@@ -77,6 +80,7 @@ function sp(){
         dots = svg.selectAll(".dot")
             .data(data)
             .enter();
+
         dots.append("circle")
             .filter(function(d) { 
                 var noDigitsAndTrim = d.region.replace(/[0-9]/g, "").trim();
@@ -93,8 +97,10 @@ function sp(){
             })
             .style("fill", function(d){
 
-                if(d.sex == "men") return "blue";
-                else return "red";
+                if(d.status == "single") return "red";
+                if(d.status == "married") return "green";
+                if(d.status == "divorced") return "blue";
+                if(d.status == "widow/widower") return "black";
 
             })
 
@@ -129,9 +135,10 @@ function sp(){
                 return statuses[d.status] * 1.5;
             })
             .style("fill", function(d){
-
-                if(d.sex == "men") return "blue";
-                else return "red";
+                if(d.status == "single") return "red";
+                if(d.status == "married") return "green";
+                if(d.status == "divorced") return "blue";
+                if(d.status == "widow/widower") return "black";
 
             })
 
@@ -176,28 +183,72 @@ function sp(){
             .style("font-size", "20px")
             .text(region);
 
+        var legendData = [];
+
+            for(var i = 0; i < status.length; i++){
+                legendData.push({men:status[i]});
+                legendData.push({women:status[i]});
+            }
+
+            console.log(legendData)
         var legend = svg.selectAll(".legend")
-            .data(status)
+            .data(legendData)
             .enter().append("g")
             .attr("class", "legend")
             .attr("transform", function(d, i) { return "translate(0," + i * 20 + ")"; });
 
-        legend.append("rect")
+        legend.append("rect").filter(function(d) { return d.men; })
             .attr("x", width - 18)
             .attr("width", 18)
             .attr("height", 18)
             .style("fill",  function(d) { 
-                if(d == "single")
+                if(d["men"] == "single")
                     return "red";
-             });  
+                if(d["men"] == "married")
+                    return "green";
+                if(d["men"] == "divorced")
+                    return "blue";
+                if(d["men"] == "widow/widower")
+                    return "black";
+             });
+
+        legend.append("circle").filter(function(d) { return d.women; })
+            .attr("cx", width - 9 )
+            .attr("cy", 8)
+            .attr("r", "0.8em")
+            .style("fill",  function(d) { 
+                if(d["women"] == "single")
+                    return "red";
+                if(d["women"] == "married")
+                    return "green";
+                if(d["women"] == "divorced")
+                    return "blue";
+                if(d["women"] == "widow/widower")
+                    return "black";
+             });
 
         legend.append("text")
             .attr("x", width - 24)
             .attr("y", 9)
             .attr("dy", ".35em")
             .style("text-anchor", "end")
-            .text(function(d){ return d; });    
-
+            .text(function(d){ 
+                if(d["men"] == "single") 
+                    return "Single men";     
+                if(d["men"] == "married") 
+                    return "Married men";
+                if(d["men"] == "divorced") 
+                    return "Divorced men";
+                if(d["men"] == "widow/widower") 
+                    return "Widow men";
+                if(d["women"] == "single") 
+                    return "Single women";     
+                if(d["women"] == "married") 
+                    return "Married women";
+                if(d["women"] == "divorced") 
+                    return "Divorced women";
+                if(d["women"] == "widow/widower") 
+                    return "Widow women"; });
     }
 
     function removeTooltip(){
@@ -207,6 +258,8 @@ function sp(){
     }
 
     function redo(data, region, status){
+
+        //console.log(data);
 
         svg.select(".region")
             .text(region);
@@ -228,8 +281,10 @@ function sp(){
             })
             .style("fill", function(d){
 
-                if(d.sex == "men") return "blue";
-                else return "red";
+                if(d.status == "single") return "red";
+                if(d.status == "married") return "green";
+                if(d.status == "divorced") return "blue";
+                if(d.status == "widow/widower") return "black";
 
             })
 
@@ -265,8 +320,10 @@ function sp(){
             })
             .style("fill", function(d){
 
-                if(d.sex == "men") return "blue";
-                else return "red";
+                if(d.status == "single") return "red";
+                if(d.status == "married") return "green";
+                if(d.status == "divorced") return "blue";
+                if(d.status == "widow/widower") return "black";
 
             })
 
@@ -287,26 +344,76 @@ function sp(){
         d3.selectAll(".legend")
             .remove();
 
+        var legendData = [];
+            /*legendData.push({men:"single"});
+            legendData.push({men:"married"});
+            legendData.push({women:"single"});
+            legendData.push({women:"married"});*/
+
+            for(var i = 0; i < status.length; i++){
+                legendData.push({men:status[i]});
+                legendData.push({women:status[i]});
+            }
+
+            console.log(legendData)
         var legend = svg.selectAll(".legend")
-            .data(status)
+            .data(legendData)
             .enter().append("g")
             .attr("class", "legend")
             .attr("transform", function(d, i) { return "translate(0," + i * 20 + ")"; });
 
-
-        legend.append("rect")
+        legend.append("rect").filter(function(d) { return d.men; })
             .attr("x", width - 18)
             .attr("width", 18)
             .attr("height", 18)
-            .style("fill",  "#00ff00");  
+            .style("fill",  function(d) { 
+                if(d["men"] == "single")
+                    return "red";
+                if(d["men"] == "married")
+                    return "green";
+                if(d["men"] == "divorced")
+                    return "blue";
+                if(d["men"] == "widow/widower")
+                    return "black";
+             });
 
-        console.log(status);
+        legend.append("circle").filter(function(d) { return d.women; })
+            .attr("cx", width - 9 )
+            .attr("cy", 8)
+            .attr("r", "0.8em")
+            .style("fill",  function(d) { 
+                if(d["women"] == "single")
+                    return "red";
+                if(d["women"] == "married")
+                    return "green";
+                if(d["women"] == "divorced")
+                    return "blue";
+                if(d["women"] == "widow/widower")
+                    return "black";
+             });
+
         legend.append("text")
             .attr("x", width - 24)
             .attr("y", 9)
             .attr("dy", ".35em")
             .style("text-anchor", "end")
-            .text(function(d){ return d;}); 
+            .text(function(d){ 
+                if(d["men"] == "single") 
+                    return "Single men";     
+                if(d["men"] == "married") 
+                    return "Married men";
+                if(d["men"] == "divorced") 
+                    return "Divorced men";
+                if(d["men"] == "widow/widower") 
+                    return "Widow men";
+                if(d["women"] == "single") 
+                    return "Single women";     
+                if(d["women"] == "married") 
+                    return "Married women";
+                if(d["women"] == "divorced") 
+                    return "Divorced women";
+                if(d["women"] == "widow/widower") 
+                    return "Widow women"; }); 
 
     }
 
