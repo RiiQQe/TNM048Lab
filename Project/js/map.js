@@ -150,39 +150,30 @@ function map(){
 
     }
 
-    var radios = document.getElementsByName("myradio");
+    this.toggleColor = function(val){
 
-    document.getElementById("btn").addEventListener("click", function(){
+    var temp = 0;
+    if(val == "married") temp = 1;
+    else if(val == "divorced") temp = 2;
+    else if(val.toLowerCase() == "widow/widower") temp = 3;
+     
 
-        var sex = undefined;
-        for(var i = 0; i < radios.length; i++){
-            if(radios[i].checked) sex = radios[i].value;
-        }
-        var year = document.getElementById("yearSpan").innerHTML;
-
-        if(!year || parseFloat(year) < 2000 || parseFloat(year) > 2012) alert(year);
-        else{
-            recalculateRange(realData, sex);
-
-            toggleColor(year, sex, newData);
-
-            console.log("working");
-        }
-    });
-
-   function toggleColor(val, sex, n){
-        
-        d3.selectAll(".municipality")
-            .style("fill", function(d){
-                var colo = undefined;
-                n.forEach(function(c){
-                    if(d.properties.name == c.region) 
-                        colo = colorRangeTester(c[sex][year]);
-                });
-              
-                return colo;
+    d3.selectAll(".municipality")
+        .style("fill", function(d){
+            var colo = undefined;
+            realData.forEach(function(c){
+                if(d.properties.name == c.key){
+                    colo = colorRangeTester(c.values[temp].values);            //TODO: changes this [1] so it corresponds to "status"
+                }
             });
-    
+          
+            return colo;
+        });
+
     }
+}
+
+function fun(val){
+    map1.toggleColor(val);
 }
 
