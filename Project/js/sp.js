@@ -117,14 +117,33 @@ function sp(){
             .attr("x", width)
             .attr("y", 0)
             .style("font-size", "20px")
-            .text(region);        
+            .text(region);
+
+        var legend = svg.selectAll(".legend")
+            .data(status)
+            .enter().append("g")
+            .attr("class", "legend")
+            .attr("transform", function(d, i) { return "translate(0," + i * 20 + ")"; });
+
+        legend.append("rect")
+            .attr("x", width - 18)
+            .attr("width", 18)
+            .attr("height", 18)
+            .style("fill",  "#00ff00");  
+
+        legend.append("text")
+            .attr("x", width - 24)
+            .attr("y", 9)
+            .attr("dy", ".35em")
+            .style("text-anchor", "end")
+            .text(status);    
+
     }
 
     function redo(data, region, status){
 
         svg.select(".region")
             .text(region);
-
 
         svg.selectAll(".dot").remove();
         dots.append("circle")
@@ -147,15 +166,17 @@ function sp(){
 
             });
 
-        //Ta ej bort, ska användas till att skriva ut legend  
-       /* var legend = svg.selectAll(".legend")
-        .data(data)
-        .enter().append("g")
-        .attr("class", "legend")
-        .attr("transform", function(d, i) { return "translate(0," + i * 20 + ")"; });
+        
+        //Tar bort legend före uppdatering och skapar ny legend
+        d3.selectAll(".legend")
+            .remove();
 
-        console.log(width);
-        console.log(height);
+        var legend = svg.selectAll(".legend")
+            .data(status)
+            .enter().append("g")
+            .attr("class", "legend")
+            .attr("transform", function(d, i) { return "translate(0," + i * 20 + ")"; });
+
 
         legend.append("rect")
             .attr("x", width - 18)
@@ -163,12 +184,13 @@ function sp(){
             .attr("height", 18)
             .style("fill",  "#00ff00");  
 
+        console.log(status);
         legend.append("text")
             .attr("x", width - 24)
             .attr("y", 9)
             .attr("dy", ".35em")
             .style("text-anchor", "end")
-            .text(function(d) { return d.status}); */
+            .text(function(d){ return d;}); 
 
     }
 
