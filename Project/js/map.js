@@ -1,5 +1,3 @@
-var realData, status = "single";
-
 function map(){
     //testkommentar för git
     var newData = [];
@@ -7,6 +5,8 @@ function map(){
     var year = "2011";
 
     var self = this; // for internal d3 functions
+
+    var realData, status = "single";
 
     var mapDiv = $("#map");
 
@@ -86,7 +86,7 @@ function map(){
 
     function draw(municipalities){
         var municipality = g.selectAll(".municipality").data(municipalities);
-        console.log(realData);
+
         municipality.enter().insert("path")
                     .attr("class", "municipality")
                     .attr("d", path)

@@ -6,10 +6,10 @@ function data(){
 	var csv = 'data/Swedish_Population_Statistics.csv';
 
 	d3.csv(csv, function(data){
-        sp1.data = data;
         self.data = data;
         var newData = createData(data);
-        var newDataMap = createDataMap(newData);
+        var tempData =	newData; //createData(data);
+        var newDataMap = createDataMap(tempData);
 
         map1.startFun(newDataMap);
         sp1.startSP(newData);
