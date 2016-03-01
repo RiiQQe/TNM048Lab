@@ -186,14 +186,17 @@ function sp(){
             .attr("x", width - 18)
             .attr("width", 18)
             .attr("height", 18)
-            .style("fill",  "#00ff00");  
+            .style("fill",  function(d) { 
+                if(d == "single")
+                    return "red";
+             });  
 
         legend.append("text")
             .attr("x", width - 24)
             .attr("y", 9)
             .attr("dy", ".35em")
             .style("text-anchor", "end")
-            .text(status);    
+            .text(function(d){ return d; });    
 
     }
 
