@@ -6,6 +6,8 @@ function sp(){
 
 	var self = this;
 
+    var dotsColor = ["red", "green", "brown", "orange"];
+
     var format = d3.time.format.utc("");//Complete the code
 
 	var spDiv = $("#sp");
@@ -55,9 +57,6 @@ function sp(){
 
     function drawSetup(data, status){
 
-        console.log(status);
-
-
         svg.append("g")
             .attr("class", "x axis")
             .attr("transform", "translate(0," + height + ")")
@@ -92,15 +91,13 @@ function sp(){
             .attr("class", "dot")
             .attr("cx", function(d){ return x(d.year); })
             .attr("cy", function(d){ return y(d.amount); })
-            .attr("r", function(d){
-                return statuses[d.status];
-            })
+            .attr("r", "0.4em")
             .style("fill", function(d){
 
-                if(d.status == "single") return "red";
-                if(d.status == "married") return "green";
-                if(d.status == "divorced") return "blue";
-                if(d.status == "widow/widower") return "black";
+                if(d.status == "single") return dotsColor[0];
+                if(d.status == "married") return dotsColor[1];
+                if(d.status == "divorced") return dotsColor[2];
+                if(d.status == "widow/widower") return dotsColor[3];
 
             })
 
@@ -128,17 +125,13 @@ function sp(){
             .attr("class", "dot")
             .attr("x", function(d){ return x(d.year); })
             .attr("y", function(d){ return y(d.amount); })
-            .attr("width", function(d){
-                return statuses[d.status] * 1.5;
-            })
-            .attr("height", function(d){
-                return statuses[d.status] * 1.5;
-            })
+            .attr("width", 8)
+            .attr("height", 8)
             .style("fill", function(d){
-                if(d.status == "single") return "red";
-                if(d.status == "married") return "green";
-                if(d.status == "divorced") return "blue";
-                if(d.status == "widow/widower") return "black";
+                if(d.status == "single") return dotsColor[0];
+                if(d.status == "married") return dotsColor[1];
+                if(d.status == "divorced") return dotsColor[2];
+                if(d.status == "widow/widower") return dotsColor[3];
 
             })
 
@@ -190,7 +183,6 @@ function sp(){
                 legendData.push({women:status[i]});
             }
 
-            console.log(legendData)
         var legend = svg.selectAll(".legend")
             .data(legendData)
             .enter().append("g")
@@ -203,13 +195,13 @@ function sp(){
             .attr("height", 18)
             .style("fill",  function(d) { 
                 if(d["men"] == "single")
-                    return "red";
+                    return dotsColor[0];
                 if(d["men"] == "married")
-                    return "green";
+                    return dotsColor[1];
                 if(d["men"] == "divorced")
-                    return "blue";
+                    return dotsColor[2];
                 if(d["men"] == "widow/widower")
-                    return "black";
+                    return dotsColor[3];
              });
 
         legend.append("circle").filter(function(d) { return d.women; })
@@ -218,13 +210,13 @@ function sp(){
             .attr("r", "0.8em")
             .style("fill",  function(d) { 
                 if(d["women"] == "single")
-                    return "red";
+                    return dotsColor[0];
                 if(d["women"] == "married")
-                    return "green";
+                    return dotsColor[1];
                 if(d["women"] == "divorced")
-                    return "blue";
+                    return dotsColor[2];
                 if(d["women"] == "widow/widower")
-                    return "black";
+                    return dotsColor[3];
              });
 
         legend.append("text")
@@ -259,7 +251,7 @@ function sp(){
 
     function redo(data, region, status){
 
-        //console.log(data);
+
 
         svg.select(".region")
             .text(region);
@@ -276,15 +268,13 @@ function sp(){
             .attr("class", "dot")
             .attr("cx", function(d){ return x(d.year); })
             .attr("cy", function(d){ return y(d.amount); })
-            .attr("r", function(d){
-                return statuses[d.status];
-            })
+            .attr("r", "0.4em")
             .style("fill", function(d){
 
-                if(d.status == "single") return "red";
-                if(d.status == "married") return "green";
-                if(d.status == "divorced") return "blue";
-                if(d.status == "widow/widower") return "black";
+                if(d.status == "single") return dotsColor[0];
+                if(d.status == "married") return dotsColor[1];
+                if(d.status == "divorced") return dotsColor[2];
+                if(d.status == "widow/widower") return dotsColor[3];
 
             })
 
@@ -312,18 +302,14 @@ function sp(){
             .attr("class", "dot")
             .attr("x", function(d){ return x(d.year); })
             .attr("y", function(d){ return y(d.amount); })
-            .attr("width", function(d){
-                return statuses[d.status] * 1.5;
-            })
-            .attr("height", function(d){
-                return statuses[d.status] * 1.5;
-            })
+            .attr("width", 8)
+            .attr("height", 8)
             .style("fill", function(d){
 
-                if(d.status == "single") return "red";
-                if(d.status == "married") return "green";
-                if(d.status == "divorced") return "blue";
-                if(d.status == "widow/widower") return "black";
+                if(d.status == "single") return dotsColor[0];
+                if(d.status == "married") return dotsColor[1];
+                if(d.status == "divorced") return dotsColor[2];
+                if(d.status == "widow/widower") return dotsColor[3];
 
             })
 
@@ -355,7 +341,7 @@ function sp(){
                 legendData.push({women:status[i]});
             }
 
-            console.log(legendData)
+
         var legend = svg.selectAll(".legend")
             .data(legendData)
             .enter().append("g")
@@ -368,13 +354,13 @@ function sp(){
             .attr("height", 18)
             .style("fill",  function(d) { 
                 if(d["men"] == "single")
-                    return "red";
+                    return dotsColor[0];
                 if(d["men"] == "married")
-                    return "green";
+                    return dotsColor[1];
                 if(d["men"] == "divorced")
-                    return "blue";
+                    return dotsColor[2];
                 if(d["men"] == "widow/widower")
-                    return "black";
+                    return dotsColor[3];
              });
 
         legend.append("circle").filter(function(d) { return d.women; })
@@ -383,13 +369,13 @@ function sp(){
             .attr("r", "0.8em")
             .style("fill",  function(d) { 
                 if(d["women"] == "single")
-                    return "red";
+                    return dotsColor[0];
                 if(d["women"] == "married")
-                    return "green";
+                    return dotsColor[1];
                 if(d["women"] == "divorced")
-                    return "blue";
+                    return dotsColor[2];
                 if(d["women"] == "widow/widower")
-                    return "black";
+                    return dotsColor[3];
              });
 
         legend.append("text")
@@ -470,7 +456,7 @@ function sp(){
 
         var vals = [];
         var vals2 = [];
-        console.log(region);
+
         data.forEach(function(d){
             var noDigitsAndTrim = d.region.replace(/[0-9]/g, "").trim();
             if(noDigitsAndTrim == region && status.indexOf(d["status"]) != -1){
