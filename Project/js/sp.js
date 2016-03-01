@@ -38,6 +38,11 @@ function sp(){
         .append("g")
         .attr("transform", "translate(" + margin.left + "," + margin.top + ")");
 
+    var tooltip = d3.select("body").append("div")
+            .attr("class", "tooltip")
+            .style("opacity", 0);
+
+
     jQuery(function(){
         $('input.mybox').click(function() {
             sp1.updateSP(self.data, region, vals);
@@ -89,7 +94,25 @@ function sp(){
                 if(d.sex == "men") return "blue";
                 else return "red";
 
+            })
+
+            .on("mouseover", function(d){
+
+                tooltip.transition()
+                       .duration(300)
+                       .style("opacity", 1);
+
+                tooltip.html('amount: ' + d.amount + "<br/>"  + (d.year).getFullYear())  
+                .style("left", (d3.event.pageX) + "px")          
+                .style("top", (d3.event.pageY - 28) + "px");
+
+                setTimeout(removeTooltip, 3000);
             });
+
+
+
+            
+
 
         //xAxis
         svg.append("text")
@@ -120,6 +143,12 @@ function sp(){
             .text(region);        
     }
 
+    function removeTooltip(){
+        tooltip.transition()
+                .duration(300)
+                .style("opacity", 0);
+    }
+
     function redo(data, region, status){
 
         svg.select(".region")
@@ -145,6 +174,19 @@ function sp(){
                 if(d.sex == "men") return "blue";
                 else return "red";
 
+            })
+            .on("mouseover", function(d){
+
+                tooltip.transition()
+                       .duration(300)
+                       .style("opacity", 1);
+
+                tooltip.html('amount: ' + d.amount + "<br/>"  + (d.year).getFullYear())  
+                .style("left", (d3.event.pageX) + "px")          
+                .style("top", (d3.event.pageY - 28) + "px");
+            
+                
+                setTimeout(removeTooltip, 3000);
             });
 
         //Ta ej bort, ska användas till att skriva ut legend  
@@ -176,13 +218,9 @@ function sp(){
         var status = ["single", "married"];
         data.self = recalcData(data);
 
-        //var kalle = handleData(data.self, region, status);
-
         fixAxels(data.self, region, status);
         drawSetup(data.self, status);
     }
-
-
 
     this.updateSP = function(data, val, status){
 
@@ -259,10 +297,6 @@ function sp(){
         return filterDataR;
     }
 
-    function selectDots(){
-        console.log("clicked");
-
-    }
     
 }
 
