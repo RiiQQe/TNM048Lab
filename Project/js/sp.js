@@ -51,9 +51,10 @@ function sp(){
 
     var statuses = {single:8, married:6, "widow/widower":4, divorced:2};
 
-    var dots;
+    var dots, rects;
 
     function drawSetup(data, status){
+
         svg.append("g")
             .attr("class", "x axis")
             .attr("transform", "translate(0," + height + ")")
@@ -80,7 +81,8 @@ function sp(){
             .filter(function(d) { 
                 var noDigitsAndTrim = d.region.replace(/[0-9]/g, "").trim();
                 if(noDigitsAndTrim == region && status.indexOf(d["status"]) !== -1){
-                    return d; 
+                    if(d["sex"] == "kvinnor" || d["sex"] == "women")
+                        return d; 
                 } 
             })
             .attr("class", "dot")
@@ -102,16 +104,48 @@ function sp(){
                        .duration(300)
                        .style("opacity", 0.8);
 
-                tooltip.html('amount: ' + d.amount + "<br/>"  + (d.year).getFullYear())  
+                tooltip.html('Amount: ' + d.amount + "<br/> Sex: "  + d.sex + "<br/> Status: "  + d.status + "<br/> Year: "  + (d.year).getFullYear())  
                 .style("left", (d3.event.pageX) + "px")          
                 .style("top", (d3.event.pageY - 28) + "px");
 
                 setTimeout(removeTooltip, 3000);
             });
 
+            dots.append("rect")
+            .filter(function(d) { 
+                var noDigitsAndTrim = d.region.replace(/[0-9]/g, "").trim();
+                if(noDigitsAndTrim == region && status.indexOf(d["status"]) !== -1){
+                    if(d["sex"] == "men")
+                        return d; 
+                } 
+            })
+            .attr("class", "dot")
+            .attr("x", function(d){ return x(d.year); })
+            .attr("y", function(d){ return y(d.amount); })
+            .attr("width", function(d){
+                return statuses[d.status] * 1.5;
+            })
+            .attr("height", function(d){
+                return statuses[d.status] * 1.5;
+            })
+            .style("fill", function(d){
 
+                if(d.sex == "men") return "blue";
+                else return "red";
 
-            
+            })
+
+            .on("mouseover", function(d){
+
+                tooltip.transition()
+                       .duration(300)
+                       .style("opacity", 0.8);
+                tooltip.html('Amount: ' + d.amount + "<br/> Sex: "  + d.sex + "<br/> Status: "  + d.status + "<br/> Year: "  + (d.year).getFullYear())  
+                       .style("left", (d3.event.pageX) + "px")          
+                       .style("top", (d3.event.pageY - 28) + "px");
+
+                setTimeout(removeTooltip, 3000);
+            });
 
 
         //xAxis
@@ -154,13 +188,13 @@ function sp(){
         svg.select(".region")
             .text(region);
 
-
         svg.selectAll(".dot").remove();
         dots.append("circle")
             .filter(function(d) { 
                 var noDigitsAndTrim = d.region.replace(/[0-9]/g, "").trim();
                 if(noDigitsAndTrim == region && status.indexOf(d["status"]) !== -1){
-                    return d; 
+                    if(d["sex"] == "kvinnor" || d["sex"] == "women")
+                        return d; 
                 } 
             })
             .attr("class", "dot")
@@ -175,16 +209,52 @@ function sp(){
                 else return "red";
 
             })
+
             .on("mouseover", function(d){
 
                 tooltip.transition()
                        .duration(300)
                        .style("opacity", 0.8);
 
-                tooltip.html('amount: ' + d.amount + "<br/>"  + (d.year).getFullYear())  
+                tooltip.html('Amount: ' + d.amount + "<br/> Sex: "  + d.sex + "<br/> Status: "  + d.status + "<br/> Year: "  + (d.year).getFullYear())  
                 .style("left", (d3.event.pageX) + "px")          
                 .style("top", (d3.event.pageY - 28) + "px");
-            
+
+                setTimeout(removeTooltip, 3000);
+            });
+
+            dots.append("rect")
+            .filter(function(d) { 
+                var noDigitsAndTrim = d.region.replace(/[0-9]/g, "").trim();
+                if(noDigitsAndTrim == region && status.indexOf(d["status"]) !== -1){
+                    if(d["sex"] == "men")
+                        return d; 
+                } 
+            })
+            .attr("class", "dot")
+            .attr("x", function(d){ return x(d.year); })
+            .attr("y", function(d){ return y(d.amount); })
+            .attr("width", function(d){
+                return statuses[d.status] * 1.5;
+            })
+            .attr("height", function(d){
+                return statuses[d.status] * 1.5;
+            })
+            .style("fill", function(d){
+
+                if(d.sex == "men") return "blue";
+                else return "red";
+
+            })
+
+            .on("mouseover", function(d){
+
+                tooltip.transition()
+                       .duration(300)
+                       .style("opacity", 0.8);
+                tooltip.html('Amount: ' + d.amount + "<br/> Sex: "  + d.sex + "<br/> Status: "  + d.status + "<br/> Year: "  + (d.year).getFullYear())  
+                       .style("left", (d3.event.pageX) + "px")          
+                       .style("top", (d3.event.pageY - 28) + "px");
 
                 setTimeout(removeTooltip, 3000);
             });
