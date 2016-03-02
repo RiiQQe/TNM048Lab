@@ -7,6 +7,7 @@ function sp(){
     var realData, reg = "Jarfalla";
 
     var dotsColor = ["red", "green", "brown", "orange"];
+    var dotsColor2 = {single:"red", married:"green", divorced:"brown", "widow/widower":"orange"};
 
     var format = d3.time.format.utc("");//Complete the code
 
@@ -96,12 +97,7 @@ function sp(){
             .attr("cy", function(d){ return y(d.amount); })
             .attr("r", "0.4em")
             .style("fill", function(d){
-
-                if(d.status == "single") return dotsColor[0];
-                if(d.status == "married") return dotsColor[1];
-                if(d.status == "divorced") return dotsColor[2];
-                if(d.status == "widow/widower") return dotsColor[3];
-
+                    return dotsColor2[d.status];
             })
 
             .on("mouseover", function(d){
@@ -131,10 +127,8 @@ function sp(){
             .attr("width", 8)
             .attr("height", 8)
             .style("fill", function(d){
-                if(d.status == "single") return dotsColor[0];
-                if(d.status == "married") return dotsColor[1];
-                if(d.status == "divorced") return dotsColor[2];
-                if(d.status == "widow/widower") return dotsColor[3];
+
+                return dotsColor2[d.status];
 
             })
 
@@ -199,29 +193,16 @@ function sp(){
             .attr("width", 18)
             .attr("height", 18)
             .style("fill",  function(d) { 
-                if(d["men"] == "single")
-                    return dotsColor[0];
-                if(d["men"] == "married")
-                    return dotsColor[1];
-                if(d["men"] == "divorced")
-                    return dotsColor[2];
-                if(d["men"] == "widow/widower")
-                    return dotsColor[3];
-             });
+                return dotsColor2[d["men"]];
+            });
 
         legend.append("circle").filter(function(d) { return d.women; })
             .attr("cx", width - 9 )
             .attr("cy", 8)
             .attr("r", "0.8em")
-            .style("fill",  function(d) { 
-                if(d["women"] == "single")
-                    return dotsColor[0];
-                if(d["women"] == "married")
-                    return dotsColor[1];
-                if(d["women"] == "divorced")
-                    return dotsColor[2];
-                if(d["women"] == "widow/widower")
-                    return dotsColor[3];
+            .style("fill",  function(d) {
+
+                return dotsColor2[d["women"]];
              });
 
         legend.append("text")
@@ -307,12 +288,7 @@ function sp(){
             .attr("width", 8)
             .attr("height", 8)
             .style("fill", function(d){
-
-                if(d.status == "single") return dotsColor[0];
-                if(d.status == "married") return dotsColor[1];
-                if(d.status == "divorced") return dotsColor[2];
-                if(d.status == "widow/widower") return dotsColor[3];
-
+                return dotsColor2[d.status];
             })
 
             .on("mouseover", function(d){
@@ -351,14 +327,7 @@ function sp(){
             .attr("width", 18)
             .attr("height", 18)
             .style("fill",  function(d) { 
-                if(d["men"] == "single")
-                    return dotsColor[0];
-                if(d["men"] == "married")
-                    return dotsColor[1];
-                if(d["men"] == "divorced")
-                    return dotsColor[2];
-                if(d["men"] == "widow/widower")
-                    return dotsColor[3];
+                return dotsColor2[d["men"]];
              });
 
         legend.append("circle").filter(function(d) { return d.women; })
@@ -366,14 +335,7 @@ function sp(){
             .attr("cy", 8)
             .attr("r", "0.8em")
             .style("fill",  function(d) { 
-                if(d["women"] == "single")
-                    return dotsColor[0];
-                if(d["women"] == "married")
-                    return dotsColor[1];
-                if(d["women"] == "divorced")
-                    return dotsColor[2];
-                if(d["women"] == "widow/widower")
-                    return dotsColor[3];
+                return dotsColor2[d["women"]];
              });
 
         legend.append("text")
