@@ -53,9 +53,6 @@ function map(){
     var csv = 'data/Swedish_Population_Statistics.csv';
     var municipalities, newData;
 
-    var arrRep1 = ["Å", "Ä", "Ö", "å", "ä", "ö"];
-    var arrRep2 = ["A", "A", "O", "a", "a", "ö"];
-
     this.startFun = function(data){
         d3.json("data/swe_mun.topojson", function(error, sweden){
             realData = data;
@@ -118,6 +115,8 @@ function map(){
                             .duration(500)
                             .style("opacity", 0);
                     });
+
+
     }
 
     function recalculateRange(val){

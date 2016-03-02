@@ -57,21 +57,23 @@
                 <!-- row of columns -->
                 <br><br><br>
                 
-                    <div id="floatLeft" style="width: 30vw;">
+                    <div id="floatLeft" style="width: 30vw">
     	                
-                        <form action="">
-    						<input id="A" type="radio" name="myradio" value="women" checked="true" onclick="fun('singel')">  Singel  </input>
-                            <input id="B" type="radio" name="myradio" value="men" onclick="fun('married')">  Married  </input>
-                            <input id="C" type="radio" name="myradio" value="total" onclick="fun('divorced')">  Divorced  </input>
-                            <input id="C" type="radio" name="myradio" value="total" onclick="fun('Widow/widower')">  Widow/widower  </input>
-    					</form>
+                       
+                            <form action="">
+        						<input id="A" type="radio" name="myradio" value="women" checked="true" onclick="fun('singel')">  Singel  </input>
+                                <input id="B" type="radio" name="myradio" value="men" onclick="fun('married')">  Married  </input>
+                                <input id="C" type="radio" name="myradio" value="total" onclick="fun('divorced')">  Divorced  </input>
+                                <input id="C" type="radio" name="myradio" value="total" onclick="fun('Widow/widower')">  Widow/widower  </input>
+        					</form>
+                      
 
                         <div class="col-md-6" id="map" style ="height: 80vh; width: 30vw; border:1px solid black;"></div>
 
                     </div>
                     <div id="floatRight" >
                         <div style="width: 59vw; float: right;">
-                            <form>
+                            <form id="form2">
                                 <input id="D" class="mybox" type="checkbox" name="checkSingle" value="single" checked>  Single  </input>
                                 <input id="E" class="mybox" type="checkbox" name="checkMarried" value="married" checked>  Married  </input>
                                 <input id="F" class="mybox" type="checkbox" name="checkDivorced" value="divorced" >  Divorced  </input>
