@@ -59,6 +59,7 @@ function sp(){
     var dots;
 
     function drawSetup(status){
+
         svg.append("g")
             .attr("class", "x axis")
             .attr("transform", "translate(0," + height + ")")

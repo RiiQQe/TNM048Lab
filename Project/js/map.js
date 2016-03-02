@@ -132,14 +132,23 @@ function map(){
                 .enter().append("g")
                 .attr("transform", function(d, i) { return "translate(" + i * 35 + ", 0)"; });
 
-        console.log(legendHeight);
-        console.log(legendWidth);
         legend.append("rect")
             .attr("x", 30)
-            .attr("y", 0)
+            .attr("y", 18)
             .attr("width", 35)
             .attr("height", 20)
             .style("fill", function(d, i) { return d; });
+
+    
+        svgLegend.append("text")
+            .attr("class", "info")
+            .attr("text-anchor", "end")
+            .attr("x", legendWidth * 0.5 + 50)
+            .attr("y", 12)
+            .style("font-size", "15px")
+            .text("[ Info text goes here ffs ]");
+
+        console.log(svgLegend.select(".info").text());
 
     }
 
