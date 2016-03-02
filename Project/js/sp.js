@@ -307,14 +307,14 @@ function sp(){
         dots2.filter(function(d) { if(status.indexOf(d.status) === -1) return d;} )
             .on("mouseover", function(d){
             })
-            .transition()
+            .transition().duration(1500).ease("sin-in-out")
             .style("opacity", 0);
 
         dots2.filter(function(d) { if(status.indexOf(d.status) !== -1 && d.sex == "men") return d;} )
             .on("mouseover", function(d){
                 showtooltip(d);
             })
-            .transition()
+            .transition().duration(1500).ease("sin-in-out")
             .attr("x", function(d){ return x(d.year) - 4; })
             .attr("y", function(d){ return y(d.amount); })
             .style("opacity", 1);
@@ -326,7 +326,7 @@ function sp(){
             .on("mouseover", function(d){
                 showtooltip(d);
             })
-            .transition()
+            .transition().duration(1500).ease("sin-in-out")
             .attr("cx", function(d){ return x(d.year); })
             .attr("cy", function(d){ return y(d.amount); })
             .style("opacity", 1);
@@ -394,7 +394,7 @@ function sp(){
         y.domain([0, d3.max(vals2)]);   
         
         svg.select("g .y.axis")
-            .transition()
+            .transition().duration(1500).ease("sin-in-out")
             .call(yAxis);
     }    
 }
