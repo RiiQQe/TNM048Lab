@@ -165,16 +165,18 @@ function sp(){
             .attr("x", width)
             .attr("y", 0)
             .style("font-size", "20px")
-            .text(reg);        
+            .text(reg);  
 
+        editLegend(status);      
+    }
 
+    function editLegend(status){
         var legendData = [];
-        var statusAll = ["single", "married", "divorced", "widow/widower"];
-
-            for(var i = 0; i < statusAll.length; i++){
-                legendData.push({men:statusAll[i]});
-                legendData.push({women:statusAll[i]});
-            }
+    
+        for(var i = 0; i < status.length; i++){
+            legendData.push({men:status[i]});
+            legendData.push({women:status[i]});
+        }
 
         var legend = svg.selectAll(".legend")
             .data(legendData)
@@ -233,21 +235,7 @@ function sp(){
                 if(d["women"] == "widow/widower") 
                     return "Widow women"; 
             });
-
-        editLegend(status);
-
     }
-
-    function editLegend(status){
-        var legend = svg.selectAll(".legend")
-        var temp = legend.selectAll(".menTxt, .womenTxt, .womenRect, .menRect");
-
-        console.log(temp);
-        temp.style("display", function(d){
-                    if(status.indexOf(d.men) !== -1 || status.indexOf(d.women) !== -1) return "";
-                    return "none";
-            });
-        }
 
     function removeTooltip(){
         tooltip.transition()
@@ -258,7 +246,7 @@ function sp(){
     function redo(status){
         svg.select(".region")
             .text(reg);
-            
+
         var realDataFilt = realData.filter(function(d){
             var noDigitsAndTrim = d.region.replace(/[0-9]/g, "").trim();
                 if(noDigitsAndTrim == reg && status.indexOf(d["status"]) !== -1){
@@ -319,7 +307,7 @@ function sp(){
                 setTimeout(removeTooltip, 3000);
             });
         
-      
+        svg.selectAll(".legend").remove();
         editLegend(status);
     }
 
