@@ -102,16 +102,7 @@ function sp(){
             })
 
             .on("mouseover", function(d){
-
-                tooltip.transition()
-                       .duration(300)
-                       .style("opacity", 0.8);
-
-                tooltip.html('Amount: ' + d.amount + "<br/> Sex: "  + d.sex + "<br/> Status: "  + d.status + "<br/> Year: "  + (d.year).getFullYear())  
-                .style("left", (d3.event.pageX) + "px")          
-                .style("top", (d3.event.pageY - 28) + "px");
-
-                setTimeout(removeTooltip, 3000);
+                showtooltip(d);
             });
 
         dots.append("rect")
@@ -129,14 +120,8 @@ function sp(){
 
             .on("mouseover", function(d){
 
-                tooltip.transition()
-                       .duration(300)
-                       .style("opacity", 0.8);
-                tooltip.html('Amount: ' + d.amount + "<br/> Sex: "  + d.sex + "<br/> Status: "  + d.status + "<br/> Year: "  + (d.year).getFullYear())  
-                       .style("left", (d3.event.pageX) + "px")          
-                       .style("top", (d3.event.pageY - 28) + "px");
+                showtooltip(d);
 
-                setTimeout(removeTooltip, 3000);
             });
 
 
@@ -273,16 +258,7 @@ function sp(){
             })
 
             .on("mouseover", function(d){
-
-                tooltip.transition()
-                       .duration(300)
-                       .style("opacity", 0.8);
-
-                tooltip.html('Amount: ' + d.amount + "<br/> Sex: "  + d.sex + "<br/> Status: "  + d.status + "<br/> Year: "  + (d.year).getFullYear())  
-                .style("left", (d3.event.pageX) + "px")          
-                .style("top", (d3.event.pageY - 28) + "px");
-
-                setTimeout(removeTooltip, 3000);
+                showtooltip(d);
             });
 
         //KOLL U
@@ -301,38 +277,55 @@ function sp(){
 
             .on("mouseover", function(d){
 
-                tooltip.transition()
-                       .duration(300)
-                       .style("opacity", 0.8);
-                tooltip.html('Amount: ' + d.amount + "<br/> Sex: "  + d.sex + "<br/> Status: "  + d.status + "<br/> Year: "  + (d.year).getFullYear())  
-                       .style("left", (d3.event.pageX) + "px")          
-                       .style("top", (d3.event.pageY - 28) + "px");
+                showtooltip(d);
 
-                setTimeout(removeTooltip, 3000);
             });
         
         svg.selectAll(".legend").remove();
         editLegend(status);
     }
 
+    function showtooltip(d){
+        tooltip.transition()
+                .duration(300)
+                .style("opacity", 0.8);
+
+        tooltip.html('Amount: ' + d.amount + "<br/> Sex: "  + d.sex + "<br/> Status: "  + d.status + "<br/> Year: "  + (d.year).getFullYear())  
+                .style("left", (d3.event.pageX) + "px")          
+                .style("top", (d3.event.pageY - 28) + "px");
+
+                setTimeout(removeTooltip, 3000);
+    }
+
     function redo2(status){
         var dots2 = svg.selectAll(".dot");
 
         dots2.filter(function(d) { if(status.indexOf(d.status) === -1) return d;} )
+            .on("mouseover", function(d){
+            })
             .transition()
             .style("opacity", 0);
 
         dots2.filter(function(d) { if(status.indexOf(d.status) !== -1 && d.sex == "men") return d;} )
+            .on("mouseover", function(d){
+                showtooltip(d);
+            })
             .transition()
             .attr("x", function(d){ return x(d.year) - 4; })
             .attr("y", function(d){ return y(d.amount); })
             .style("opacity", 1);
 
         dots2.filter(function(d) { if(status.indexOf(d.status) !== -1 && d.sex == "kvinnor") return d;} )
+            .on("mouseover", function(d){
+                showtooltip(d);
+            })
             .transition()
             .attr("cx", function(d){ return x(d.year); })
             .attr("cy", function(d){ return y(d.amount); })
             .style("opacity", 1);
+
+        svg.selectAll(".legend").remove();
+        editLegend(status);
     }
 
     this.startSP = function(data){
