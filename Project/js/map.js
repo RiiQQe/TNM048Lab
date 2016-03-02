@@ -16,7 +16,8 @@ function map(){
             .scaleExtent([0.5, 8])
             .on("zoom", move);
 
-    var margin = {top: 20, right: 20, bottom: 20, left: 20};
+    //var margin = {top: 20, right: 20, bottom: 20, left: 20};
+    var margin = {top: 0, right: 0, bottom: 0, left: 0};
     var width = mapDiv.width() - margin.right - margin.left,
         height = mapDiv.height() - margin.top - margin.bottom;
 

@@ -14,12 +14,14 @@ function sp(){
 
 	var margin = "";
 
-	var margin = {top: 20, right: 20, bottom: 30, left: 40},
+	//var margin = {top: 20, right: 20, bottom: 30, left: 40},
+    var margin = {top: 20, right: 5, bottom: 30, left: 80},
         width = spDiv.width() - margin.right - margin.left,
         height = spDiv.height() - margin.top - margin.bottom;
 
+        //-120 to have space for municipality text and legend
     var x = d3.time.scale()
-        .range([0, width - 100]);
+        .range([0, width - 120]);
 
     var color = d3.scale.category10();
 
@@ -124,7 +126,7 @@ function sp(){
                 } 
             })
             .attr("class", "dot")
-            .attr("x", function(d){ return x(d.year); })
+            .attr("x", function(d){ return x(d.year) - 4; })
             .attr("y", function(d){ return y(d.amount); })
             .attr("width", 8)
             .attr("height", 8)
@@ -153,8 +155,8 @@ function sp(){
         svg.append("text")
             .attr("class", "x label")
             .attr("text-anchor", "end")
-            .attr("x", width - 100)
-            .attr("y", height - 6)
+            .attr("x", width - 60)
+            .attr("y", height + 6)
             .style("font-size", "13px")
             .text("Year");
 
@@ -162,7 +164,8 @@ function sp(){
         svg.append("text")
             .attr("class", "y label")
             .attr("text-anchor", "end")
-            .attr("y", 4)
+            .attr("x", 0)
+            .attr("y", - 80)
             .attr("dy", "2.0em")
             .attr("transform", "rotate(-90)")
             .style("font-size", "13px")
@@ -299,7 +302,7 @@ function sp(){
                 } 
             })
             .attr("class", "dot")
-            .attr("x", function(d){ return x(d.year); })
+            .attr("x", function(d){ return x(d.year) - 4; })
             .attr("y", function(d){ return y(d.amount); })
             .attr("width", 8)
             .attr("height", 8)
