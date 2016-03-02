@@ -93,7 +93,7 @@ function sp(){
         console.log(realDataFilt);
 
         dots.append("circle")
-            .filter(function(d){ if(d.sex == "kvinnor") return d;  })
+            .filter(function(d){ if(d.sex == "kvinnor" ||d.sex == "women") return d;  })
             .attr("class", "dot")
             .attr("cx", function(d){ return x(d.year); })
             .attr("cy", function(d){ return y(d.amount); })
@@ -249,7 +249,7 @@ function sp(){
             .enter();
 
         dots.append("circle")
-            .filter(function(d){ if(d.sex == "kvinnor") return d;  })
+            .filter(function(d){ console.log(d); if(d.sex == "kvinnor" || d.sex == "women") return d;  })
             .attr("class", "dot")
             .attr("cx", function(d){ return x(d.year); })
             .attr("cy", function(d){ return y(d.amount); })
@@ -316,7 +316,10 @@ function sp(){
             .attr("y", function(d){ return y(d.amount); })
             .style("opacity", 1);
 
-        dots2.filter(function(d) { if(status.indexOf(d.status) !== -1 && d.sex == "kvinnor") return d;} )
+        dots2.filter(function(d) { 
+                if(status.indexOf(d.status) !== -1) 
+                    if(d.sex == "kvinnor" || d.sex == "women") return d;
+            })
             .on("mouseover", function(d){
                 showtooltip(d);
             })
