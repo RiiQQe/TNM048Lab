@@ -50,7 +50,7 @@ function sp(){
 
     jQuery(function(){
         $('input.mybox').click(function() {
-            sp1.updateSP(reg);
+            sp1.updateSP2(reg);
         })
     });
 
@@ -82,7 +82,6 @@ function sp(){
         var realDataFilt = realData.filter(function(d){
             var noDigitsAndTrim = d.region.replace(/[0-9]/g, "").trim();
                 if(noDigitsAndTrim == reg && status.indexOf(d["status"]) !== -1){
-                    if(d["sex"] == "kvinnor" || d["sex"] == "women")
                         return d; 
                 } 
         })
@@ -91,7 +90,10 @@ function sp(){
             .data(realDataFilt)
             .enter();
 
+        console.log(realDataFilt);
+
         dots.append("circle")
+            .filter(function(d){ if(d.sex == "kvinnor") return d;  })
             .attr("class", "dot")
             .attr("cx", function(d){ return x(d.year); })
             .attr("cy", function(d){ return y(d.amount); })
@@ -114,6 +116,7 @@ function sp(){
             });
 
         dots.append("rect")
+            .filter(function(d){ if(d.sex == "men") return d; })
             .attr("class", "dot")
             .attr("x", function(d){ return x(d.year) - 4; })
             .attr("y", function(d){ return y(d.amount); })
@@ -250,7 +253,6 @@ function sp(){
         var realDataFilt = realData.filter(function(d){
             var noDigitsAndTrim = d.region.replace(/[0-9]/g, "").trim();
                 if(noDigitsAndTrim == reg && status.indexOf(d["status"]) !== -1){
-                    if(d["sex"] == "kvinnor" || d["sex"] == "women")
                         return d; 
                 } 
         })
@@ -262,6 +264,7 @@ function sp(){
             .enter();
 
         dots.append("circle")
+            .filter(function(d){ if(d.sex == "kvinnor") return d;  })
             .attr("class", "dot")
             .attr("cx", function(d){ return x(d.year); })
             .attr("cy", function(d){ return y(d.amount); })
@@ -283,7 +286,9 @@ function sp(){
                 setTimeout(removeTooltip, 3000);
             });
 
+        //KOLL U
         dots.append("rect")
+            .filter(function(d){  if(d.sex == "men") return d;  })
             .attr("class", "dot")
             .attr("x", function(d){ return x(d.year) - 4; })
             .attr("y", function(d){ return y(d.amount); })
@@ -311,11 +316,48 @@ function sp(){
         editLegend(status);
     }
 
+    function redo2(status){
+        var dots2 = svg.selectAll(".dot");
+
+        dots2.filter(function(d) { if(status.indexOf(d.status) === -1) return d;} )
+            .transition()
+            .style("opacity", 0);
+
+        dots2.filter(function(d) { if(status.indexOf(d.status) !== -1 && d.sex == "men") return d;} )
+            .transition()
+            .attr("x", function(d){ return x(d.year) - 4; })
+            .attr("y", function(d){ return y(d.amount); })
+            .style("opacity", 1);
+
+        dots2.filter(function(d) { if(status.indexOf(d.status) !== -1 && d.sex == "kvinnor") return d;} )
+            .transition()
+            .attr("cx", function(d){ return x(d.year); })
+            .attr("cy", function(d){ return y(d.amount); })
+            .style("opacity", 1);
+    }
+
     this.startSP = function(data){
         var status = ["single", "married", "divorced", "widow/widower"];
         realData = data;
         fixAxels(status);
         drawSetup(status);
+    }
+
+    this.updateSP2 = function(region){
+        reg = region;
+
+        var status = [];
+        jQuery(function(){
+            $('.mybox:checked').each(function(){
+                status.push($(this).val());
+            });            
+        });
+        
+        if(!status)
+            var status = ["single", "married"];
+
+        fixAxels(status);
+        redo2(status);
     }
 
     this.updateSP = function(region){
