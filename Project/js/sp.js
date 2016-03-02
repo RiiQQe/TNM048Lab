@@ -391,6 +391,7 @@ function sp(){
         y.domain([0, d3.max(vals2)]);   
         
         svg.select("g .y.axis")
+            .transition()
             .call(yAxis);
     }    
 }
