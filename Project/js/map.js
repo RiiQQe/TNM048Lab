@@ -9,6 +9,7 @@ function map(){
     var realData, status = "single";
 
     var mapDiv = $("#map");
+    var legendDiv = $("#mapLegend");
 
     var color = d3.scale.category20();
 
@@ -21,6 +22,8 @@ function map(){
     var width = mapDiv.width() - margin.right - margin.left,
         height = mapDiv.height() - margin.top - margin.bottom;
 
+    var legendWidth = legendDiv.width(),
+        legendHeight = legendDiv.height();
 
     var tooltip = d3.select("body").append("div")
                     .attr("class", "tooltip")
@@ -40,6 +43,12 @@ function map(){
             .call(zoom);
 
     var g = svg.append("g");
+
+    var svgLegend = d3.select("#mapLegend").append("svg")
+            .attr("width", legendWidth)
+            .attr("height", legendHeight);
+
+    var gLegend = svgLegend.append("g");
 
     //Sets the map projection
     var projection = d3.geo.mercator()
@@ -116,6 +125,21 @@ function map(){
                             .style("opacity", 0);
                     });
 
+                    //console.log(colorbrewer.Reds[9]);
+
+        var legend = svgLegend.selectAll(".legend")
+                .data(colorbrewer.Reds[9])
+                .enter().append("g")
+                .attr("transform", function(d, i) { return "translate(" + i * 35 + ", 0)"; });
+
+        console.log(legendHeight);
+        console.log(legendWidth);
+        legend.append("rect")
+            .attr("x", 30)
+            .attr("y", 0)
+            .attr("width", 35)
+            .attr("height", 20)
+            .style("fill", function(d, i) { return d; });
 
     }
 
