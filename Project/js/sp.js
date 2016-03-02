@@ -59,7 +59,7 @@ function sp(){
     var dots;
 
     function drawSetup(status){
-
+        console.log(realData);
         svg.append("g")
             .attr("class", "x axis")
             .attr("transform", "translate(0," + height + ")")
@@ -79,19 +79,19 @@ function sp(){
             .attr("y", 6)
             .attr("dy", ".71em");
 
-        dots = svg.selectAll(".dot")
-            .data(realData)
-            .enter();
-
-        dots.append("circle")
-            .filter(function(d) {
-
-                var noDigitsAndTrim = d.region.replace(/[0-9]/g, "").trim();
+        var realDataFilt = realData.filter(function(d){
+            var noDigitsAndTrim = d.region.replace(/[0-9]/g, "").trim();
                 if(noDigitsAndTrim == reg && status.indexOf(d["status"]) !== -1){
                     if(d["sex"] == "kvinnor" || d["sex"] == "women")
                         return d; 
                 } 
-            })
+        })
+
+        dots = svg.selectAll(".dot")
+            .data(realDataFilt)
+            .enter();
+
+        dots.append("circle")
             .attr("class", "dot")
             .attr("cx", function(d){ return x(d.year); })
             .attr("cy", function(d){ return y(d.amount); })
@@ -113,14 +113,7 @@ function sp(){
                 setTimeout(removeTooltip, 3000);
             });
 
-            dots.append("rect")
-            .filter(function(d) { 
-                var noDigitsAndTrim = d.region.replace(/[0-9]/g, "").trim();
-                if(noDigitsAndTrim == reg && status.indexOf(d["status"]) !== -1){
-                    if(d["sex"] == "men")
-                        return d; 
-                } 
-            })
+        dots.append("rect")
             .attr("class", "dot")
             .attr("x", function(d){ return x(d.year) - 4; })
             .attr("y", function(d){ return y(d.amount); })
@@ -172,15 +165,18 @@ function sp(){
             .attr("x", width)
             .attr("y", 0)
             .style("font-size", "20px")
-            .text(reg);        
+            .text(reg);  
 
+        editLegend(status);      
+    }
 
+    function editLegend(status){
         var legendData = [];
-
-            for(var i = 0; i < status.length; i++){
-                legendData.push({men:status[i]});
-                legendData.push({women:status[i]});
-            }
+    
+        for(var i = 0; i < status.length; i++){
+            legendData.push({men:status[i]});
+            legendData.push({women:status[i]});
+        }
 
         var legend = svg.selectAll(".legend")
             .data(legendData)
@@ -189,6 +185,7 @@ function sp(){
             .attr("transform", function(d, i) { return "translate(0," + i * 20 + ")"; });
 
         legend.append("rect").filter(function(d) { return d.men; })
+            .attr("class", "menRect")
             .attr("x", width - 18)
             .attr("width", 18)
             .attr("height", 18)
@@ -197,15 +194,16 @@ function sp(){
             });
 
         legend.append("circle").filter(function(d) { return d.women; })
+            .attr("class", "womenRect")
             .attr("cx", width - 9 )
             .attr("cy", 8)
             .attr("r", "0.8em")
             .style("fill",  function(d) {
-
                 return dotsColor2[d["women"]];
              });
 
-        legend.append("text")
+        legend.append("text").filter(function(d){ return d.men })
+            .attr("class", "menTxt")
             .attr("x", width - 24)
             .attr("y", 9)
             .attr("dy", ".35em")
@@ -219,6 +217,15 @@ function sp(){
                     return "Divorced men";
                 if(d["men"] == "widow/widower") 
                     return "Widow men";
+        });
+
+        legend.append("text").filter(function(d){ return d.women })
+            .attr("class", "womenTxt")
+            .attr("x", width - 24)
+            .attr("y", 9)
+            .attr("dy", ".35em")
+            .style("text-anchor", "end")
+            .text(function(d){ 
                 if(d["women"] == "single") 
                     return "Single women";     
                 if(d["women"] == "married") 
@@ -226,7 +233,8 @@ function sp(){
                 if(d["women"] == "divorced") 
                     return "Divorced women";
                 if(d["women"] == "widow/widower") 
-                    return "Widow women"; });
+                    return "Widow women"; 
+            });
     }
 
     function removeTooltip(){
@@ -239,26 +247,27 @@ function sp(){
         svg.select(".region")
             .text(reg);
 
-        svg.selectAll(".dot").remove();
-        dots.append("circle")
-            .filter(function(d) { 
-                var noDigitsAndTrim = d.region.replace(/[0-9]/g, "").trim();
+        var realDataFilt = realData.filter(function(d){
+            var noDigitsAndTrim = d.region.replace(/[0-9]/g, "").trim();
                 if(noDigitsAndTrim == reg && status.indexOf(d["status"]) !== -1){
                     if(d["sex"] == "kvinnor" || d["sex"] == "women")
                         return d; 
                 } 
-            })
+        })
+
+        svg.selectAll(".dot").remove();
+
+        dots = svg.selectAll(".dot")
+            .data(realDataFilt)
+            .enter();
+
+        dots.append("circle")
             .attr("class", "dot")
             .attr("cx", function(d){ return x(d.year); })
             .attr("cy", function(d){ return y(d.amount); })
             .attr("r", "0.4em")
             .style("fill", function(d){
-
-                if(d.status == "single") return dotsColor[0];
-                if(d.status == "married") return dotsColor[1];
-                if(d.status == "divorced") return dotsColor[2];
-                if(d.status == "widow/widower") return dotsColor[3];
-
+                    return dotsColor2[d.status];
             })
 
             .on("mouseover", function(d){
@@ -274,21 +283,16 @@ function sp(){
                 setTimeout(removeTooltip, 3000);
             });
 
-            dots.append("rect")
-            .filter(function(d) { 
-                var noDigitsAndTrim = d.region.replace(/[0-9]/g, "").trim();
-                if(noDigitsAndTrim == reg && status.indexOf(d["status"]) !== -1){
-                    if(d["sex"] == "men")
-                        return d; 
-                } 
-            })
+        dots.append("rect")
             .attr("class", "dot")
             .attr("x", function(d){ return x(d.year) - 4; })
             .attr("y", function(d){ return y(d.amount); })
             .attr("width", 8)
             .attr("height", 8)
             .style("fill", function(d){
+
                 return dotsColor2[d.status];
+
             })
 
             .on("mouseover", function(d){
@@ -302,69 +306,13 @@ function sp(){
 
                 setTimeout(removeTooltip, 3000);
             });
-
         
-        //Tar bort legend före uppdatering och skapar ny legend
-        d3.selectAll(".legend")
-            .remove();
-
-        var legendData = [];
-
-            for(var i = 0; i < status.length; i++){
-                legendData.push({men:status[i]});
-                legendData.push({women:status[i]});
-            }
-
-
-        var legend = svg.selectAll(".legend")
-            .data(legendData)
-            .enter().append("g")
-            .attr("class", "legend")
-            .attr("transform", function(d, i) { return "translate(0," + i * 20 + ")"; });
-
-        legend.append("rect").filter(function(d) { return d.men; })
-            .attr("x", width - 18)
-            .attr("width", 18)
-            .attr("height", 18)
-            .style("fill",  function(d) { 
-                return dotsColor2[d["men"]];
-             });
-
-        legend.append("circle").filter(function(d) { return d.women; })
-            .attr("cx", width - 9 )
-            .attr("cy", 8)
-            .attr("r", "0.8em")
-            .style("fill",  function(d) { 
-                return dotsColor2[d["women"]];
-             });
-
-        legend.append("text")
-            .attr("x", width - 24)
-            .attr("y", 9)
-            .attr("dy", ".35em")
-            .style("text-anchor", "end")
-            .text(function(d){ 
-                if(d["men"] == "single") 
-                    return "Single men";     
-                if(d["men"] == "married") 
-                    return "Married men";
-                if(d["men"] == "divorced") 
-                    return "Divorced men";
-                if(d["men"] == "widow/widower") 
-                    return "Widow men";
-                if(d["women"] == "single") 
-                    return "Single women";     
-                if(d["women"] == "married") 
-                    return "Married women";
-                if(d["women"] == "divorced") 
-                    return "Divorced women";
-                if(d["women"] == "widow/widower") 
-                    return "Widow women"; }); 
-
+        svg.selectAll(".legend").remove();
+        editLegend(status);
     }
 
     this.startSP = function(data){
-        var status = ["single", "married"];
+        var status = ["single", "married", "divorced", "widow/widower"];
         realData = data;
         fixAxels(status);
         drawSetup(status);
