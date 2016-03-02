@@ -234,10 +234,11 @@ function sp(){
     function redo(status){
         svg.select(".region")
             .text(reg);
+        var status2 = ["single", "married", "divorced", "widow/widower"];
 
         var realDataFilt = realData.filter(function(d){
             var noDigitsAndTrim = d.region.replace(/[0-9]/g, "").trim();
-                if(noDigitsAndTrim == reg && status.indexOf(d["status"]) !== -1){
+                if(noDigitsAndTrim == reg && status2.indexOf(d["status"]) !== -1){
                         return d; 
                 } 
         })
@@ -249,7 +250,7 @@ function sp(){
             .enter();
 
         dots.append("circle")
-            .filter(function(d){ console.log(d); if(d.sex == "kvinnor" || d.sex == "women") return d;  })
+            .filter(function(d){ if(d.sex == "kvinnor" || d.sex == "women") return d;  })
             .attr("class", "dot")
             .attr("cx", function(d){ return x(d.year); })
             .attr("cy", function(d){ return y(d.amount); })
@@ -282,8 +283,10 @@ function sp(){
 
             });
         
-        svg.selectAll(".legend").remove();
-        editLegend(status);
+        //svg.selectAll(".legend").remove();
+        //editLegend(status);
+
+        redo2(status);
     }
 
     function showtooltip(d){
