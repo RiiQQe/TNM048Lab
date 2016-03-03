@@ -422,7 +422,6 @@ function sp(){
         x.domain([new Date(d3.min(vals)), new Date(d3.max(vals))]);
         y.domain([0, d3.max(vals2)]);  
 
-        
         svg.select("g .y.axis")
             .transition().duration(1500).ease("sin-in-out")
             .call(yAxis);
@@ -430,6 +429,8 @@ function sp(){
         svg.select("g .y.grid")
             .transition().duration(1500).ease("sin-in-out")
             .call(make_y_gridLines()
+                // + 120 to cut the lines at the end of the SP
+                //should be changed to something more dynamic
                 .tickSize(-width + 120, 0, 0)
                 .tickFormat(""));
     }    
