@@ -58,6 +58,20 @@ function sp(){
 
     var dots;
 
+    function make_x_gridLines() {
+        return d3.svg.axis()
+                .scale(x)
+                .orient("bottom")
+                .ticks(12);
+    }
+
+    function make_y_gridLines() {
+        return d3.svg.axis()
+                .scale(y)
+                .orient("left")
+                .ticks(yAxis.ticks());
+    }
+
     function drawSetup(status){
 
         svg.append("g")
@@ -79,6 +93,21 @@ function sp(){
             .attr("y", 6)
             .attr("dy", ".71em");
 
+        // Add vertical gridlines
+        svg.append("g")
+            .attr("class", "x grid")
+            .attr("transform", "translate(0," + height + ")")
+            .call(make_x_gridLines()
+                .tickSize(-height, 0, 0)
+                .tickFormat(""));
+
+        // Add horizontal gridlines
+        svg.append("g")
+            .attr("class", "y grid")
+            .call(make_y_gridLines()
+                .tickSize(-width + 120, 0, 0)
+                .tickFormat(""));
+
         var realDataFilt = realData.filter(function(d){
             var noDigitsAndTrim = d.region.replace(/[0-9]/g, "").trim();
                 if(noDigitsAndTrim == reg && status.indexOf(d["status"]) !== -1){
@@ -90,7 +119,7 @@ function sp(){
             .data(realDataFilt)
             .enter();
 
-        console.log(realDataFilt);
+        //console.log(realDataFilt);
 
         dots.append("circle")
             .filter(function(d){ if(d.sex == "kvinnor" ||d.sex == "women") return d;  })
@@ -391,11 +420,18 @@ function sp(){
         });
 
         x.domain([new Date(d3.min(vals)), new Date(d3.max(vals))]);
-        y.domain([0, d3.max(vals2)]);   
+        y.domain([0, d3.max(vals2)]);  
+
         
         svg.select("g .y.axis")
             .transition().duration(1500).ease("sin-in-out")
             .call(yAxis);
+
+        svg.select("g .y.grid")
+            .transition().duration(1500).ease("sin-in-out")
+            .call(make_y_gridLines()
+                .tickSize(-width + 120, 0, 0)
+                .tickFormat(""));
     }    
 }
 
