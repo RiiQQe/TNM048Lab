@@ -6,8 +6,8 @@ function sp(){
 
     var realData, reg = "Jarfalla";
 
-    var dotsColor = ["red", "green", "brown", "orange"];
-    var dotsColor2 = {single:"red", married:"green", divorced:"brown", "widow/widower":"orange"};
+    var colorMen = {single:"#EF5350", married:"#66BB6A", divorced:"#AB47BC", "widow/widower":"#FFA726"};
+    var colorWomen = {single:"#B71C1C", married:"#1B5E20", divorced:"#4A148C", "widow/widower":"#E65100"};
 
     var format = d3.time.format.utc("");//Complete the code
 
@@ -122,13 +122,13 @@ function sp(){
         //console.log(realDataFilt);
 
         dots.append("circle")
-            .filter(function(d){ if(d.sex == "kvinnor" ||d.sex == "women") return d;  })
             .attr("class", "dot")
+            .filter(function(d){ if(d.sex == "kvinnor" ||d.sex == "women") return d;  })
             .attr("cx", function(d){ return x(d.year); })
             .attr("cy", function(d){ return y(d.amount); })
             .attr("r", "0.4em")
             .style("fill", function(d){
-                    return dotsColor2[d.status];
+                    return colorWomen[d.status];
             })
 
             .on("mouseover", function(d){
@@ -136,15 +136,15 @@ function sp(){
             });
 
         dots.append("rect")
-            .filter(function(d){ if(d.sex == "men") return d; })
             .attr("class", "dot")
+            .filter(function(d){ if(d.sex == "men") return d; })
             .attr("x", function(d){ return x(d.year) - 4; })
             .attr("y", function(d){ return y(d.amount); })
             .attr("width", 8)
             .attr("height", 8)
             .style("fill", function(d){
 
-                return dotsColor2[d.status];
+                return colorMen[d.status];
 
             })
 
@@ -207,7 +207,7 @@ function sp(){
             .attr("width", 18)
             .attr("height", 18)
             .style("fill",  function(d) { 
-                return dotsColor2[d["men"]];
+                return colorMen[d["men"]];
             });
 
         legend.append("circle").filter(function(d) { return d.women; })
@@ -216,7 +216,7 @@ function sp(){
             .attr("cy", 8)
             .attr("r", "0.8em")
             .style("fill",  function(d) {
-                return dotsColor2[d["women"]];
+                return colorWomen[d["women"]];
              });
 
         legend.append("text").filter(function(d){ return d.men })
@@ -281,13 +281,13 @@ function sp(){
         console.log(dots);
 
         dots.append("circle")
-            .filter(function(d){ if(d.sex == "kvinnor" || d.sex == "women") return d;  })
             .attr("class", "dot")
+            .filter(function(d){ if(d.sex == "kvinnor" || d.sex == "women") return d;  })
             .attr("cx", function(d){ return x(d.year); })
             .attr("cy", function(d){ return y(d.amount); })
             .attr("r", "0.4em")
             .style("fill", function(d){
-                    return dotsColor2[d.status];
+                    return colorWomen[d.status];
             })
 
             .on("mouseover", function(d){
@@ -296,15 +296,15 @@ function sp(){
 
         //KOLL U
         dots.append("rect")
-            .filter(function(d){  if(d.sex == "men") return d;  })
             .attr("class", "dot")
+            .filter(function(d){  if(d.sex == "men") return d;  })
             .attr("x", function(d){ return x(d.year) - 4; })
             .attr("y", function(d){ return y(d.amount); })
             .attr("width", 8)
             .attr("height", 8)
             .style("fill", function(d){
 
-                return dotsColor2[d.status];
+                return colorMen[d.status];
 
             })
 
@@ -335,7 +335,7 @@ function sp(){
         dots2.filter(function(d) { if(status.indexOf(d.status) === -1) return d;} )
             .on("mouseover", function(d){
             })
-            .transition().duration(1500).ease("sin-in-out")
+            .transition().duration(0).ease("sin-in-out")
             .style("opacity", 0);
 
         dots2.filter(function(d) { if(status.indexOf(d.status) !== -1 && d.sex == "men") return d;} )
