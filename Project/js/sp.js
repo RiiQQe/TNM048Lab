@@ -272,48 +272,19 @@ function sp(){
                 } 
         })
 
-        svg.selectAll(".dot").remove();
-
-        dots = svg.selectAll(".dot")
+         svg.selectAll("rect")
             .data(realDataFilt)
-            .enter();
-
-        dots.append("circle")
-            .attr("class", "dot")
-            .filter(function(d){ if(d.sex == "kvinnor" || d.sex == "women") return d;  })
-            .attr("cx", function(d){ return x(d.year); })
-            .attr("cy", function(d){ return y(d.amount); })
-            .attr("r", "0.4em")
-            .style("fill", function(d){
-                    return colorWomen[d.status];
-            })
-
-            .on("mouseover", function(d){
-                showtooltip(d);
-            });
-
-        //KOLL U
-        dots.append("rect")
-            .attr("class", "dot")
-            .filter(function(d){  if(d.sex == "men") return d;  })
+            .transition().duration(1500).ease("sin-in-out")
             .attr("x", function(d){ return x(d.year) - 4; })
             .attr("y", function(d){ return y(d.amount); })
-            .attr("width", 8)
-            .attr("height", 8)
-            .style("fill", function(d){
+            .style("opacity", 1);
 
-                return colorMen[d.status];
-
-            })
-
-            .on("mouseover", function(d){
-
-                showtooltip(d);
-
-            });
-        
-        //svg.selectAll(".legend").remove();
-        //editLegend(status);
+        svg.selectAll("circle")
+            .data(realDataFilt)
+            .transition().duration(1500).ease("sin-in-out")
+            .attr("cx", function(d){ return x(d.year); })
+            .attr("cy", function(d){ return y(d.amount); })
+            .style("opacity", 1);
 
         redo2(status);
     }
@@ -333,10 +304,10 @@ function sp(){
     function redo2(status){
         var dots2 = svg.selectAll(".dot");
 
-        dots2.filter(function(d) { if(status.indexOf(d.status) === -1) return d;} )
+        dots2.filter(function(d) { if(status.indexOf(d.status) === -1 ) return d;} )
             .on("mouseover", function(d){
             })
-            .transition().duration(0).ease("sin-in-out")
+            .transition().duration(1500).ease("sin-in-out")
             .style("opacity", 0);
 
         dots2.filter(function(d) { if(status.indexOf(d.status) !== -1 && d.sex == "men") return d;} )
@@ -385,7 +356,9 @@ function sp(){
             var status = ["single", "married"];
 
         fixAxels(status);
+
         redo2(status);
+
     }
 
     this.updateSP = function(region){
@@ -404,6 +377,7 @@ function sp(){
         fixAxels(status);
 
         redo(status);
+
     }
 
     function fixAxels(status){
