@@ -148,12 +148,12 @@ function map(){
         var legend = svgLegend.selectAll(".legend")
                 .data(colorbrewer.Reds[9])
                 .enter().append("g")
-                .attr("transform", function(d, i) { return "translate(" + i * 35 + ", 0)"; });
+                .attr("transform", function(d, i) { return "translate(" + i * (width / 18) + ", 0)"; });
 
         legend.append("rect")
-            .attr("x", 30)
+            .attr("x", width / 4)
             .attr("y", 18)
-            .attr("width", 35)
+            .attr("width", (width / 20))
             .attr("height", 20)
             .style("fill", function(d, i) { return d; });
 
