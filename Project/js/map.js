@@ -1,5 +1,11 @@
 function map(){
     //testkommentar för git
+    var nrOfColors = 9;
+
+    var min, max;
+
+    var legend;
+
     var newData = [];
     var municipalities;
     var year = "2011";
@@ -29,12 +35,11 @@ function map(){
                     .attr("class", "tooltip")
                     .style("opacity", 0);
 
-    //initialize color scale
-    //...
-    var colorRangeTester = d3.scale.ordinal().range(["blue", "green", "red"]);
+    var colorRangeTester = d3.scale.linear()
+        .range(colorbrewer.Reds[nrOfColors]);
 
-    colorRangeTester = d3.scale.ordinal()
-        .range(colorbrewer.Reds[9]);
+  
+    var colorRangeTesters = d3.scale.linear().range(colorbrewer.Reds[nrOfColors]);
 
     //Assings the svg canvas to the map div
     var svg = d3.select("#map").append("svg")
@@ -52,8 +57,8 @@ function map(){
 
     //Sets the map projection
     var projection = d3.geo.mercator()
-            .center([39, 61.5])
-            .scale(750);
+            .center([25, 65])
+            .scale(1200);
 
 
     //Creates a new geographic path generator and assing the projection        
@@ -70,6 +75,16 @@ function map(){
             municipalities = topojson.feature(sweden, sweden.objects.swe_mun).features;
 
             municipalities = replaceLetters(municipalities);
+
+            //Used to normalize
+            realData.forEach(function(d){
+                var sum = 0;    
+                d.values.forEach(function(e){
+                    sum += e.values;
+                });
+                d.tot = sum;
+            });
+
 
             draw(municipalities);
 
@@ -92,18 +107,22 @@ function map(){
     }
 
     function draw(municipalities){
+        var status = 'single';
+        recalculateRange(status);
+
         var municipality = g.selectAll(".municipality").data(municipalities);
+
 
         municipality.enter().insert("path")
                     .attr("class", "municipality")
                     .attr("d", path)
-                    .style('stroke-width', 1)
+                    .style('stroke-width', 0.5)
                     .style("stroke", "white")
                     .style("fill", function(d){
                         var colo = undefined;
                         realData.forEach(function(c){
                             if(d.properties.name == c.key){
-                                colo = colorRangeTester(c.values[1].values);            //TODO: changes this [1] so it corresponds to "status"
+                                colo = colorRangeTesters(c.values[0].values / c.tot);            //TODO: changes this [1] so it corresponds to "status"
                             }
                         });
                         return colo;
@@ -119,7 +138,7 @@ function map(){
                             .style("left", (d3.event.pageX) + "px")
                             .style("top", (d3.event.pageY - 28) + "px");
                         d3.select(this.parentNode.appendChild(this)).transition().duration(150)
-                            .style("stroke", "black");
+                          .style("stroke", "black");
 
                     })
                     .on("mouseout", function(d){
@@ -129,17 +148,18 @@ function map(){
                         d3.select(this).transition().duration(150).style("stroke", "white");
                     });
 
-                    //console.log(colorbrewer.Reds[9]);
 
-        var legend = svgLegend.selectAll(".legend")
+
+        legend = svgLegend.selectAll(".legend2")
+                .style("border", "thick solid #0000FF")
                 .data(colorbrewer.Reds[9])
                 .enter().append("g")
-                .attr("transform", function(d, i) { return "translate(" + i * 35 + ", 0)"; });
+                .attr("transform", function(d, i) { return "translate(" + i * (width / 18) + ", 0)"; });
 
         legend.append("rect")
-            .attr("x", 30)
+            .attr("x", width / 4)
             .attr("y", 18)
-            .attr("width", 35)
+            .attr("width", (width / 20))
             .attr("height", 20)
             .style("fill", function(d, i) { return d; });
 
@@ -151,29 +171,70 @@ function map(){
             .attr("y", 12)
             .style("font-size", "12px")
             .text("Darker color equals more persons");
+        /*
+        legend.append("text")
+            .attr("class", "from")
+            .attr("x", width / 5)
+            .attr("y", 18)
+            .style("font-size", "12px")
+            .text("from");
+        */
+
+        legend.append("text")
+            .filter(function(d, i){ if(i == 0 || i == 8) return d; })
+            .attr("class", "fromto")
+            .attr("x", width / 4)
+            .attr("y", 50)
+            .style("font-size", "12px")
+            .text(function(d, i){
+                if(i == 0) return  (100 * min).toPrecision(3) + " %";
+                else return (max * 100).toPrecision(3) + " %";
+            });
+
 
         console.log(svgLegend.select(".info").text());
 
     }
 
-    function recalculateRange(val){
-        var min, max,
-            prevMax = 0,
-            prevMin = Infinity;
-
-        realData.forEach(function(nd){
-            max = d3.max(nd[val]);
-            min = d3.min(nd[val]);
-            if(max > prevMax)
-                prevMax = max;
-            
-            if(min < prevMin)
-                prevMin = min;
-            
-        });
+    function recalculateRange(status){
         
-        //colorbrew.domain([prevMin, prevMax]);
-        colorRangeTester.domain([prevMin, prevMax]);
+        var temp = 0;
+        if(status == "married") temp = 1;
+        else if(status == "divorced") temp = 2;
+        else if(status.toLowerCase() == "widow/widower") temp = 3;
+
+        var vals = [];
+
+        realData.forEach(function(d){
+            vals.push(d.values[temp].values / d.tot);
+        });
+        max = d3.max(vals);
+        min = d3.min(vals);
+
+        var temp = (max - min) / (nrOfColors - 1); 
+        
+        var newPercantage = [];
+
+        for(var i = 0; i < nrOfColors; i++){
+            var temp2 = min + temp * i;
+            newPercantage.push(temp2);
+        }
+        colorRangeTesters.domain(newPercantage);
+
+    }
+    function updateMaxMin(a, i){
+        var legendText = d3.selectAll(".fromto");
+
+        legendText.transition()
+            .duration(1000)
+            .style("opacity", 0)
+            .transition().duration(500)
+            .style("opacity", 1)
+            .text(function(d, k){
+                    if(k == 0) return  (100 * i).toPrecision(3) + " %";
+                    else return (a * 100).toPrecision(3) + " %";
+                    return "heej";
+            });
     }
 
     //zoom and panning method
@@ -181,7 +242,6 @@ function map(){
         var t = d3.event.translate;
         var s = d3.event.scale;
         
-
         zoom.translate(t);
         g.style("stroke-width", 1 / s).attr("transform", "translate(" + t + ")scale(" + s + ")");
 
@@ -189,22 +249,24 @@ function map(){
 
     this.toggleColor = function(val){
 
+    recalculateRange(val);
+    updateMaxMin(max, min);
+
     var temp = 0;
     if(val == "married") temp = 1;
     else if(val == "divorced") temp = 2;
     else if(val.toLowerCase() == "widow/widower") temp = 3;
-     
-
+    
     d3.selectAll(".municipality")
+        .transition().duration(1500).ease("in-in-out")
         .style("fill", function(d){
             var colo = undefined;
             realData.forEach(function(c){
                 if(d.properties.name == c.key){
-                    colo = colorRangeTester(c.values[temp].values);            //TODO: changes this [1] so it corresponds to "status"
+                    colo = colorRangeTesters(c.values[temp].values / c.tot);            //TODO: changes this [1] so it corresponds to "status"
                 }
             });
-          
-            return colo;
+            return colo;    
         });
 
     }

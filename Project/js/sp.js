@@ -285,7 +285,7 @@ function sp(){
             .attr("cx", function(d){ return x(d.year); })
             .attr("cy", function(d){ return y(d.amount); })
             .style("opacity", 1);
-
+        
         redo2(status);
     }
 
