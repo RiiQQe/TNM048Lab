@@ -34,10 +34,7 @@ function map(){
     var colorRangeTester = d3.scale.linear()
         .range(colorbrewer.Reds[nrOfColors]);
 
-    var hej = ["#fff5f0", "#cb181d", "#67000d"];
-    console.log(colorbrewer.Reds[nrOfColors]);
-    console.log(hej);
-    
+  
     var colorRangeTesters = d3.scale.linear().range(colorbrewer.Reds[nrOfColors]);
 
     //Assings the svg canvas to the map div
@@ -75,18 +72,15 @@ function map(){
 
             municipalities = replaceLetters(municipalities);
 
-            
-
+            //Used to normalize
             realData.forEach(function(d){
                 var sum = 0;    
                 d.values.forEach(function(e){
-
                     sum += e.values;
-
                 });
-
                 d.tot = sum;
             });
+
 
             draw(municipalities);
 
@@ -113,12 +107,12 @@ function map(){
         recalculateRange(status);
 
         var municipality = g.selectAll(".municipality").data(municipalities);
-        var counter = 0;
+
 
         municipality.enter().insert("path")
                     .attr("class", "municipality")
                     .attr("d", path)
-                    .style('stroke-width', 1)
+                    .style('stroke-width', 0.5)
                     .style("stroke", "white")
                     .style("fill", function(d){
                         var colo = undefined;
@@ -140,7 +134,7 @@ function map(){
                             .style("left", (d3.event.pageX) + "px")
                             .style("top", (d3.event.pageY - 28) + "px");
                         d3.select(this.parentNode.appendChild(this)).transition().duration(150)
-                            .style("stroke", "black");
+                          .style("stroke", "black");
 
                     })
                     .on("mouseout", function(d){
@@ -150,7 +144,6 @@ function map(){
                         d3.select(this).transition().duration(150).style("stroke", "white");
                     });
 
-                    //console.log(colorbrewer.Reds[9]);
 
         var legend = svgLegend.selectAll(".legend")
                 .data(colorbrewer.Reds[9])
@@ -188,36 +181,20 @@ function map(){
         var vals = [];
 
         realData.forEach(function(d){
-
-            vals.push(d.values[temp].values);
-
+            vals.push(d.values[temp].values / d.tot);
         });
         max = d3.max(vals);
         min = d3.min(vals);
 
-
-        /*colorRangeTester
-            .domain([parseFloat(min),, parseFloat(max)]);*/
-        max = 1;
-        min = 0;
         var temp = (max - min) / (nrOfColors - 1); 
-        console.log("min: " + min);
-        var ihatethis = [];
         
+        var newPercantage = [];
+
         for(var i = 0; i < nrOfColors; i++){
             var temp2 = min + temp * i;
-            ihatethis.push(temp2);
+            newPercantage.push(temp2);
         }
-        console.log(ihatethis);
-        
-        colorRangeTesters.domain(ihatethis);
-
-        console.log(colorbrewer.Reds[nrOfColors]);
-
-        console.log(colorRangeTesters(min));
-
-        console.log(colorRangeTesters(max));
-
+        colorRangeTesters.domain(newPercantage);
     }
 
     //zoom and panning method
@@ -225,7 +202,6 @@ function map(){
         var t = d3.event.translate;
         var s = d3.event.scale;
         
-
         zoom.translate(t);
         g.style("stroke-width", 1 / s).attr("transform", "translate(" + t + ")scale(" + s + ")");
 
@@ -239,8 +215,6 @@ function map(){
     if(val == "married") temp = 1;
     else if(val == "divorced") temp = 2;
     else if(val.toLowerCase() == "widow/widower") temp = 3;
-     
-    console.log(realData);
     
     d3.selectAll(".municipality")
         .style("fill", function(d){
