@@ -278,6 +278,8 @@ function sp(){
             .data(realDataFilt)
             .enter();
 
+        console.log(dots);
+
         dots.append("circle")
             .filter(function(d){ if(d.sex == "kvinnor" || d.sex == "women") return d;  })
             .attr("class", "dot")
@@ -312,9 +314,6 @@ function sp(){
 
             });
         
-        //svg.selectAll(".legend").remove();
-        //editLegend(status);
-
         redo2(status);
     }
 

@@ -1,5 +1,7 @@
 function map(){
     //testkommentar för git
+    var nrOfColors = 9;
+
     var newData = [];
     var municipalities;
     var year = "2011";
@@ -29,12 +31,14 @@ function map(){
                     .attr("class", "tooltip")
                     .style("opacity", 0);
 
-    //initialize color scale
-    //...
-    var colorRangeTester = d3.scale.ordinal().range(["blue", "green", "red"]);
+    var colorRangeTester = d3.scale.linear()
+        .range(colorbrewer.Reds[nrOfColors]);
 
-    colorRangeTester = d3.scale.ordinal()
-        .range(colorbrewer.Reds[9]);
+    var hej = ["#fff5f0", "#cb181d", "#67000d"];
+    console.log(colorbrewer.Reds[nrOfColors]);
+    console.log(hej);
+    
+    var colorRangeTesters = d3.scale.linear().range(colorbrewer.Reds[nrOfColors]);
 
     //Assings the svg canvas to the map div
     var svg = d3.select("#map").append("svg")
@@ -71,6 +75,19 @@ function map(){
 
             municipalities = replaceLetters(municipalities);
 
+            
+
+            realData.forEach(function(d){
+                var sum = 0;    
+                d.values.forEach(function(e){
+
+                    sum += e.values;
+
+                });
+
+                d.tot = sum;
+            });
+
             draw(municipalities);
 
          });
@@ -92,7 +109,11 @@ function map(){
     }
 
     function draw(municipalities){
+        var status = 'single';
+        recalculateRange(status);
+
         var municipality = g.selectAll(".municipality").data(municipalities);
+        var counter = 0;
 
         municipality.enter().insert("path")
                     .attr("class", "municipality")
@@ -103,7 +124,7 @@ function map(){
                         var colo = undefined;
                         realData.forEach(function(c){
                             if(d.properties.name == c.key){
-                                colo = colorRangeTester(c.values[1].values);            //TODO: changes this [1] so it corresponds to "status"
+                                colo = colorRangeTesters(c.values[0].values / c.tot);            //TODO: changes this [1] so it corresponds to "status"
                             }
                         });
                         return colo;
@@ -152,24 +173,47 @@ function map(){
 
     }
 
-    function recalculateRange(val){
-        var min, max,
-            prevMax = 0,
-            prevMin = Infinity;
+    function recalculateRange(status){
+        var min, max;
 
-        realData.forEach(function(nd){
-            max = d3.max(nd[val]);
-            min = d3.min(nd[val]);
-            if(max > prevMax)
-                prevMax = max;
-            
-            if(min < prevMin)
-                prevMin = min;
-            
+        var temp = 0;
+        if(status == "married") temp = 1;
+        else if(status == "divorced") temp = 2;
+        else if(status.toLowerCase() == "widow/widower") temp = 3;
+
+        var vals = [];
+
+        realData.forEach(function(d){
+
+            vals.push(d.values[temp].values);
+
         });
+        max = d3.max(vals);
+        min = d3.min(vals);
+
+
+        /*colorRangeTester
+            .domain([parseFloat(min),, parseFloat(max)]);*/
+        max = 1;
+        min = 0;
+        var temp = (max - min) / (nrOfColors - 1); 
+        console.log("min: " + min);
+        var ihatethis = [];
         
-        //colorbrew.domain([prevMin, prevMax]);
-        colorRangeTester.domain([prevMin, prevMax]);
+        for(var i = 0; i < nrOfColors; i++){
+            var temp2 = min + temp * i;
+            ihatethis.push(temp2);
+        }
+        console.log(ihatethis);
+        
+        colorRangeTesters.domain(ihatethis);
+
+        console.log(colorbrewer.Reds[nrOfColors]);
+
+        console.log(colorRangeTesters(min));
+
+        console.log(colorRangeTesters(max));
+
     }
 
     //zoom and panning method
@@ -185,22 +229,24 @@ function map(){
 
     this.toggleColor = function(val){
 
+    recalculateRange(val);
+
     var temp = 0;
     if(val == "married") temp = 1;
     else if(val == "divorced") temp = 2;
     else if(val.toLowerCase() == "widow/widower") temp = 3;
      
-
+    console.log(realData);
+    
     d3.selectAll(".municipality")
         .style("fill", function(d){
             var colo = undefined;
             realData.forEach(function(c){
                 if(d.properties.name == c.key){
-                    colo = colorRangeTester(c.values[temp].values);            //TODO: changes this [1] so it corresponds to "status"
+                    colo = colorRangeTesters(c.values[temp].values / c.tot);            //TODO: changes this [1] so it corresponds to "status"
                 }
             });
-          
-            return colo;
+            return colo;    
         });
 
     }
