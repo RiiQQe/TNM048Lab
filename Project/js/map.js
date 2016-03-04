@@ -52,8 +52,8 @@ function map(){
 
     //Sets the map projection
     var projection = d3.geo.mercator()
-            .center([28, 64])
-            .scale(1000);
+            .center([39, 61.5])
+            .scale(750);
 
 
     //Creates a new geographic path generator and assing the projection        
@@ -118,11 +118,15 @@ function map(){
                         tooltip.html(d.properties.name)
                             .style("left", (d3.event.pageX) + "px")
                             .style("top", (d3.event.pageY - 28) + "px");
+                        d3.select(this.parentNode.appendChild(this)).transition().duration(150)
+                            .style("stroke", "black");
+
                     })
                     .on("mouseout", function(d){
                         tooltip.transition()
                             .duration(500)
                             .style("opacity", 0);
+                        d3.select(this).transition().duration(150).style("stroke", "white");
                     });
 
                     //console.log(colorbrewer.Reds[9]);
@@ -143,10 +147,10 @@ function map(){
         svgLegend.append("text")
             .attr("class", "info")
             .attr("text-anchor", "end")
-            .attr("x", legendWidth * 0.5 + 50)
+            .attr("x", legendWidth * 0.5 + 70)
             .attr("y", 12)
-            .style("font-size", "15px")
-            .text("[ Info text goes here ffs ]");
+            .style("font-size", "12px")
+            .text("Darker color equals more persons");
 
         console.log(svgLegend.select(".info").text());
 
