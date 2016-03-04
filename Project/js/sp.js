@@ -132,6 +132,9 @@ function sp(){
             })
 
             .on("mouseover", function(d){
+                d3.select(this).transition().duration(500).attr("r", "0.7em").transition().duration(1500).attr("r", "0.4em");
+
+                //.style("opacity", 0.2);
                 showtooltip(d);
             });
 
@@ -143,12 +146,13 @@ function sp(){
             .attr("width", 8)
             .attr("height", 8)
             .style("fill", function(d){
-
+                
                 return colorMen[d.status];
 
             })
 
             .on("mouseover", function(d){
+                d3.select(this).transition().duration(500).attr("height", 16).attr("width", 16).transition().duration(1500).attr("height", 8).attr("width", 8);
 
                 showtooltip(d);
 
@@ -293,6 +297,7 @@ function sp(){
         tooltip.transition()
                 .duration(300)
                 .style("opacity", 0.8);
+
 
         tooltip.html('Amount: ' + d.amount + "<br/> Sex: "  + d.sex + "<br/> Status: "  + d.status + "<br/> Year: "  + (d.year).getFullYear())  
                 .style("left", (d3.event.pageX) + "px")          
