@@ -2,6 +2,10 @@ function map(){
     //testkommentar för git
     var nrOfColors = 9;
 
+    var min, max;
+
+    var legend;
+
     var newData = [];
     var municipalities;
     var year = "2011";
@@ -53,8 +57,8 @@ function map(){
 
     //Sets the map projection
     var projection = d3.geo.mercator()
-            .center([39, 61.5])
-            .scale(750);
+            .center([25, 65])
+            .scale(1200);
 
 
     //Creates a new geographic path generator and assing the projection        
@@ -145,7 +149,9 @@ function map(){
                     });
 
 
-        var legend = svgLegend.selectAll(".legend")
+
+        legend = svgLegend.selectAll(".legend2")
+                .style("border", "thick solid #0000FF")
                 .data(colorbrewer.Reds[9])
                 .enter().append("g")
                 .attr("transform", function(d, i) { return "translate(" + i * (width / 18) + ", 0)"; });
@@ -165,14 +171,33 @@ function map(){
             .attr("y", 12)
             .style("font-size", "12px")
             .text("Darker color equals more persons");
+        /*
+        legend.append("text")
+            .attr("class", "from")
+            .attr("x", width / 5)
+            .attr("y", 18)
+            .style("font-size", "12px")
+            .text("from");
+        */
+
+        legend.append("text")
+            .filter(function(d, i){ if(i == 0 || i == 8) return d; })
+            .attr("class", "fromto")
+            .attr("x", width / 4)
+            .attr("y", 50)
+            .style("font-size", "12px")
+            .text(function(d, i){
+                if(i == 0) return  (100 * min).toPrecision(3) + " %";
+                else return (max * 100).toPrecision(3) + " %";
+            });
+
 
         console.log(svgLegend.select(".info").text());
 
     }
 
     function recalculateRange(status){
-        var min, max;
-
+        
         var temp = 0;
         if(status == "married") temp = 1;
         else if(status == "divorced") temp = 2;
@@ -195,6 +220,21 @@ function map(){
             newPercantage.push(temp2);
         }
         colorRangeTesters.domain(newPercantage);
+
+    }
+    function updateMaxMin(a, i){
+        var legendText = d3.selectAll(".fromto");
+
+        legendText.transition()
+            .duration(1000)
+            .style("opacity", 0)
+            .transition().duration(500)
+            .style("opacity", 1)
+            .text(function(d, k){
+                    if(k == 0) return  (100 * i).toPrecision(3) + " %";
+                    else return (a * 100).toPrecision(3) + " %";
+                    return "heej";
+            });
     }
 
     //zoom and panning method
@@ -210,6 +250,7 @@ function map(){
     this.toggleColor = function(val){
 
     recalculateRange(val);
+    updateMaxMin(max, min);
 
     var temp = 0;
     if(val == "married") temp = 1;
@@ -217,6 +258,7 @@ function map(){
     else if(val.toLowerCase() == "widow/widower") temp = 3;
     
     d3.selectAll(".municipality")
+        .transition().duration(1500).ease("in-in-out")
         .style("fill", function(d){
             var colo = undefined;
             realData.forEach(function(c){
