@@ -206,6 +206,7 @@ function sp(){
             .attr("x", width - 18)
             .attr("width", 18)
             .attr("height", 18)
+            .transition().duration(1500)
             .style("fill",  function(d) { 
                 return colorMen[d["men"]];
             });
@@ -215,6 +216,7 @@ function sp(){
             .attr("cx", width - 9 )
             .attr("cy", 8)
             .attr("r", "0.8em")
+            .transition().duration(1500)
             .style("fill",  function(d) {
                 return colorWomen[d["women"]];
              });
