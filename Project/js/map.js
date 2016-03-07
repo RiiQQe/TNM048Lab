@@ -187,14 +187,7 @@ function map(){
             .attr("y", 12)
             .style("font-size", "12px")
             .text("Darker color equals more single's");
-        /*
-        legend.append("text")
-            .attr("class", "from")
-            .attr("x", width / 5)
-            .attr("y", 18)
-            .style("font-size", "12px")
-            .text("from");
-        */
+
 
         legend.append("text")
             .filter(function(d, i){ if(i == 0 || i == 8) return d; })
