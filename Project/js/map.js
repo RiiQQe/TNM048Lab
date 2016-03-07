@@ -199,7 +199,7 @@ function map(){
             });
 
 
-        console.log(svgLegend.select(".info").text());
+        //console.log(svgLegend.select(".info").text());
 
     }
 

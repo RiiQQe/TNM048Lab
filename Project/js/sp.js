@@ -12,6 +12,7 @@ function sp(){
     var format = d3.time.format.utc("");//Complete the code
 
 	var spDiv = $("#sp");
+    var headLineDiv = $("#spHeadline");
 
 	var margin = "";
 
@@ -19,6 +20,9 @@ function sp(){
     var margin = {top: 20, right: 5, bottom: 30, left: 80},
         width = spDiv.width() - margin.right - margin.left,
         height = spDiv.height() - margin.top - margin.bottom;
+
+    var headlineWidth = headLineDiv.width(),
+        headlineHeight = headLineDiv.height();
 
         //-120 to have space for municipality text and legend
     var x = d3.time.scale()
@@ -42,6 +46,10 @@ function sp(){
         .attr("height", height + margin.top + margin.bottom)
         .append("g")
         .attr("transform", "translate(" + margin.left + "," + margin.top + ")");
+
+    var svgHeadline = d3.select("#spHeadline").append("svg")
+            .attr("width", headlineWidth)
+            .attr("height", headlineHeight);
 
     var tooltip = d3.select("body").append("div")
             .attr("class", "tooltip")
@@ -189,14 +197,13 @@ function sp(){
             .style("font-size", "13px")
             .text("Amount");
 
-
-        svg.append("text")
+        svgHeadline.append("text")
             .attr("class", "region")
-            .attr("text-anchor", "end")
-            .attr("x", width)
-            .attr("y", 0)
-            .style("font-size", "20px")
-            .text(reg);  
+            .attr("text-anchor", "start")
+            .attr("x", 10)
+            .attr("y", headlineHeight - 10)
+            .style("font-size", function(d) {  return (headlineHeight/2); })
+            .text(reg); 
 
         initLegend(status);      
     }
@@ -220,7 +227,6 @@ function sp(){
             .attr("x", width - 18)
             .attr("width", 18)
             .attr("height", 18)
-            .transition().duration(1500)
             .style("fill",  function(d) { 
                 return colorMen[d["men"]];
             });
@@ -230,7 +236,6 @@ function sp(){
             .attr("cx", width - 9 )
             .attr("cy", 8)
             .attr("r", "0.8em")
-            .transition().duration(1500)
             .style("fill",  function(d) {
                 return colorWomen[d["women"]];
              });
@@ -324,8 +329,10 @@ function sp(){
     }
 
     function redo(status){
-        svg.select(".region")
-            .text(reg);
+        svgHeadline.select(".region")
+            .text(reg)
+            .transition().duration(1500).ease("sin-in-out");
+
         var status2 = ["single", "married", "divorced", "widow/widower"];
 
         var realDataFilt = realData.filter(function(d){
@@ -402,8 +409,6 @@ function sp(){
                 .attr("r", "0.7em")
                 .transition().duration(1500)
                 .attr("r", "0.4em");
-
-                
 
                 showtooltip(d);
             })
