@@ -110,8 +110,8 @@ function sp(){
                 .tickFormat(""));
 
         var realDataFilt = realData.filter(function(d){
-            var noDigitsAndTrim = d.region.replace(/[0-9]/g, "").trim();
-                if(noDigitsAndTrim == reg && status.indexOf(d["status"]) !== -1){
+            var noDigitsAndTrim = d.region.replace(/[0-9]/g, "").trim().toLowerCase();
+                if(noDigitsAndTrim == reg.toLowerCase() && status.indexOf(d["status"]) !== -1){
                         return d; 
                 } 
         })
@@ -337,8 +337,8 @@ function sp(){
         var status2 = ["single", "married", "divorced", "widow/widower"];
 
         var realDataFilt = realData.filter(function(d){
-            var noDigitsAndTrim = d.region.replace(/[0-9]/g, "").trim();
-                if(noDigitsAndTrim == reg && status2.indexOf(d["status"]) !== -1){
+            var noDigitsAndTrim = d.region.replace(/[0-9]/g, "").trim().toLowerCase();
+                if(noDigitsAndTrim == reg.toLowerCase() && status2.indexOf(d["status"]) !== -1){
                         return d; 
                 } 
         })
@@ -505,8 +505,8 @@ function sp(){
         var vals2 = [];
 
         realData.forEach(function(d){
-            var noDigitsAndTrim = d.region.replace(/[0-9]/g, "").trim();
-            if(noDigitsAndTrim == reg && status.indexOf(d["status"]) != -1){
+            var noDigitsAndTrim = d.region.replace(/[0-9]/g, "").trim().toLowerCase();
+            if(noDigitsAndTrim == reg.toLowerCase() && status.indexOf(d["status"]) != -1){
                 vals2.push(d.amount);
                 vals.push(new Date(d.year));
             }

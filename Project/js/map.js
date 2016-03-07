@@ -91,15 +91,24 @@ function map(){
             });
 
 
+
             draw(municipalities);
 
          });
     }
 
+    function callOther(name){
+
+        sp1.updateSP(name);
+
+    }
+
 
     function replaceLetters(municipalities){
 
-        municipalities.forEach(function(d){ d.properties.name = d.properties.name.replace(/Å/g, "A")
+        municipalities.forEach(function(d){ 
+                                            d.properties.name = d.properties.name.replace(/Habo/g, "Habo Jonkoping")
+                                            d.properties.name = d.properties.name.replace(/Å/g, "A")
                                             d.properties.name = d.properties.name.replace(/Ä/g, "A")
                                             d.properties.name = d.properties.name.replace(/Ö/g, "O")
                                             d.properties.name = d.properties.name.replace(/å/g, "a")
@@ -197,9 +206,6 @@ function map(){
                 if(i == 0) return  (100 * min).toPrecision(3) + " %";
                 else return (max * 100).toPrecision(3) + " %";
             });
-
-
-        console.log(svgLegend.select(".info").text());
 
     }
 
@@ -347,7 +353,8 @@ function fun2(e){
 function fun3(val){
     if(regions.indexOf(val.toLowerCase().trim()) === -1) alert(val + " doesn't exists, only english alphabet");
     else{
-        val = val.trim().toLowerCase();
+         val = val.trim().toLowerCase();
+         //if(val.trim() == "habo jonkoping") val = "Habo Jonkoping";
          sp1.updateSP(val.charAt(0).toUpperCase()  + val.slice(1));
          map1.toggleStroke(val);
     }   
