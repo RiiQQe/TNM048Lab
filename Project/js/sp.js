@@ -280,23 +280,16 @@ function sp(){
 
     function editLegend(status){
 
-        var legendData = [];
-    
-        for(var i = 0; i < status.length; i++){
-            legendData.push({men:status[i]});
-            legendData.push({women:status[i]});
-        }
-
         //Men: fade away legend.                
         legend.selectAll("rect.menRect").filter(function(d) { 
                             if(status.indexOf(d["men"]) === -1 ) return d;})
             .transition().duration(1500)
-            .style("opacity", 0);
+            .style("opacity", .2);
 
         legend.selectAll("text.menTxt").filter(function(d) { 
                             if(status.indexOf(d["men"]) === -1 ) return d;})
             .transition().duration(1500)
-            .style("opacity", 0);
+            .style("opacity", .2);
 
         //Men: show legend.
         legend.selectAll("rect.menRect").filter(function(d) { 
@@ -313,12 +306,12 @@ function sp(){
         legend.selectAll("circle.womenCircle").filter(function(d) { 
                             if(status.indexOf(d["women"]) === -1 ) return d;} )
             .transition().duration(1500)
-            .style("opacity", 0);
+            .style("opacity", .2);
 
         legend.selectAll("text.womenTxt").filter(function(d) { 
                             if(status.indexOf(d["women"]) === -1 ) return d;})
             .transition().duration(1500)
-            .style("opacity", 0);
+            .style("opacity", .2);
 
         //Women: show legend.
         legend.selectAll("circle.womenCircle").filter(function(d) { 
