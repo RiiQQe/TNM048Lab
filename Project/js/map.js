@@ -131,10 +131,18 @@ function map(){
                     
                     //Tooltip functions
                     .on("mousemove", function(d){
+
+                        //Get info for tooltip
+                        var mapped = realData.filter(function (rd){
+                            if(rd.key == d.properties.name) return rd; 
+                        })
+
+                        var percentage = (100 * mapped[0].values[0].values / mapped[0].tot).toPrecision(3);
+
                         tooltip.transition()
-                            .duration(200)
+                            .duration(0)
                             .style("opacity", 1);
-                        tooltip.html(d.properties.name)
+                        tooltip.html("Region: " + d.properties.name + "<br> Percentage " + percentage + "%")
                             .style("left", (d3.event.pageX) + "px")
                             .style("top", (d3.event.pageY - 28) + "px");
                         d3.select(this.parentNode.appendChild(this)).transition().duration(150)
@@ -143,7 +151,7 @@ function map(){
                     })
                     .on("mouseout", function(d){
                         tooltip.transition()
-                            .duration(500)
+                            .duration(700)
                             .style("opacity", 0);
                         d3.select(this).transition().duration(150).style("stroke", "white");
                     });
@@ -231,9 +239,15 @@ function map(){
             .transition().duration(500)
             .style("opacity", 1)
             .text(function(d, k){
-                    if(k == 0) return  (100 * i).toPrecision(3) + " %";
-                    else return (a * 100).toPrecision(3) + " %";
-                    return "heej";
+                    if(k == 0){
+                        var val2 = 3;
+                        if(i * 100 < 10) val2 = 2;
+                        var min2 = (i * 100).toPrecision(val2); 
+                        return  min2 + " %";
+                    }
+                    else 
+                        return (a * 100).toPrecision(3) + " %";
+                    
             });
     }
 
@@ -248,7 +262,6 @@ function map(){
     }
 
     this.toggleColor = function(val){
-
     recalculateRange(val);
     updateMaxMin(max, min);
 
@@ -258,6 +271,32 @@ function map(){
     else if(val.toLowerCase() == "widow/widower") temp = 3;
     
     d3.selectAll(".municipality")
+        .on("mousemove", function(d){
+
+                //Get info for tooltip
+                var mapped = realData.filter(function (rd){
+                    if(rd.key == d.properties.name) return rd; 
+                })
+
+                var percentage = (100 * mapped[0].values[temp].values / mapped[0].tot).toPrecision(3);
+
+                tooltip.transition()
+                        .duration(0)
+                        .style("opacity", 1);
+                tooltip.html("Region: " + d.properties.name + "<br> Percentage " + percentage + "%")
+                    .style("left", (d3.event.pageX) + "px")
+                    .style("top", (d3.event.pageY - 28) + "px");
+                d3.select(this.parentNode.appendChild(this)).transition().duration(150)
+                  .style("stroke", "black");
+
+
+        })
+        .on("mouseout", function(d){
+                        tooltip.transition()
+                            .duration(700)
+                            .style("opacity", 0);
+                        d3.select(this).transition().duration(150).style("stroke", "white");
+        })
         .transition().duration(1500).ease("in-in-out")
         .style("fill", function(d){
             var colo = undefined;
