@@ -177,7 +177,7 @@ function map(){
             .attr("x", legendWidth * 0.5 + 70)
             .attr("y", 12)
             .style("font-size", "12px")
-            .text("Darker color equals more persons");
+            .text("Darker color equals more single");
         /*
         legend.append("text")
             .attr("class", "from")
@@ -248,6 +248,14 @@ function map(){
                         return (a * 100).toPrecision(3) + " %";
                     
             });
+        var legendText2 = d3.selectAll(".info");
+
+        legendText2
+            .transition().duration(1000)
+            .style("opacity", 0)
+            .transition().duration(500)
+            .style("opacity", 1)
+            .text("Darker color equals more " + status)
     }
 
     //zoom and panning method
@@ -261,6 +269,7 @@ function map(){
     }
 
     this.toggleColor = function(val){
+    status = val;
     recalculateRange(val);
     updateMaxMin(max, min);
 
