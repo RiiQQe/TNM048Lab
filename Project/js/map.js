@@ -271,7 +271,7 @@ function map(){
                         .duration(0)
                         .style("opacity", 1);
                 tooltip.html("Region: " + d.properties.name + "<br> Percentage " + (100 * d.percentage).toPrecision(3) + "%")
-                    .style("left", (d3.event.pageX) + "px")
+                    .style("left", (d3.event.pageX + 28) + "px")
                     .style("top", (d3.event.pageY - 28) + "px");
                 d3.select(this.parentNode.appendChild(this)).transition().duration(150)
                   .style("stroke", "black");
