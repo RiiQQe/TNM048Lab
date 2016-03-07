@@ -1,3 +1,5 @@
+var regions = [];
+
 function map(){
     //testkommentar för git
     var nrOfColors = 9;
@@ -70,6 +72,8 @@ function map(){
     this.startFun = function(data){
         d3.json("data/swe_mun.topojson", function(error, sweden){
             realData = data;
+
+
             if(error) return console.error(error);
             
             municipalities = topojson.feature(sweden, sweden.objects.swe_mun).features;
@@ -78,6 +82,7 @@ function map(){
 
             //Used to normalize
             realData.forEach(function(d){
+                regions.push(d.key.toLowerCase());
                 var sum = 0;    
                 d.values.forEach(function(e){
                     sum += e.values;
@@ -297,9 +302,52 @@ function map(){
         });
 
     }
+
+    this.toggleStroke = function(val){
+        console.log("here i am");
+        var colo = undefined;
+        d3.selectAll('.municipality')
+            .filter(function(d){ return (d.properties.name).toLowerCase() == val.toLowerCase() })
+            .transition().duration(1000)
+            .style("fill", "blue")
+            .transition().duration(1000)
+            .style("fill", function(d){
+                realData.forEach(function(c){
+                    if(d.properties.name.toLowerCase() == val.toLowerCase()){
+                        d.percentage = c.values[0].values / c.tot;
+                        colo = colorRangeTesters(d.percentage);            //TODO: changes this [1] so it corresponds to "status"
+                    }
+                });
+                return colo;
+            })
+            .transition().duration(1000)
+            .style("fill", "blue")
+            .transition().duration(1000)
+            .style("fill", colo);
+
+    }
 }
 
 function fun(val){
     map1.toggleColor(val);
+}
+
+function fun2(e){
+    if (e.keyCode == 13) {
+        var tb = document.getElementById("search");
+        fun3(tb.value);
+        return false;
+    }
+}
+function fun3(val){
+    if(regions.indexOf(val.toLowerCase().trim()) === -1) alert(val + " doesn't exists, only english alphabet");
+    else{
+        val = val.trim().toLowerCase();
+         sp1.updateSP(val.charAt(0).toUpperCase()  + val.slice(1));
+         map1.toggleStroke(val);
+    }   
+     
+
+
 }
 
