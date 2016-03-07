@@ -118,8 +118,8 @@ function sp(){
                 .tickFormat(""));
 
         var realDataFilt = realData.filter(function(d){
-            var noDigitsAndTrim = d.region.replace(/[0-9]/g, "").trim();
-                if(noDigitsAndTrim == reg && status.indexOf(d["status"]) !== -1){
+            var noDigitsAndTrim = d.region.replace(/[0-9]/g, "").trim().toLowerCase();
+                if(noDigitsAndTrim == reg.toLowerCase() && status.indexOf(d["status"]) !== -1){
                         return d; 
                 } 
         })
@@ -148,6 +148,9 @@ function sp(){
                 .attr("r", "0.4em");
 
                 showtooltip(d);
+            })
+            .on("click", function(d){
+                highlightCircle(d);
             });
 
         dots.append("rect")
@@ -173,6 +176,11 @@ function sp(){
                 .attr("height", 8);
 
                 showtooltip(d, this);
+
+            })
+            .on("click",function(d){
+                
+                highlightRect(d);
 
             });
 
@@ -336,8 +344,8 @@ function sp(){
         var status2 = ["single", "married", "divorced", "widow/widower"];
 
         var realDataFilt = realData.filter(function(d){
-            var noDigitsAndTrim = d.region.replace(/[0-9]/g, "").trim();
-                if(noDigitsAndTrim == reg && status2.indexOf(d["status"]) !== -1){
+            var noDigitsAndTrim = d.region.replace(/[0-9]/g, "").trim().toLowerCase();
+                if(noDigitsAndTrim == reg.toLowerCase() && status2.indexOf(d["status"]) !== -1){
                         return d; 
                 } 
         })
@@ -366,7 +374,7 @@ function sp(){
 
 
         tooltip.html('Amount: ' + d.amount + "<br/> Sex: "  + d.sex + "<br/> Status: "  + d.status + "<br/> Year: "  + (d.year).getFullYear())  
-                .style("left", (d3.event.pageX) + "px")          
+                .style("left", (d3.event.pageX + 28) + "px")          
                 .style("top", (d3.event.pageY - 28) + "px");
 
                 setTimeout(removeTooltip, 3000);
@@ -375,7 +383,7 @@ function sp(){
     function redo2(status){
         var dots2 = svg.selectAll(".dot");
 
-        dots2.filter(function(d) { if(status.indexOf(d.status) === -1 ) return d;} )
+        dots2.filter(function(d) { if(status.indexOf(d.status) === -1 ) return d; } )
             .on("mouseover", function(d){
             })
             .transition().duration(1500).ease("sin-in-out")
@@ -465,14 +473,45 @@ function sp(){
 
     }
 
+    function highlightCircle(val){
+
+        var dots2 = svg.selectAll(".dot");
+
+        dots2
+            .filter(function(d){ 
+                if(val.sex == d.sex && val.status == d.status) return d;  
+            })
+            .transition().duration(2000).ease("sin-in-out")
+            .attr("r", "1.0em")
+            .transition().duration(2000).ease("sin-in-out")
+            .attr("r", "0.4em");
+    
+    }
+
+    function highlightRect(val){
+        var dots2 = svg.selectAll(".dot");
+
+        dots2
+            .filter(function(d){ 
+                if(val.sex == d.sex && val.status == d.status) return d;  
+            })
+            .transition().duration(2000).ease("sin-in-out")
+            .attr("width", 20)
+            .attr("height", 20)
+            .transition().duration(2000).ease("sin-in-out")
+            .attr("width", 8)
+            .attr("height", 8);
+        
+    }
+
     function fixAxels(status){
 
         var vals = [];
         var vals2 = [];
 
         realData.forEach(function(d){
-            var noDigitsAndTrim = d.region.replace(/[0-9]/g, "").trim();
-            if(noDigitsAndTrim == reg && status.indexOf(d["status"]) != -1){
+            var noDigitsAndTrim = d.region.replace(/[0-9]/g, "").trim().toLowerCase();
+            if(noDigitsAndTrim == reg.toLowerCase() && status.indexOf(d["status"]) != -1){
                 vals2.push(d.amount);
                 vals.push(new Date(d.year));
             }
