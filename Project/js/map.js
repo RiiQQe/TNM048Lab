@@ -122,7 +122,8 @@ function map(){
                         var colo = undefined;
                         realData.forEach(function(c){
                             if(d.properties.name == c.key){
-                                colo = colorRangeTesters(c.values[0].values / c.tot);            //TODO: changes this [1] so it corresponds to "status"
+                                d.percentage = c.values[0].values / c.tot;
+                                colo = colorRangeTesters(d.percentage);            //TODO: changes this [1] so it corresponds to "status"
                             }
                         });
                         return colo;
@@ -132,17 +133,10 @@ function map(){
                     //Tooltip functions
                     .on("mousemove", function(d){
 
-                        //Get info for tooltip
-                        var mapped = realData.filter(function (rd){
-                            if(rd.key == d.properties.name) return rd; 
-                        })
-
-                        var percentage = (100 * mapped[0].values[0].values / mapped[0].tot).toPrecision(3);
-
                         tooltip.transition()
                             .duration(0)
                             .style("opacity", 1);
-                        tooltip.html("Region: " + d.properties.name + "<br> Percentage " + percentage + "%")
+                        tooltip.html("Region: " + d.properties.name + "<br> Percentage " +(100 * d.percentage).toPrecision(3) + "%")
                             .style("left", (d3.event.pageX) + "px")
                             .style("top", (d3.event.pageY - 28) + "px");
                         d3.select(this.parentNode.appendChild(this)).transition().duration(150)
@@ -273,17 +267,10 @@ function map(){
     d3.selectAll(".municipality")
         .on("mousemove", function(d){
 
-                //Get info for tooltip
-                var mapped = realData.filter(function (rd){
-                    if(rd.key == d.properties.name) return rd; 
-                })
-
-                var percentage = (100 * mapped[0].values[temp].values / mapped[0].tot).toPrecision(3);
-
                 tooltip.transition()
                         .duration(0)
                         .style("opacity", 1);
-                tooltip.html("Region: " + d.properties.name + "<br> Percentage " + percentage + "%")
+                tooltip.html("Region: " + d.properties.name + "<br> Percentage " + (100 * d.percentage).toPrecision(3) + "%")
                     .style("left", (d3.event.pageX) + "px")
                     .style("top", (d3.event.pageY - 28) + "px");
                 d3.select(this.parentNode.appendChild(this)).transition().duration(150)
@@ -302,7 +289,8 @@ function map(){
             var colo = undefined;
             realData.forEach(function(c){
                 if(d.properties.name == c.key){
-                    colo = colorRangeTesters(c.values[temp].values / c.tot);            //TODO: changes this [1] so it corresponds to "status"
+                    d.percentage = c.values[temp].values / c.tot;
+                    colo = colorRangeTesters(d.percentage);            //TODO: changes this [1] so it corresponds to "status"
                 }
             });
             return colo;    
