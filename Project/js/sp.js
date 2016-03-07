@@ -279,8 +279,6 @@ function sp(){
             legendData.push({women:status[i]});
         }
 
-        console.log(legend.selectAll("rect.menRect"));
-
         //Men: fade away legend.                
         legend.selectAll("rect.menRect").filter(function(d) { 
                             if(status.indexOf(d["men"]) === -1 ) return d;})
