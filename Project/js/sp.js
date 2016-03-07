@@ -57,6 +57,7 @@ function sp(){
     var statuses = {single:8, married:6, "widow/widower":4, divorced:2};
 
     var dots;
+    var legend;
 
     function make_x_gridLines() {
         return d3.svg.axis()
@@ -197,10 +198,10 @@ function sp(){
             .style("font-size", "20px")
             .text(reg);  
 
-        editLegend(status);      
+        initLegend(status);      
     }
 
-    function editLegend(status){
+    function initLegend(status){
         var legendData = [];
     
         for(var i = 0; i < status.length; i++){
@@ -208,7 +209,7 @@ function sp(){
             legendData.push({women:status[i]});
         }
 
-        var legend = svg.selectAll(".legend")
+        legend = svg.selectAll(".legend")
             .data(legendData)
             .enter().append("g")
             .attr("class", "legend")
@@ -219,15 +220,17 @@ function sp(){
             .attr("x", width - 18)
             .attr("width", 18)
             .attr("height", 18)
+            .transition().duration(1500)
             .style("fill",  function(d) { 
                 return colorMen[d["men"]];
             });
 
         legend.append("circle").filter(function(d) { return d.women; })
-            .attr("class", "womenRect")
+            .attr("class", "womenCircle")
             .attr("cx", width - 9 )
             .attr("cy", 8)
             .attr("r", "0.8em")
+            .transition().duration(1500)
             .style("fill",  function(d) {
                 return colorWomen[d["women"]];
              });
@@ -265,6 +268,62 @@ function sp(){
                 if(d["women"] == "widow/widower") 
                     return "Widow women"; 
             });
+    }
+
+    function editLegend(status){
+
+        var legendData = [];
+    
+        for(var i = 0; i < status.length; i++){
+            legendData.push({men:status[i]});
+            legendData.push({women:status[i]});
+        }
+
+        console.log(legend.selectAll("rect.menRect"));
+
+        //Men: fade away legend.                
+        legend.selectAll("rect.menRect").filter(function(d) { 
+                            if(status.indexOf(d["men"]) === -1 ) return d;})
+            .transition().duration(1500)
+            .style("opacity", 0);
+
+        legend.selectAll("text.menTxt").filter(function(d) { 
+                            if(status.indexOf(d["men"]) === -1 ) return d;})
+            .transition().duration(1500)
+            .style("opacity", 0);
+
+        //Men: show legend.
+        legend.selectAll("rect.menRect").filter(function(d) { 
+                            if(status.indexOf(d["men"]) !== -1 ) return d;})
+            .transition().duration(1500)
+            .style("opacity", 1);
+
+        legend.selectAll("text.menTxt").filter(function(d) { 
+                            if(status.indexOf(d["men"]) !== -1 ) return d;})
+            .transition().duration(1500)
+            .style("opacity", 1);
+
+        //Women: fade legend.
+        legend.selectAll("circle.womenCircle").filter(function(d) { 
+                            if(status.indexOf(d["women"]) === -1 ) return d;} )
+            .transition().duration(1500)
+            .style("opacity", 0);
+
+        legend.selectAll("text.womenTxt").filter(function(d) { 
+                            if(status.indexOf(d["women"]) === -1 ) return d;})
+            .transition().duration(1500)
+            .style("opacity", 0);
+
+        //Women: show legend.
+        legend.selectAll("circle.womenCircle").filter(function(d) { 
+                            if(status.indexOf(d["women"]) !== -1 ) return d;} )
+            .transition().duration(1500)
+            .style("opacity", 1);
+
+        legend.selectAll("text.womenTxt").filter(function(d) { 
+                            if(status.indexOf(d["women"]) !== -1 ) return d;})
+            .transition().duration(1500)
+            .style("opacity", 1);
     }
 
     function removeTooltip(){
@@ -362,7 +421,6 @@ function sp(){
             .attr("cy", function(d){ return y(d.amount); })
             .style("opacity", 1);
 
-        svg.selectAll(".legend").remove();
         editLegend(status);
     }
 
