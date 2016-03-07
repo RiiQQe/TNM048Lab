@@ -71,8 +71,9 @@ function map(){
 
     this.startFun = function(data){
         d3.json("data/swe_mun.topojson", function(error, sweden){
-            realData = data;
 
+
+            realData = data;
 
             if(error) return console.error(error);
             
@@ -90,11 +91,25 @@ function map(){
                 d.tot = sum;
             });
 
-
+            createDropDown();
 
             draw(municipalities);
 
          });
+    }
+
+    function createDropDown(){
+
+        var selection = document.getElementById("selectId");
+
+        regions.sort();
+
+        regions.forEach(function(d){
+            var option = document.createElement("option");
+            option.text = d;
+            selection.add(option);
+        });
+
     }
 
     function callOther(name){
@@ -351,9 +366,16 @@ function fun3(val){
          val = val.trim().toLowerCase();
          sp1.updateSP(val.charAt(0).toUpperCase()  + val.slice(1));
          map1.toggleStroke(val);
-    }   
-     
-
-
+    }
 }
+
+function changeFunc() {
+    var selectBox = document.getElementById("selectId");
+    var selectedValue = selectBox.options[selectBox.selectedIndex].value;
+
+    var val = selectedValue.trim().toLowerCase();
+    sp1.updateSP(val.charAt(0).toUpperCase()  + val.slice(1));
+    map1.toggleStroke(val);
+    
+}   
 
