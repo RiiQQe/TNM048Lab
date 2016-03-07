@@ -133,9 +133,12 @@ function sp(){
             })
 
             .on("mouseover", function(d){
-                d3.select(this).transition().duration(500).attr("r", "0.7em").transition().duration(1500).attr("r", "0.4em");
+                d3.select(this)
+                .transition().duration(500)
+                .attr("r", "0.7em")
+                .transition().duration(1500)
+                .attr("r", "0.4em");
 
-                //.style("opacity", 0.2);
                 showtooltip(d);
             });
 
@@ -153,9 +156,15 @@ function sp(){
             })
 
             .on("mouseover", function(d){
-                d3.select(this).transition().duration(500).attr("height", 16).attr("width", 16).transition().duration(1500).attr("height", 8).attr("width", 8);
+                d3.select(this)
+                .transition().duration(500)
+                .attr("width", 16)
+                .attr("height", 16)
+                .transition().duration(1500)
+                .attr("width", 8)
+                .attr("height", 8);
 
-                showtooltip(d);
+                showtooltip(d, this);
 
             });
 
@@ -262,7 +271,7 @@ function sp(){
     }
 
     function editLegend(status){
-         
+
         //Men: fade away legend.                
         legend.selectAll("rect.menRect").filter(function(d) { 
                             if(status.indexOf(d["men"]) === -1 ) return d;})
@@ -367,6 +376,15 @@ function sp(){
 
         dots2.filter(function(d) { if(status.indexOf(d.status) !== -1 && d.sex == "men") return d;} )
             .on("mouseover", function(d){
+
+                 d3.select(this)
+                .transition().duration(500)
+                .attr("width", 16)
+                .attr("height", 16)
+                .transition().duration(1500)
+                .attr("width", 8)
+                .attr("height", 8);
+
                 showtooltip(d);
             })
             .transition().duration(1500).ease("sin-in-out")
@@ -379,6 +397,14 @@ function sp(){
                     if(d.sex == "kvinnor" || d.sex == "women") return d;
             })
             .on("mouseover", function(d){
+                 d3.select(this)
+                .transition().duration(500)
+                .attr("r", "0.7em")
+                .transition().duration(1500)
+                .attr("r", "0.4em");
+
+                
+
                 showtooltip(d);
             })
             .transition().duration(1500).ease("sin-in-out")

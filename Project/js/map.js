@@ -1,3 +1,5 @@
+var regions = [];
+
 function map(){
     //testkommentar för git
     var nrOfColors = 9;
@@ -70,6 +72,8 @@ function map(){
     this.startFun = function(data){
         d3.json("data/swe_mun.topojson", function(error, sweden){
             realData = data;
+
+
             if(error) return console.error(error);
             
             municipalities = topojson.feature(sweden, sweden.objects.swe_mun).features;
@@ -78,6 +82,7 @@ function map(){
 
             //Used to normalize
             realData.forEach(function(d){
+                regions.push(d.key.toLowerCase());
                 var sum = 0;    
                 d.values.forEach(function(e){
                     sum += e.values;
@@ -122,7 +127,8 @@ function map(){
                         var colo = undefined;
                         realData.forEach(function(c){
                             if(d.properties.name == c.key){
-                                colo = colorRangeTesters(c.values[0].values / c.tot);            //TODO: changes this [1] so it corresponds to "status"
+                                d.percentage = c.values[0].values / c.tot;
+                                colo = colorRangeTesters(d.percentage);            //TODO: changes this [1] so it corresponds to "status"
                             }
                         });
                         return colo;
@@ -131,11 +137,12 @@ function map(){
                     
                     //Tooltip functions
                     .on("mousemove", function(d){
+
                         tooltip.transition()
-                            .duration(200)
+                            .duration(0)
                             .style("opacity", 1);
-                        tooltip.html(d.properties.name)
-                            .style("left", (d3.event.pageX) + "px")
+                        tooltip.html("Region: " + d.properties.name + "<br> Percentage " +(100 * d.percentage).toPrecision(3) + "%")
+                            .style("left", (d3.event.pageX + 28) + "px")
                             .style("top", (d3.event.pageY - 28) + "px");
                         d3.select(this.parentNode.appendChild(this)).transition().duration(150)
                           .style("stroke", "black");
@@ -143,7 +150,7 @@ function map(){
                     })
                     .on("mouseout", function(d){
                         tooltip.transition()
-                            .duration(500)
+                            .duration(700)
                             .style("opacity", 0);
                         d3.select(this).transition().duration(150).style("stroke", "white");
                     });
@@ -170,7 +177,7 @@ function map(){
             .attr("x", legendWidth * 0.5 + 70)
             .attr("y", 12)
             .style("font-size", "12px")
-            .text("Darker color equals more persons");
+            .text("Darker color equals more single");
         /*
         legend.append("text")
             .attr("class", "from")
@@ -231,10 +238,24 @@ function map(){
             .transition().duration(500)
             .style("opacity", 1)
             .text(function(d, k){
-                    if(k == 0) return  (100 * i).toPrecision(3) + " %";
-                    else return (a * 100).toPrecision(3) + " %";
-                    return "heej";
+                    if(k == 0){
+                        var val2 = 3;
+                        if(i * 100 < 10) val2 = 2;
+                        var min2 = (i * 100).toPrecision(val2); 
+                        return  min2 + " %";
+                    }
+                    else 
+                        return (a * 100).toPrecision(3) + " %";
+                    
             });
+        var legendText2 = d3.selectAll(".info");
+
+        legendText2
+            .transition().duration(1000)
+            .style("opacity", 0)
+            .transition().duration(500)
+            .style("opacity", 1)
+            .text("Darker color equals more " + status)
     }
 
     //zoom and panning method
@@ -248,7 +269,7 @@ function map(){
     }
 
     this.toggleColor = function(val){
-
+    status = val;
     recalculateRange(val);
     updateMaxMin(max, min);
 
@@ -258,21 +279,80 @@ function map(){
     else if(val.toLowerCase() == "widow/widower") temp = 3;
     
     d3.selectAll(".municipality")
+        .on("mousemove", function(d){
+
+                tooltip.transition()
+                        .duration(0)
+                        .style("opacity", 1);
+                tooltip.html("Region: " + d.properties.name + "<br> Percentage " + (100 * d.percentage).toPrecision(3) + "%")
+                    .style("left", (d3.event.pageX + 28) + "px")
+                    .style("top", (d3.event.pageY - 28) + "px");
+                d3.select(this.parentNode.appendChild(this)).transition().duration(150)
+                  .style("stroke", "black");
+
+
+        })
+        .on("mouseout", function(d){
+                        tooltip.transition()
+                            .duration(700)
+                            .style("opacity", 0);
+                        d3.select(this).transition().duration(150).style("stroke", "white");
+        })
         .transition().duration(1500).ease("in-in-out")
         .style("fill", function(d){
             var colo = undefined;
             realData.forEach(function(c){
                 if(d.properties.name == c.key){
-                    colo = colorRangeTesters(c.values[temp].values / c.tot);            //TODO: changes this [1] so it corresponds to "status"
+                    d.percentage = c.values[temp].values / c.tot;
+                    colo = colorRangeTesters(d.percentage);            //TODO: changes this [1] so it corresponds to "status"
                 }
             });
             return colo;    
         });
 
     }
+
+    this.toggleStroke = function(val){
+        
+        var colo = "black";
+
+        d3.selectAll('.municipality')
+            .filter(function(d){ return (d.properties.name).toLowerCase() == val.toLowerCase() })
+            .transition().duration(1000)
+            .style("fill", "blue")
+            .transition().duration(1000)
+            .style("fill", function(d){
+                colo = colorRangeTesters(d.percentage);
+                return colo
+            })
+            .transition().duration(1000)
+            .style("fill", "blue")
+            .transition().duration(1000)
+            .style("fill", colo);
+
+    }
 }
 
 function fun(val){
     map1.toggleColor(val);
+}
+
+function fun2(e){
+    if (e.keyCode == 13) {
+        var tb = document.getElementById("search");
+        fun3(tb.value);
+        return false;
+    }
+}
+function fun3(val){
+    if(regions.indexOf(val.toLowerCase().trim()) === -1) alert(val + " doesn't exists, only english alphabet");
+    else{
+        val = val.trim().toLowerCase();
+         sp1.updateSP(val.charAt(0).toUpperCase()  + val.slice(1));
+         map1.toggleStroke(val);
+    }   
+     
+
+
 }
 
