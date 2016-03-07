@@ -6,8 +6,8 @@ function sp(){
 
     var realData, reg = "Jarfalla";
 
-    var colorMen = {single:"#EF5350", married:"#66BB6A", divorced:"#AB47BC", "widow/widower":"#FFA726"};
-    var colorWomen = {single:"#B71C1C", married:"#1B5E20", divorced:"#4A148C", "widow/widower":"#E65100"};
+    var colorMen = {single:"#EF5350", married:"#66BB6A", divorced:"#29B6F6", "widow/widower":"#BDBDBD"};
+    var colorWomen = {single:"#B71C1C", married:"#1B5E20", divorced:"#01579B", "widow/widower":"#212121"};
 
     var format = d3.time.format.utc("");//Complete the code
 
