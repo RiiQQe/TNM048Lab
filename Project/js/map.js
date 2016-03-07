@@ -186,7 +186,7 @@ function map(){
             .attr("x", legendWidth * 0.5 + 70)
             .attr("y", 12)
             .style("font-size", "12px")
-            .text("Darker color equals more single");
+            .text("Darker color equals more single's");
         /*
         legend.append("text")
             .attr("class", "from")
@@ -255,13 +255,15 @@ function map(){
                     
             });
         var legendText2 = d3.selectAll(".info");
+        var stat = status;
+        if(stat == "single") stat = "single's";
 
         legendText2
             .transition().duration(1000)
             .style("opacity", 0)
             .transition().duration(500)
             .style("opacity", 1)
-            .text("Darker color equals more " + status)
+            .text("Darker color equals more " + stat)
     }
 
     //zoom and panning method
@@ -354,7 +356,6 @@ function fun3(val){
     if(regions.indexOf(val.toLowerCase().trim()) === -1) alert(val + " doesn't exists, only english alphabet");
     else{
          val = val.trim().toLowerCase();
-         //if(val.trim() == "habo jonkoping") val = "Habo Jonkoping";
          sp1.updateSP(val.charAt(0).toUpperCase()  + val.slice(1));
          map1.toggleStroke(val);
     }   
