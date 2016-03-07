@@ -304,21 +304,17 @@ function map(){
     }
 
     this.toggleStroke = function(val){
-        console.log("here i am");
-        var colo = undefined;
+        
+        var colo = "black";
+
         d3.selectAll('.municipality')
             .filter(function(d){ return (d.properties.name).toLowerCase() == val.toLowerCase() })
             .transition().duration(1000)
             .style("fill", "blue")
             .transition().duration(1000)
             .style("fill", function(d){
-                realData.forEach(function(c){
-                    if(d.properties.name.toLowerCase() == val.toLowerCase()){
-                        d.percentage = c.values[0].values / c.tot;
-                        colo = colorRangeTesters(d.percentage);            //TODO: changes this [1] so it corresponds to "status"
-                    }
-                });
-                return colo;
+                colo = colorRangeTesters(d.percentage);
+                return colo
             })
             .transition().duration(1000)
             .style("fill", "blue")
